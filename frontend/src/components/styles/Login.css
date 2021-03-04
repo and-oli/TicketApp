@@ -1,0 +1,56 @@
+.login-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    top: 100px;
+    background: white;
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 2px;
+    text-align-last: center;
+    width: 350px;
+    height: 450px;
+    margin-top: 100px;
+    position: relative;
+}
+.logo{
+    display: flex;
+    position: absolute;
+    height: 80px;
+    width: auto; 
+}
+.image {
+    left: 0px;
+    top: 0px;
+    display: flex;
+    justify-content: center;
+    position:absolute;
+    align-items: center;
+    height: 100px;
+    width:100%; 
+    background-color: black;
+}
+
+.container-title {
+    display:flex;
+    justify-content:center;
+    flex-direction:column;
+    width: 500px;
+    height: 250px;
+}
+
+.title {
+font-size: 40px;
+font-family:sans-serif;
+color: rgba(0, 0, 0, 0.871);
+}
+
+.checkbox {
+    margin: 10px;
+    position: absolute;
+}
+
+.button {
+    margin: 20px;
+    width: 200px;
+    align-self: center;
+}
