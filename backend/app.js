@@ -8,6 +8,15 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var Solicitudes = require('./routes/apiSolicitudes');
+var coneccion = require('./config/config');
+const mongoose = require('mongoose');
+
+mongoose.connect(coneccion.database, {
+  useNewUrlParser: true, useUnifiedTopology: true
+}, (err, client) => {
+  if (err) return console.error(err)
+  console.log('Connected to Database')
+})
 
 var app = express();
 

@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const mongoose = require('mongoose');
-const SolicitudSchema = require('../schemas/Solicitudes');
+const SolicitudSchema = require('../models/Solicitudes');
 const Solicitudes = mongoose.model('solicitudes', SolicitudSchema);
 
 function enviarError(error) {
