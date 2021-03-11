@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var SolicitudSchema = new Schema({
-    idSolicitud: Number,
+    idSolicitud: { type: Number, unique: true },
     resumen: String,
     desripcion: String,
     fechaHora: Date,
