@@ -1,43 +1,30 @@
 const express = require("express");
 const router = express.Router();
-const user = require('../services/userService')
-
+const token = require("../services/token");
+const userService = require('../services/userService')
 router.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type, Authorization,Accept,x-access-token');
-    next();
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin,X-Requested-With,Content-Type, Authorization,Accept,x-access-token"
+  );
+  next();
 });
 
-
-router.post("/", async function (req, res) {
-    try {
-        const newUser = await user.postUser(req.body)
-        res.json(newUser)
-    } catch (err) {
-        res.json(newUser)
-    }
+router.post("/", (req, res, next) => token.checkTokenAdmin(req, res, next, true), async function (req, res) {
+  const newUser = await userService.postUser(res, req.body);
+  return newUser;
 });
 
-router.post("/editar",async function (req, res) {
-    try {
-        const updateUser = await user.updateUser(req.body)
-        res.json(updateUser)
-    } catch (err) {
-        res.json(updateUser)
-    }
+router.post("/editar", token.checkToken, async function (req, res) {
+  const updateUser = await userService.updateUser(res, req.body);
+  return updateUser;
 });
 
-router.post("/find",async function (req, res) {
-    try{
-        const validationUser = await user.authorizeUser(req.body)
-        res.json(validationUser)
-    } catch(err){
-        res.json({mensaje:"hay un error",ok:false})
-    }
-})
+router.post("/authenticate", async function (req, res) {
+  const validationUser = await token.authorizeUser(res, req.body);
+  return validationUser;
+});
 
 module.exports = router;
-
-
-
