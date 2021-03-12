@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
-
 var UserSchema = new Schema({
   idUser: { type: Number, unique: true },
   name: String,
@@ -12,9 +11,7 @@ var UserSchema = new Schema({
 });
 
 UserSchema.pre('save', function (next) {
-
   let user = this
-
   if (!user.isModified("password")) {
     return next()
   }

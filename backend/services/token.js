@@ -8,12 +8,12 @@ module.exports = {
     if (token) {
       jwt.verify(token, secretKey, function (err, decoded) {
         if (err) {
-          return res.status(403).send({ success: false, message: "Error de autenticación, por favor refresque la aplicación." });
+          return res.status(403).send({ success: false, message: "Error de autenticación, por favor refresque la aplicación.", });
         } else {
           if (admin && decoded.role !== "ADMINISTRADOR") {
             return res.status(403).send({
               success: false,
-              message: "No tiene permiso para realizar esta acción."
+              message: "No tiene permiso para realizar esta acción.",
             });
           } else {
             req.decoded = decoded;
@@ -23,7 +23,7 @@ module.exports = {
     } else {
       return res.status(403).json({
         success: false,
-        message: "No tiene permiso para realizar esta acción."
+        message: "No tiene permiso para realizar esta acción.",
       });
     };
     next();
@@ -34,7 +34,7 @@ module.exports = {
     if (token) {
       jwt.verify(token, secretKey, function (err, decoded) {
         if (err) {
-          return res.status(403).send({ success: false, message: "Error de autenticación, por favor refresque la aplicación." });
+          return res.status(403).send({ success: false, message: "Error de autenticación, por favor refresque la aplicación.", });
         } else {
           req.decoded = decoded;
         };
@@ -42,7 +42,7 @@ module.exports = {
     } else {
       return res.status(403).send({
         success: false,
-        message: "No tiene permiso para realizar esta acción."
+        message: "No tiene permiso para realizar esta acción.",
       });
     };
     next();
@@ -61,7 +61,7 @@ module.exports = {
             id: userAuthorize.idUser,
             name: userAuthorize.name,
             userName: userAuthorize.userName,
-            role: userAuthorize.role
+            role: userAuthorize.role,
           }, secretKey, { expiresIn: '24h' });
           console.log(token)
           res.json({
@@ -70,12 +70,12 @@ module.exports = {
             admin: userAuthorize.role === "ADMINISTRADOR",
             nombre: userAuthorize.name,
             token,
-            ok: true
+            ok: true,
           });
         };
       })
       .catch((err) => {
-        res.json({ mensaje: "Usuario incorrecto", err, ok: false });
+        res.json({ mensaje: "Usuario incorrecto", err, ok: false, });
       });
     return authorize;
   }
