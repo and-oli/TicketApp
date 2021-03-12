@@ -7,8 +7,10 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var Solicitudes = require('./routes/apiSolicitudes');
 var coneccion = require('./config/config');
+var Solicitudes = require('./routes/apiSolicitudes');
+var CambiosSoliciud = require('./routes/apiCambiosSolicitud');
+
 const mongoose = require('mongoose');
 
 mongoose.connect(coneccion.database, {
@@ -35,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/solicitudes', Solicitudes);
+app.use('/cambiosSolicitud', CambiosSoliciud);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

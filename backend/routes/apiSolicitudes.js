@@ -8,17 +8,17 @@ router.get('/', async function (req, res) {
 });
 
 router.get('/asignadasAUsuario/:idUsuarioMongo', async function (req, res) {
-  const rutaPorUsuario = await solicitudesService.getSoliUsuario(res, req);
+  const rutaPorUsuario = await solicitudesService.getSoliUsuario(req, res);
   return rutaPorUsuario
 });
 
 router.get('/porNumero/:idSolicitud', async function (req, res) {
-  const rutaPorId = await solicitudesService.getSoliNumero(res, req);
+  const rutaPorId = await solicitudesService.getSoliNumero(req, res);
   return rutaPorId
 });
 
 router.post('/', async function (req, res) {
-  const rutaCrear = await solicitudesService.postSolicitud(res, req);
+  const rutaCrear = await solicitudesService.postSolicitud(req, res);
   return rutaCrear
 });
 

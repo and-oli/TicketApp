@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var CambiosSolicitudSchema = new Schema({
-    idCambioSolicitud: Number,
+    idCambioSolicitud: { type: Number, unique: true },
     nota: String,
     fechaHora: Date,
     Estado: String,
-    idSolicitud: {
+    idSolicitudCambio: {
         type: Schema.Types.ObjectId,
         ref: 'solicitudes'
     },
@@ -14,10 +14,10 @@ var CambiosSolicitudSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'usuarios'
     },
-    archivos: [{
+    archivos: {
         type: Schema.Types.ObjectId,
         ref: 'archivos'
-    }]
+    }
 });
 
 module.exports = CambiosSolicitudSchema;

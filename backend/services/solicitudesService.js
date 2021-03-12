@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const SolicitudSchema = require('../models/Solicitudes');
 const Solicitudes = mongoose.model('solicitudes', SolicitudSchema);
 
@@ -24,7 +24,7 @@ module.exports = {
     return mostrarSolicitudes;
   },
 
-  getSoliUsuario: async function (res, req) {
+  getSoliUsuario: async function (req, res) {
     const solitudesPorUsuario = (await Solicitudes.find({ idUsuarioMongo: req.params.idUsuarioMongo })
       .populate('idUsuarioMongo').then(solicitudPorUsuario => res.json({
         mensaje: 'Solicitud exitosa...',
@@ -36,12 +36,12 @@ module.exports = {
     return solitudesPorUsuario;
   },
 
-  getSoliNumero: async function (res, req) {
+  getSoliNumero: async function (req, res) {
     const solicitudesPorId = (await Solicitudes.find({ idSolicitud: req.params.idSolicitud })
       .then(solicitudPorId => {
         if (solicitudPorId.length === 0) {
           res.json({
-            mensaje: `No se encontraron solicitudes con ese id: ${req.params.idSolicitud}`,
+            mensaje: `No se encontraron solicitudes con el id: ${req.params.idSolicitud}`,
             ok: false,
           })
         } else {
@@ -57,9 +57,13 @@ module.exports = {
     return solicitudesPorId;
   },
 
-  postSolicitud: async function (res, req) {
+  postSolicitud: async function (req, res) {
+
+    const idUnico = (await Solicitudes.find())
+    let id = idUnico.length + 1
+
     const crearSolicitud = (await Solicitudes.create({
-      idSolicitud: req.body.idSolicitud,
+      idSolicitud: id,
       resumen: req.body.resumen,
       desripcion: req.body.desripcion,
       fechaHora: new Date(),
