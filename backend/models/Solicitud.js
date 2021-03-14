@@ -2,28 +2,35 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var SolicitudSchema = new Schema({
-    idSolicitud:{type:Number, unique:true},
+    idSolicitud: Number,
     resumen: String,
     desripcion: String,
     fechaHora: Date,
     estado: String,
+    abierta: Boolean,
     categoria: String,
-    idUsuarioMongo: {
+    refUsuarioAsignado: {
         type: Schema.Types.ObjectId,
         ref: 'usuarios'
     },
-    idCliente: {
+    refCliente: {
         type: Schema.Types.ObjectId,
         ref: 'clientes'
     },
-    idTarea: {
+    refTarea: {
         type: Schema.Types.ObjectId,
         fer: 'tareas'
     },
-    idProyecto: {
+    refProyecto: {
         type: Schema.Types.ObjectId,
         ref: 'proyectos'
     }
 });
 
-module.exports = SolicitudSchema;
+const nombreModelo = 'solicitudes'   
+
+module.exports = {
+    schema: SolicitudSchema,
+    modelo: mongoose.model(nombreModelo, SolicitudSchema),
+    nombreModelo,
+};

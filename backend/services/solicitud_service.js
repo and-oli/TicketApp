@@ -1,26 +1,27 @@
-const mongoose = require('mongoose')
-const SolicitudSchema = require('../models/Solicitudes');
-const Solicitudes = mongoose.model('solicitudes', SolicitudSchema);
+const ModuloSolicitud = require('../models/Solicitud');
+const Solicitud = ModuloSolicitud.modelo;
 
-function enviarError(error) {
+function enviarError(res, error) {
   console.error(error);
-  return {
+  return res.json({
     mensaje: 'Hubo un error...',
     ok: false,
-  };
+  });
 };
 
 module.exports = {
 
   getSolicitudes: async function (res) {
-    const mostrarSolicitudes = (await Solicitudes.find().then(solicitudes => res.json({
-      mensaje: 'Solicitud exitosa...',
-      ok: true,
-      solicitudes,
-    }))
-      .catch(enviarError)
-    )
-    return mostrarSolicitudes;
+    try {
+      const solicitudes = await Solicitud.find();
+      return  res.json({
+        mensaje: 'Solicitud exitosa...',
+        ok: true,
+        solicitudes,
+      });
+    } catch (error){
+      enviarError(res, error);
+    }
   },
 
   getSoliUsuario: async function (res, req) {
@@ -58,11 +59,10 @@ module.exports = {
 
   postSolicitud: async function (res, req) {
     const crearSolicitud = (await Solicitudes.create({
-      idSolicitud: req.body.idSolicitud,
       resumen: req.body.resumen,
       desripcion: req.body.desripcion,
       fechaHora: new Date(),
-      estado: req.body.estado,
+      estado: 'Sin asignar (abierta)',
       categoria: req.body.categoria,
       idUsuarioMongo: req.body.idUsuarioMongo,
       idCliente: req.body.idCliente,

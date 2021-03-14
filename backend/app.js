@@ -10,9 +10,9 @@ mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: t
 
 const bodyParser = require('body-parser');
 
-const users = require('./routes/users');
-const solicitudes = require('./routes/solicitudes')
-const CambiosSoliciud = require('./routes/apiCambiosSolicitud');
+const users = require('./routes/user');
+const solicitudes = require('./routes/solicitud')
+const CambiosSoliciud = require('./routes/cambio_solicitud');
 
 const app = express();
 
@@ -25,7 +25,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', index);
 app.use('/solicitudes', solicitudes);
 app.use('/users', users);
 app.use('/cambiosSolicitud', CambiosSoliciud);
