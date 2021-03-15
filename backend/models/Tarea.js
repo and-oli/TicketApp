@@ -2,16 +2,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var TareaSchema = new Schema({
-    idTarea: {type:Number,unique:true},
     nombre: String,
-    idProyecto: {
+    refProyecto: {
         type: Schema.Types.ObjectId,
         ref: 'proyectos'
     },
-    idCliente: {
+    refCliente: {
         type: Schema.Types.ObjectId,
         ref: 'clientes'
-    }
+    },
 });
 
-module.exports = TareaSchema;
+const nombreModelo = 'tareas'   
+
+module.exports = {
+    schema: TareaSchema,
+    modelo: mongoose.model(nombreModelo, TareaSchema),
+    nombreModelo,
+};

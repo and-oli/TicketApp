@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const token = require("../services/token");
-const userService = require('../services/userService')
+const token = require("../services/token_service");
+const userService = require('../services/usuario_service')
+
 router.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
@@ -12,19 +13,16 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.post("/", (req, res, next) => token.checkTokenAdmin(req, res, next, true), async function (req, res) {
-  const newUser = await userService.postUser(res, req.body);
-  return newUser;
+router.post("/",  async function (req, res) {
+  return await userService.postUser(res, req.body);
 });
 
 router.post("/editar", token.checkToken, async function (req, res) {
-  const updateUser = await userService.updateUser(res, req.body);
-  return updateUser;
+  return await userService.updateUser(res, req.body);
 });
 
 router.post("/authenticate", async function (req, res) {
-  const validationUser = await token.authorizeUser(res, req.body);
-  return validationUser;
+  return await token.authorizeUser(res, req.body);
 });
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const token = require("../services/token");
-const solicitudesService = require('../services/solicitudesService');
+const token = require("../services/token_service");
+const solicitudesService = require('../services/solicitud_service');
 
 router.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -14,23 +14,19 @@ router.use(function (req, res, next) {
 });
 
 router.get('/', token.checkToken, async function (req, res) {
-  const rutaGeneral = await solicitudesService.getSolicitudes(res);
-  return rutaGeneral
+  return await solicitudesService.getSolicitudes(res);
 });
 
 router.get('/asignadasAUsuario/:idUsuarioMongo', token.checkToken, async function (req, res) {
-  const rutaPorUsuario = await solicitudesService.getSoliUsuario(res, req);
-  return rutaPorUsuario
+  return await solicitudesService.getSoliUsuario(res, req);
 });
 
 router.get('/porNumero/:idSolicitud', token.checkToken, async function (req, res) {
-  const rutaPorId = await solicitudesService.getSoliNumero(res, req);
-  return rutaPorId
+  return await solicitudesService.getSoliNumero(res, req);
 });
 
 router.post('/', token.checkToken, async function (req, res) {
-  const rutaCrear = await solicitudesService.postSolicitud(res, req);
-  return rutaCrear
+  return await solicitudesService.postSolicitud(res, req);
 });
 
 module.exports = router;

@@ -1,8 +1,5 @@
-const mongoose = require('mongoose');
-const CambiosSoliSchema = require('../models/CambiosSolicitudes');
-const Cambios = mongoose.model('cambiosSolicitud', CambiosSoliSchema);
-const SolicitudSchema = require('../models/Solicitudes');
-const Solicitud = mongoose.model('solicitudes', SolicitudSchema);
+const ModuloCambioSolicitud = require('../models/CambioSolicitud');
+const CambioSolicitud = ModuloCambioSolicitud.modelo;
 
 function enviarError(error) {
   res.json({
@@ -15,7 +12,7 @@ function enviarError(error) {
 module.exports = {
 
   postNota: async function (req, res) {
-    const nuevaNota = (await Cambios.create({
+    const nuevaNota = (await CambioSolicitud.create({
       idCambioSolicitud: 1,
       nota: req.body.nota,
       fechaHora: new Date(),
