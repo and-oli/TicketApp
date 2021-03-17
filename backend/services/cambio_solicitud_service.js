@@ -1,29 +1,36 @@
-const ModuloCambioSolicitud = require('../models/CambioSolicitud');
-const CambioSolicitud = ModuloCambioSolicitud.modelo;
-
-function enviarError(error) {
-  res.json({
-    mensaje: 'No se pudo actualizar...',
-    ok: false,
-  });
-  console.log(error);
-};
+const ModuloCambiosSolicitud = require('../models/Cambio_solicitud');
+const CambiosSolicitud = ModuloCambiosSolicitud.modelo;
+const ModuloSolicitud = require('../models/Solicitud');
+const Solicitud = ModuloSolicitud.modelo;
 
 module.exports = {
+  cambio: async function (cambios, res) {
+    if (cambios.estado) {
+      await Solicitud.updateOne({ _id: cambios.refSolicitud }, { estado: cambios.estado })
+    }
+    if (cambios.abierta === false) {
+      await Solicitud.updateOne({ _id: cambios.refSolicitud }, { abierta: cambios.abierta })
+    }
 
-  postNota: async function (req, res) {
-    const nuevaNota = (await CambioSolicitud.create({
-      idCambioSolicitud: 1,
-      nota: req.body.nota,
-      fechaHora: new Date(),
-      idSolicitud: req.body.idSolicitud,
-    }).then(nota => res.json({
-      mensaje: 'Actualización exitosa...',
-      ok: true,
-      actualizacion: nota,
-    })).catch(enviarError)
-    )
-    return nuevaNota;
+    const cambiosSolicitud = new CambiosSolicitud();
+
+    for (let llave in cambios) {
+      if (cambios[llave] !== "") {
+        cambiosSolicitud[llave] = cambios[llave];
+      }
+    }
+    try {
+      await cambiosSolicitud.save()
+      res.json({
+        mensaje: 'Cambios guardado.',
+        ok: true,
+      })
+    } catch (err) {
+      console.error(err);
+      res.json({
+        mensaje: 'Hubo un error.',
+        ok: false,
+      })
+    }
   },
-
-};
+}
