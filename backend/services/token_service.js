@@ -49,7 +49,7 @@ module.exports = {
     };
   },
 
-  authorizeUser: async function (res, user) {
+  authorizeUser: async function (user, res) {
     try {
       const userInfo = await Usuario.find({ username: user.username })
         .select('_id name username password role')
