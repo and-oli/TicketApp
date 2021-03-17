@@ -5,7 +5,7 @@ const Usuario = ModuloUsuario.modelo;
 const bcrypt = require('bcrypt');
 
 module.exports = {
-  postUser: async function (res, user) {
+  postUser: async function (user, res) {
     try {
       const duplicado = await Usuario.findOne({ $or: [{ username: user.username }, { email: user.email }] })
       if (duplicado) {
@@ -39,7 +39,7 @@ module.exports = {
     await Usuario.findOne({ name: user.name });
   },
 
-  updateUser: async function (res, user) {
+  updateUser: async function (user, res) {
 
     const resUser = await this.getUser(user);
 

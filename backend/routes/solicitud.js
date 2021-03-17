@@ -18,15 +18,15 @@ router.get('/', async function (req, res) {
 });
 
 router.get('/asignadasAUsuario/:idUsuarioMongo', async function (req, res) {
-  return await solicitudesService.getSoliUsuario(res, req);
+  return await solicitudesService.getSoliUsuario(req, res);
 });
 
 router.get('/porNumero/:idSolicitud', async function (req, res) {
-  return await solicitudesService.getSoliNumero(res, req);
+  return await solicitudesService.getSoliNumero(req, res);
 });
 
 router.post('/', async function (req, res) {
-  return await solicitudesService.postSolicitud(res, req);
+  return await solicitudesService.postSolicitud(req, res);
 });
 
 module.exports = router;

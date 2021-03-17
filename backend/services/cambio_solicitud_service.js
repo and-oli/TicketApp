@@ -3,6 +3,7 @@ const CambiosSolicitud = ModuloCambiosSolicitud.modelo;
 const ModuloSolicitud = require('../models/Solicitud');
 const Solicitud = ModuloSolicitud.modelo;
 
+
 module.exports = {
   cambio: async function (cambios, res) {
     if (cambios.estado) {

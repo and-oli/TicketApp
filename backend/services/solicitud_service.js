@@ -24,7 +24,7 @@ module.exports = {
     }
   },
 
-  getSoliUsuario: async function (res, req) {
+  getSoliUsuario: async function (req, res) {
     try {
       const solicitudesPorUsuario = await Solicitud.find({ idUsuarioMongo: req.params.idUsuarioMongo })
         .populate('idUsuarioMongo')
@@ -38,7 +38,7 @@ module.exports = {
     }
   },
 
-  getSoliNumero: async function (res, req) {
+  getSoliNumero: async function (req, res) {
     try {
       const solicitudesPorId = await Solicitud.find({ idSolicitud: req.params.idSolicitud })
       if (solicitudesPorId.length === 0) {
@@ -58,7 +58,7 @@ module.exports = {
     }
   },
 
-  postSolicitud: async function (res, req) {
+  postSolicitud: async function (req, res) {
     try {
       const crearSolicitud = await Solicitud.create({
         idSolicitud: req.body.idSolicitud,

@@ -14,15 +14,15 @@ router.use(function (req, res, next) {
 });
 
 router.post('/', async function (req, res) {
-  return await userService.postUser(res, req.body);
+  return await userService.postUser(req.body, res);
 });
 
 router.post('/editar', token.checkToken, async function (req, res) {
-  return await userService.updateUser(res, req.body);
+  return await userService.updateUser(req.body, res);
 });
 
 router.post('/authenticate', async function (req, res) {
-  return await token.authorizeUser(res, req.body);
+  return await token.authorizeUser(req.body, res);
 });
 
 module.exports = router;
