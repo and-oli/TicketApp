@@ -14,19 +14,19 @@ router.use(function (req, res, next) {
 });
 
 router.get('/', async function (req, res) {
-  return await solicitudesService.getSolicitudes(res);
+  await solicitudesService.getSolicitudes(res);
 });
 
 router.get('/asignadasAUsuario/:idUsuarioMongo', async function (req, res) {
-  return await solicitudesService.getSoliUsuario(req, res);
+  await solicitudesService.getSoliUsuario(req, res);
 });
 
 router.get('/porNumero/:idSolicitud', async function (req, res) {
-  return await solicitudesService.getSoliNumero(req, res);
+  await solicitudesService.getSoliNumero(req, res);
 });
 
 router.post('/', async function (req, res) {
-  return await solicitudesService.postSolicitud(req, res);
+  await solicitudesService.postSolicitud(req, res);
 });
 
 module.exports = router;

@@ -7,17 +7,18 @@ const bcrypt = require('bcrypt');
 module.exports = {
   postUser: async function (user, res) {
     try {
-      const duplicado = await Usuario.findOne({ $or: [{ username: user.username }, { email: user.email }] })
+      const duplicado = await Usuario.findOne({ $or: [{ username: user.username }, { email: user.email }] });
       if (duplicado) {
         res.json({ mensaje: 'Correo o username no disponible', ok: false })
       }
-      if (user.refCliente) {
+      if (user.refCLiente) {
         // La cuenta de usuario que se intenta agregar es de tipo CLIENTE.
         // Se debe revisar que el cliente exista en la base de datos
-        const cliente = await Cliente.find({ _id: user.refCLiente })
+        const cliente = await Cliente.findById(user.refCLiente);
         if (!cliente) {
           res.json({ mensaje: 'Cliente no existente.', ok: false })
         }
+
       }
       const newUser = new Usuario();
       newUser.name = user.name;
@@ -25,7 +26,7 @@ module.exports = {
       newUser.username = user.username;
       newUser.password = user.password;
       newUser.role = user.role;
-      newUser.refCliente = user.refCliente;
+      newUser.refCLiente = user.refCLiente;
       await newUser.save();
       res.json({ mensaje: 'Usuario creado correctamente', ok: true })
     } catch (error) {
@@ -39,10 +40,8 @@ module.exports = {
     await Usuario.findOne({ name: user.name });
   },
 
-  updateUser: async function (user, res) {
-
+  validUser: async function (user, res, next) {
     const resUser = await this.getUser(user);
-
     if (!resUser) {
       res.json({ mensaje: 'Usuario incorrecto', ok: false });
     } else {
@@ -50,14 +49,56 @@ module.exports = {
       if (!validPassword) {
         res.json({ mensaje: 'Contraseña incorrecta', ok: false });
       } else {
-        let newPassword = await bcrypt.hash(user.newPassword, 10)
-        const actualizado = await Usuario.updateOne({ name: user.name }, { password: newPassword });
-        if (!actualizado) {
-          res.json({ mensaje: 'La contraseña no pudo ser actualizada', ok: false });
-        } else {
-          res.json({ mensaje: 'La contraseña se actualizó con exito', ok: true });
-        };
+        next()
+      }
+    }
+  },
+
+  updatePassword: async function (user, res) {
+
+    const resUser = await this.getUser(user);
+
+    let newPassword = await bcrypt.hash(user.newPassword, 10)
+    const comparar = bcrypt.compareSync(user.newPassword, resUser.password);
+    if (!comparar) {
+      const actualizado = await Usuario.updateOne({ name: user.name }, { password: newPassword })
+      if (!actualizado.nModified) {
+        res.json({ mensaje: 'La contraseña no pudo ser actualizada', ok: false });
+      } else {
+        res.json({ mensaje: 'La contraseña se actualizó con exito', ok: true });
       };
-    };
-  }
+    } else {
+      res.json({ mensaje: 'Ingresar contraseña diferente.', ok: false })
+    }
+  },
+
+  updateEmail: async function (user, res) {
+    const resUser = await this.getUser(user);
+    if (!resUser) {
+      res.json({ mensaje: 'No se encontro el usuario.' })
+    } else {
+      let newEmail = await Usuario.updateOne({ name: user.name }, { email: user.newEmail })
+      if (!newEmail.nModified) {
+        res.json({ mensaje: 'El e-mail no se pudo actualizar.', ok: false });
+      } else {
+        res.json({ mensaje: 'El e-mail se actualizó con exito', ok: true });
+      };
+
+    }
+  },
+
+  updateUsername: async function (user, res) {
+    const resUser = await this.getUser(user);
+    if (!resUser) {
+      res.json({ mensaje: 'No se encontro el usuario.' })
+    } else {
+      let newUserName = await Usuario.updateOne({ name: user.name }, { username: user.newUserName });
+      if (!newUserName.nModified) {
+        res.json({ mensaje: 'El nombre de usuario no se pudo actualizar.', ok: false });
+      } else {
+        res.json({ mensaje: 'El nombre de usuario se actualizó con exito', ok: true });
+      };
+    }
+  },
+
 };
