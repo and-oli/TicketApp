@@ -6,4 +6,8 @@ router.post('/', async function (req, res) {
   await cambioService.cambio(req.body, res)
 });
 
+router.post('/enviarCorreo',async function (req, res) {
+  await cambioService.enviarCorreo(req.body, res)
+});
+
 module.exports = router;

@@ -1,8 +1,10 @@
-const ModuloCambiosSolicitud = require('../models/Cambio_solicitud');
+const ModuloCambiosSolicitud = require('../models/CambioSolicitud');
 const CambiosSolicitud = ModuloCambiosSolicitud.modelo;
-const ModuloSolicitud = require('../models/Solicitud');
-const Solicitud = ModuloSolicitud.modelo;
-
+const UsuarioSchema = require('../models/Usuario');
+const Usuario = UsuarioSchema.modelo;
+const credencialesDeCorreo = require('../config/config');
+const fetch = require('node-fetch');
+  
 
 module.exports = {
   cambio: async function (cambios, res) {
@@ -33,5 +35,34 @@ module.exports = {
         ok: false,
       })
     }
+  },
+  
+  enviarCorreo: async function (users, res) {
+    // const correosUsuarios = await Usuario.find({_id:[users,'604e300ca0f34b37c07b7c3a']}).select('email');
+    // const emailPorUsuario = []
+    // for(let i = 0; i < correosUsuarios.length; i++){
+    //   emailPorUsuario.push(correosUsuarios[i].email)
+    // }
+    console.log(users)
+    const { emailjsUserId, emailjsTemplateId, emailjsServiceId } = credencialesDeCorreo
+    data = {
+      serviceId: emailjsServiceId,
+      templateId: emailjsTemplateId,
+      userId: emailjsUserId,
+      templateParams: {'email': users.email, 'name': users.name, 'mensaje': users.mensaje },
+    }
+    console.log(data)
+    fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' },
+      contentType: 'application/json'
+    })
+      .then((ok) => {
+        console.log(ok)
+        res.json({ mensaje: 'correo enviado' })
+      })
+      .catch(error =>
+        console.error(error.stack))
   },
 }
