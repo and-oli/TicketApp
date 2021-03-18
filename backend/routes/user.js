@@ -14,26 +14,26 @@ router.use(function (req, res, next) {
 });
 
 router.post('/', async function (req, res) {
-  return await userService.postUser(req.body, res);
+  await userService.postUser(req.body, res);
 });
 
 router.post('/editar/password', token.checkToken, (req, res, next) => userService
   .validUser(req.body, res, next), async function (req, res) {
-    return await userService.updatePassword(req.body, res);
+    await userService.updatePassword(req.body, res);
   });
 
 router.post('/editar/email', token.checkToken, (req, res, next) => userService
   .validUser(req.body, res, next), async function (req, res) {
-    return await userService.updateEmail(req.body, res);
+    await userService.updateEmail(req.body, res);
   });
 
 router.post('/editar/username', token.checkToken, (req, res, next) => userService
   .validUser(req.body, res, next), async function (req, res) {
-    return await userService.updateUsername(req.body, res);
+    await userService.updateUsername(req.body, res);
   });
 
 router.post('/authenticate', async function (req, res) {
-  return await token.authorizeUser(req.body, res);
+  await token.authorizeUser(req.body, res);
 });
 
 module.exports = router;
