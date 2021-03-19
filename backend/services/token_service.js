@@ -32,6 +32,7 @@ module.exports = {
 
   checkToken: function (req, res, next) {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
+
     if (token) {
       jwt.verify(token, secretKey, function (err, decoded) {
         if (err) {
@@ -54,10 +55,10 @@ module.exports = {
       const userInfo = await Usuario.find({ username: user.username })
         .select('_id name username password role')
 
-      if (!userInfo[0]) {
+      const userAuthorize = userInfo[0];
+      if (!userAuthorize) {
         res.json({ mensaje: 'Usuario incorrecto', ok: false });
       } else {
-        const userAuthorize = userInfo[0];
         const password = userAuthorize.comparePassword(user.password);
         if (!password) {
           res.json({ mensaje: 'Contraseña incorrecta', ok: false });
@@ -68,6 +69,7 @@ module.exports = {
             username: userAuthorize.username,
             role: userAuthorize.role,
           }, secretKey, { expiresIn: '24h' });
+          console.log(token)
           res.json({
             mensaje: 'Usuario valido',
             idUsuario: userAuthorize.idUser,

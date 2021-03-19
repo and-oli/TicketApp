@@ -1,4 +1,5 @@
 const ModuloSolicitud = require('../models/Solicitud');
+const Usuario = require('../models/Usuario').modelo;
 const Solicitud = ModuloSolicitud.modelo;
 
 function enviarError(res, error) {
@@ -66,9 +67,11 @@ module.exports = {
         desripcion: req.body.descripcion,
         fechaHora: new Date(),
         estado: 'Sin asignar (abierta)',
+        abierta:true,
         categoria: req.body.categoria,
         refUsuarioAsignado: req.body.refUsuarioAsignado,
         refCliente: req.body.refCliente,
+        usuariosIncumbentes:{refUsuario:[req.decoded.id]}
       })
       res.json({
         mensaje: 'Solicitud creada...',
@@ -78,5 +81,33 @@ module.exports = {
     } catch (error) {
       enviarError(res, error)
     }
+  },
+
+  getUsuariosId:async function(req, res){
+    try{
+      let idUsuarios = [];
+      const refUsuario = await Usuario.find({}).select('_id');
+      if(!refUsuarios){
+        res.json({mensaje:'no hay usuarios'})
+      } else {
+        refUsuario.forEach(idPorUsuario => idUsuarios.push(idPorUsuario._id));
+        res.json({usuarios:idUsuarios});
+      }
+    } catch (error) {
+      console.error(error);
+    };
+  },
+
+  postIncumbentes:async function(req, res){
+    try{
+      await Solicitud.updateOne({idSolicitud:req.params.idSolicitud},{
+        $addToSet:{
+      listaIncumbentes:[refUsuario],
+      }
+    });
+    
+    } catch (error) {
+      console.error(error)
+    };
   },
 };

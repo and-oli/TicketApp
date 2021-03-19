@@ -33,7 +33,7 @@ router.post('/editar/username', token.checkToken, (req, res, next) => userServic
   });
 
 router.post('/authenticate', async function (req, res) {
-  await token.authorizeUser(req.body, res);
+    await token.authorizeUser(req.body, res);
 });
 
 module.exports = router;

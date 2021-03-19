@@ -13,20 +13,27 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.get('/', async function (req, res) {
+router.get('/', token.checkToken, async function (req, res) {
   await solicitudesService.getSolicitudes(res);
 });
 
-router.get('/asignadasAUsuario/:idUsuarioMongo', async function (req, res) {
+router.get('/asignadasAUsuario/:idUsuarioMongo', token.checkToken, async function (req, res) {
   await solicitudesService.getSoliUsuario(req, res);
 });
 
-router.get('/porNumero/:idSolicitud', async function (req, res) {
+router.get('/porNumero/:idSolicitud', token.checkToken, async function (req, res) {
   await solicitudesService.getSoliNumero(req, res);
 });
 
-router.post('/', async function (req, res) {
+router.post('/', token.checkToken, async function (req, res) {
   await solicitudesService.postSolicitud(req, res);
+});
+router.post('/relacionarUsuario/:idSolicitud', token.checkToken, async function (req, res) {
+  await solicitudesService.postIncumbentes(req, res);
+});
+
+router.get('/usuariosARelacionar', token.checkToken, async function (req, res) {
+  await solicitudesService.getUsuariosId(req, res);
 });
 
 module.exports = router;
