@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-var SolicitudSchema = new Schema({
+const SolicitudSchema = new Schema({
     idSolicitud: Number,
     resumen: String,
     desripcion: String,
@@ -9,6 +9,7 @@ var SolicitudSchema = new Schema({
     estado: String,
     abierta: Boolean,
     categoria: String,
+    listaIncumbentes:[{type:String, unique:true, ref:'usuarios'}],
     refUsuarioAsignado: {
         type: Schema.Types.ObjectId,
         ref: 'usuarios'

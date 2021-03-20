@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import "./styles/Login.css";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React, { useState } from 'react';
+import './styles/Login.css';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default function Login() {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState({ text: "", color: "green" });
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState({ text: '', color: 'green' });
   const [loading, setloading] = useState(false);
 
   function userChange(event) {
@@ -22,14 +22,14 @@ export default function Login() {
     if (!loading) {
       setloading(true);
       let user = {
-        name: userName,
+        username: userName,
         password: password,
       };
-      fetch("http://localhost:3000/users/find", {
-        method: "post",
+      fetch('http://localhost:3000/users/authenticate', {
+        method: 'post',
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
       })
@@ -37,9 +37,9 @@ export default function Login() {
         .then((res) => {
           setloading(false);
           if (res.ok) {
-            setMessage({ text: res.mensaje, color: "green" });
+            setMessage({ text: res.mensaje, color: 'green' });
           } else {
-            setMessage({ text: res.mensaje, color: "red" });
+            setMessage({ text: res.mensaje, color: 'red' });
           }
         });
     }
@@ -47,27 +47,27 @@ export default function Login() {
 
   return (
     <div>
-      <div className="image">
-        <img className="logo" src={process.env.PUBLIC_URL + '/logoComsistelco.jpg'} alt="Logo comsistelco" />
+      <div className='image'>
+        <img className='logo' src={process.env.PUBLIC_URL + '/logoComsistelco.png'} alt='Logo comsistelco' />
       </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div className="login-container">
-          <h2 className="title">Iniciar Sesión</h2>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className='login-container'>
+          <h2 className='title'>Iniciar Sesión</h2>
           <div>
-            <form className="container-title" onSubmit={handleSubmit}>
+            <form className='container-title' onSubmit={handleSubmit}>
               <TextField
-                type="text"
-                label="E-mail"
-                style={{ width: 200, alignSelf: "center" }}
-                size="small"
+                type='text'
+                label='E-mail'
+                style={{ width: 200, alignSelf: 'center' }}
+                size='small'
                 value={userName}
                 onChange={userChange}
                 required
               />
               <TextField
-                type="password"
-                label="Contraseña"
-                style={{ width: 200, alignSelf: "center" }}
+                type='password'
+                label='Contraseña'
+                style={{ width: 200, alignSelf: 'center' }}
                 value={password}
                 onChange={passwordChange}
                 required
@@ -77,18 +77,18 @@ export default function Login() {
               </h6>
               {loading ? (
                 <CircularProgress
-                  style={{ width: 40, alignSelf: "center", marginTop: 30 }}
+                  style={{ width: 40, alignSelf: 'center', marginTop: 30 }}
                   disableShrink
                 />
               ) : (
                 <Button
-                  variant="contained"
-                  type="submit"
-                  color="default"
+                  variant='contained'
+                  type='submit'
+                  color='default'
                   style={{
                     width: 130,
                     fontSize: 10,
-                    alignSelf: "center",      
+                    alignSelf: 'center',      
                     marginTop: 30,
                   }}
                 >

@@ -9,14 +9,14 @@ module.exports = {
     try {
       const duplicado = await Usuario.findOne({ $or: [{ username: user.username }, { email: user.email }] });
       if (duplicado) {
-        return res.json({ mensaje: 'Correo o username no disponible', ok: false })
+        res.json({ mensaje: 'Correo o username no disponible', ok: false })
       }
       if (user.refCLiente) {
         // La cuenta de usuario que se intenta agregar es de tipo CLIENTE.
         // Se debe revisar que el cliente exista en la base de datos
         const cliente = await Cliente.findById(user.refCLiente);
         if (!cliente) {
-          return res.json({ mensaje: 'Cliente no existente.', ok: false })
+          res.json({ mensaje: 'Cliente no existente.', ok: false })
         }
 
       }
@@ -28,16 +28,16 @@ module.exports = {
       newUser.role = user.role;
       newUser.refCLiente = user.refCLiente;
       await newUser.save();
-      return res.json({ mensaje: 'Usuario creado correctamente', ok: true })
+      res.json({ mensaje: 'Usuario creado correctamente', ok: true })
     } catch (error) {
       console.error(error)
-      return res.json({ mensaje: 'El usuario no pudo ser creado', ok: false });
+      res.json({ mensaje: 'El usuario no pudo ser creado', ok: false });
     }
 
   },
 
   getUser: async function (user) {
-    return await Usuario.findOne({ name: user.name });
+    await Usuario.findOne({ name: user.name });
   },
 
   validUser: async function (user, res, next) {
