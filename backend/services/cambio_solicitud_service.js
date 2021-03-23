@@ -29,7 +29,6 @@ module.exports = {
         cambiosSolicitud[llave] = cambios[llave];
       }
     }
-    console.log(resultadoSolicitud)
     await this.enviarCorreo(req, resultadoSolicitud, cambios.nota);
 
     try {
@@ -49,14 +48,13 @@ module.exports = {
 
   enviarCorreo: async function (req, cambios, nota) {
     let incumbentes = [];
-    let emails = [];
+
     const solicitud = await Solicitud.findOne({ _id: req.params.idSolicitud })
       .select('listaIncumbentes');
     incumbentes = solicitud.listaIncumbentes;
 
     const emailUsuarios = await Usuario.find({ _id: incumbentes }).select('email');
-
-    emailUsuarios.forEach(usuario => emails.push(usuario.email));
+    const emails = emailUsuarios.map(usuario => usuario.email);
     const { emailjsUserId, emailjsTemplateId, emailjsServiceId } = credencialesDeCorreo
 
     data = {
@@ -68,7 +66,7 @@ module.exports = {
         'title': 'Hubo un cambio en la solicitud:',
         'nota': nota,
         'cambios': Object.values(cambios),
-        'bcc' : emails[1]
+        'bcc': emails
       }
 
     }
@@ -78,9 +76,6 @@ module.exports = {
       headers: { 'Content-Type': 'application/json' },
       contentType: 'application/json'
     })
-      .then((ok) => {
-
-      })
       .catch(error =>
         console.error(error.stack))
   },

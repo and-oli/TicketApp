@@ -82,27 +82,12 @@ module.exports = {
       enviarError(res, error)
     }
   },
-
-  getUsuariosId:async function(req, res){
-    try{
-      let idUsuarios = [];
-      const refUsuario = await Usuario.find({}).select('_id');
-      if(!refUsuarios){
-        res.json({mensaje:'no hay usuarios'})
-      } else {
-        refUsuario.forEach(idPorUsuario => idUsuarios.push(idPorUsuario._id));
-        res.json({usuarios:idUsuarios});
-      }
-    } catch (error) {
-      console.error(error);
-    };
-  },
-
+  
   postIncumbentes:async function(req, res){
     try{
-      await Solicitud.updateOne({idSolicitud:req.params.idSolicitud},{
+      await Solicitud.updateOne({_id:req.params.idSolicitud},{
         $addToSet:{
-      listaIncumbentes:[refUsuario],
+      listaIncumbentes:req.body.nuevosIncumbentes,
       }
     });
     

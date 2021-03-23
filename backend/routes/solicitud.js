@@ -32,8 +32,4 @@ router.post('/relacionarUsuario/:idSolicitud', token.checkToken, async function 
   await solicitudesService.postIncumbentes(req, res);
 });
 
-router.get('/usuariosARelacionar', token.checkToken, async function (req, res) {
-  await solicitudesService.getUsuariosId(req, res);
-});
-
 module.exports = router;
