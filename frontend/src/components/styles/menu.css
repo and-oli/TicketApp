@@ -1,0 +1,32 @@
+.container{
+  display: flex;
+  position: absolute;
+  flex-wrap: wrap;
+  flex-direction: column;
+  height: auto;
+  width: auto;
+}
+
+.container nav{
+  display: flex;
+  flex-direction: column; 
+  font-size: 10px;
+  width: 100%;
+}
+.form{
+  display: flex; 
+  height: 100px;
+  width: 100%;
+}
+
+.form label{
+  display: flex;
+  padding-left: 10%;
+  font-size: 72%;
+}
+
+.form div{
+  display: flex;
+  align-self: center;
+  width: 90%;
+}
