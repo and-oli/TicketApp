@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "../Header";
+import Header from "../header";
 import Menu from "../menu";
 import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
