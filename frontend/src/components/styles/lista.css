@@ -1,0 +1,32 @@
+#container-padre{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-left: 400px;
+    margin-top: 150px;
+    width: auto;
+}
+.acordion-h{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+#typography{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100%;
+}
+
+#panel1a-header {
+  display: flex;
+  background-color: black;
+  border-radius: 2px;
+  color: white;
+}
+
+#panel1a-header #flecha {
+  display: flex;
+  color: white;
+}

@@ -36,4 +36,8 @@ router.post('/authenticate', async function (req, res) {
     await token.authorizeUser(req.body, res);
 });
 
+router.get('/clientes', token.checkToken, async function (req, res) {
+  await userService.getClientes(res);
+});
+
 module.exports = router;

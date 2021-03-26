@@ -14,7 +14,7 @@ module.exports = {
 
   getSolicitudes: async function (res) {
     try {
-      const solicitudes = await Solicitud.find();
+      const solicitudes = await Solicitud.find({});
       res.json({
         mensaje: 'Solicitud exitosa...',
         ok: true,
@@ -60,37 +60,39 @@ module.exports = {
   },
 
   postSolicitud: async function (req, res) {
+    const fecha = new Date()
     try {
-      const crearSolicitud = await Solicitud.create({
-        idSolicitud: req.body.idSolicitud,
-        resumen: req.body.resumen,
-        desripcion: req.body.descripcion,
-        fechaHora: new Date(),
-        estado: 'Sin asignar (abierta)',
-        abierta:true,
-        categoria: req.body.categoria,
-        refUsuarioAsignado: req.body.refUsuarioAsignado,
-        refCliente: req.body.refCliente,
-        usuariosIncumbentes:{refUsuario:[req.decoded.id]}
-      })
+      const idSolicitud = await Solicitud.find({})
+      const newSolicitud = new Solicitud()
+      newSolicitud.idSolicitud = idSolicitud.length + 1;
+      newSolicitud.resumen = req.body.resumen;
+      newSolicitud.desripcion = req.body.descripcion;
+      newSolicitud.fechaHora = fecha.getDay() + '/' + fecha.getMonth() + '/' + fecha.getFullYear() + '     ' + fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
+      newSolicitud.estado = 'Sin asignar (abierta)';
+      newSolicitud.abierta = true;
+      newSolicitud.categoria = req.body.categoria;
+      newSolicitud.refUsuarioAsignado = req.body.refUsuarioAsignado;
+      newSolicitud.refCliente = req.body.refCliente;
+      newSolicitud.listaIncumbentes = [req.decoded.id];
+      await newSolicitud.save()
       res.json({
         mensaje: 'Solicitud creada...',
         ok: true,
-        solicitud: crearSolicitud,
+        solicitud: newSolicitud,
       })
     } catch (error) {
       enviarError(res, error)
     }
   },
-  
-  postIncumbentes:async function(req, res){
-    try{
-      await Solicitud.updateOne({_id:req.params.idSolicitud},{
-        $addToSet:{
-      listaIncumbentes:req.body.nuevosIncumbentes,
-      }
-    });
-    
+
+  postIncumbentes: async function (req, res) {
+    try {
+      await Solicitud.updateOne({ _id: req.params.idSolicitud }, {
+        $addToSet: {
+          listaIncumbentes: req.body.nuevosIncumbentes,
+        }
+      });
+
     } catch (error) {
       console.error(error)
     };

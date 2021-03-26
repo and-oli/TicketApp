@@ -32,10 +32,10 @@ module.exports = {
 
   checkToken: function (req, res, next) {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
-
     if (token) {
       jwt.verify(token, secretKey, function (err, decoded) {
         if (err) {
+          console.log(err)
           res.status(403).send({ success: false, message: 'Error de autenticación, por favor refresque la aplicación.', });
         } else {
           req.decoded = decoded;
@@ -69,7 +69,6 @@ module.exports = {
             username: userAuthorize.username,
             role: userAuthorize.role,
           }, secretKey, { expiresIn: '24h' });
-          console.log(token)
           res.json({
             mensaje: 'Usuario valido',
             idUsuario: userAuthorize.idUser,

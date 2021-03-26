@@ -36,9 +36,7 @@ export default class CreateSolicitud extends React.Component {
     })
       .then((res) => res.json())
       .then((getClientes) => {
-        let lista = [];
-        getClientes.clientes.map((infoCliente) => lista.push(infoCliente));
-        this.setState({ listaClientes: lista });
+        this.setState({ listaClientes: getClientes.clientes });
       });
   }
 
@@ -53,8 +51,8 @@ export default class CreateSolicitud extends React.Component {
     for (let info in state) {
       if (state[info] !== state.listaClientes) {
         data[info] = state[info];
-      };
-    };
+      }
+    }
     fetch("http://localhost:3000/solicitudes", {
       method: "POST",
       body: JSON.stringify(data),
@@ -67,14 +65,16 @@ export default class CreateSolicitud extends React.Component {
       .then((res) => res.json())
       .then((json) => {});
     event.preventDefault();
-  };
+  }
 
   render() {
     function renderizarClientes(lista) {
       return lista.map((cliente) => (
-        <option key={cliente.nombre} value={cliente._id}>{cliente.nombre}</option>
+        <option key={cliente.nombre} value={cliente._id}>
+          {cliente.nombre}
+        </option>
       ));
-    };
+    }
     return (
       <div>
         <Header />
@@ -215,5 +215,5 @@ export default class CreateSolicitud extends React.Component {
         </form>
       </div>
     );
-  };
-};
+  }
+}
