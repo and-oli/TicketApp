@@ -37,6 +37,7 @@ export default function Login() {
         .then((res) => {
           setloading(false);
           if (res.ok) {
+            localStorage.setItem("TAToken", res.token);
             setMessage({ text: res.mensaje, color: 'green' });
           } else {
             setMessage({ text: res.mensaje, color: 'red' });

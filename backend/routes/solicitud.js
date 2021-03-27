@@ -26,14 +26,12 @@ router.get('/porNumero/:idSolicitud', token.checkToken, async function (req, res
 });
 
 router.post('/', token.checkToken, async function (req, res) {
+  console.log(req.body)
   await solicitudesService.postSolicitud(req, res);
 });
+
 router.post('/relacionarUsuario/:idSolicitud', token.checkToken, async function (req, res) {
   await solicitudesService.postIncumbentes(req, res);
-});
-
-router.get('/usuariosARelacionar', token.checkToken, async function (req, res) {
-  await solicitudesService.getUsuariosId(req, res);
 });
 
 module.exports = router;

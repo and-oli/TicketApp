@@ -100,5 +100,16 @@ module.exports = {
       };
     }
   },
-
+  getClientes: async function (res) {
+    try {
+      const clientes = await Cliente.find({})
+      res.json({
+        mensaje: 'Solicitud exitosa...',
+        ok: true,
+        clientes,
+      })
+    } catch (error) {
+      enviarError(res, error)
+    }
+  },
 };

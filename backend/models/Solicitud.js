@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const SolicitudSchema = new Schema({
-    idSolicitud: Number,
+    idSolicitud: {type:Number, unique:true},
     resumen: String,
     desripcion: String,
     fechaHora: Date,
     estado: String,
     abierta: Boolean,
     categoria: String,
-    listaIncumbentes:[{type:String, unique:true, ref:'usuarios'}],
+    listaIncumbentes:[{type:Schema.Types.ObjectId, ref:'usuarios', unique:false}],
     refUsuarioAsignado: {
         type: Schema.Types.ObjectId,
         ref: 'usuarios'
