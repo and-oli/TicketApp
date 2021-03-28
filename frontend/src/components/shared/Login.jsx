@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './styles/Login.css';
+import '../styles/Login.css';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -38,6 +38,8 @@ export default function Login() {
           setloading(false);
           if (res.ok) {
             localStorage.setItem("TAToken", res.token);
+            localStorage.setItem("TAAdmin", res.amin);
+            window.location.reload();
             setMessage({ text: res.mensaje, color: 'green' });
           } else {
             setMessage({ text: res.mensaje, color: 'red' });

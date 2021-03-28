@@ -1,17 +1,3 @@
-#container-padre{
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    margin-left: 400px;
-    margin-top: 150px;
-    width: auto;
-}
-.acordion-h{
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-}
-
 #typography{
     display: flex;
     flex-wrap: wrap;

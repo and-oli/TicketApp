@@ -4,9 +4,9 @@ import Menu from "../menu";
 import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import TextField from "@material-ui/core/TextField";
-import "../styles/createSolicitud.css";
+import "../styles/EnviarSolicitud.css";
 
-export default class CreateSolicitud extends React.Component {
+export default class EnviarSolicitud extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
