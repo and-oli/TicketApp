@@ -1,6 +1,4 @@
 import React from "react";
-import Header from "../header";
-import Menu from "../menu";
 import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import TextField from "@material-ui/core/TextField";
@@ -77,9 +75,7 @@ export default class EnviarSolicitud extends React.Component {
     }
     return (
       <div>
-        <Header />
-        <Menu />
-        <div className="title">
+        <div className="title-envio">
           <p>Introduzca los detalles de la solicitud</p>
         </div>
         <form onSubmit={this.enviarSolicitud}>
@@ -213,7 +209,7 @@ export default class EnviarSolicitud extends React.Component {
             <input type="submit" value="Enviar solicitud" />
           </div>
         </form>
-      </div>
+        </div>
     );
   }
 }

@@ -60,7 +60,7 @@ export default function Login() {
             <form className='container-title' onSubmit={handleSubmit}>
               <TextField
                 type='text'
-                label='E-mail'
+                label='Usuario'
                 style={{ width: 200, alignSelf: 'center' }}
                 size='small'
                 value={userName}

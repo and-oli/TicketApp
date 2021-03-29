@@ -8,21 +8,22 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
+import { Link } from "react-router-dom";
 import "../styles/Menu.css";
 
 class Menu extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      listaProyectos:[]
-    }
+      listaProyectos: [],
+    };
   }
 
   render() {
     return (
       <div className="container">
         <List component="nav" aria-label="main mailbox folders">
-          <ListItem button>
+          <ListItem button component={Link} to={`/`}>
             <ListItemIcon>
               <img
                 alt="icon"
@@ -33,10 +34,10 @@ class Menu extends React.Component {
             <ListItemText
               component="p"
               className="button-label"
-              primary="Mi vista"
+              primary="Solicitudes"
             />
           </ListItem>
-          <ListItem button>
+          <ListItem button component={Link} to={`/nueva-solicitud`}>
             <ListItemIcon>
               <img
                 alt="icon"
@@ -60,7 +61,7 @@ class Menu extends React.Component {
         </List>
       </div>
     );
-  };
-};
+  }
+}
 
 export default Menu;
