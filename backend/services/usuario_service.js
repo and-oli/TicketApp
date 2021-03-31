@@ -36,12 +36,21 @@ module.exports = {
 
   },
 
-  getUser: async function (user) {
+  getUserTecnicos:async function (req, res) {
+    const tecnicos = await Usuario.find({role:'tecnico'});
+    if(!tecnicos){
+      res.json({ mensaje: 'no hay tecnicos', ok: false });
+    } else {
+      res.json({ mensaje: 'solicitud exitosa', tecnicos, ok: false });
+    }
+  },
+
+  getUserByUserName: async function (user) {
     await Usuario.findOne({ name: user.name });
   },
 
   validUser: async function (user, res, next) {
-    const resUser = await this.getUser(user);
+    const resUser = await this.getUserByUserName(user);
     if (!resUser) {
       res.json({ mensaje: 'Usuario incorrecto', ok: false });
     } else {
@@ -56,7 +65,7 @@ module.exports = {
 
   updatePassword: async function (user, res) {
 
-    const resUser = await this.getUser(user);
+    const resUser = await this.getUserByUserName(user);
 
     let newPassword = await bcrypt.hash(user.newPassword, 10)
     const comparar = bcrypt.compareSync(user.newPassword, resUser.password);
@@ -73,7 +82,7 @@ module.exports = {
   },
 
   updateEmail: async function (user, res) {
-    const resUser = await this.getUser(user);
+    const resUser = await this.getUserByUserName(user);
     if (!resUser) {
       res.json({ mensaje: 'No se encontro el usuario.' })
     } else {
@@ -88,7 +97,7 @@ module.exports = {
   },
 
   updateUsername: async function (user, res) {
-    const resUser = await this.getUser(user);
+    const resUser = await this.getUserByUserName(user);
     if (!resUser) {
       res.json({ mensaje: 'No se encontro el usuario.' })
     } else {

@@ -8,19 +8,39 @@ const fetch = require('node-fetch');
 
 
 module.exports = {
+
+  getCambiosPorSolicitud: async function (req, res) {
+
+    const cambios = await CambiosSolicitud.find({ refSolicitud: req.params.idSolicitud })
+      .populate('refUsuario');
+    if (!cambios) {
+      res.json({ mensaje: 'No hay cambios', ok: false });
+    } else {
+      res.json({ mensaje: 'Cambios', cambios, ok: true })
+    };
+  },
+
   cambio: async function (req, res) {
 
     const cambios = req.body;
-
     const resultadoSolicitud = {};
     if (cambios.abierta !== undefined) {
       resultadoSolicitud.abierta = cambios.abierta;
     };
-    if (cambios.estado) {
-      resultadoSolicitud.estado = cambios.estado;
-    };
+    if (cambios.refUsuarioAsignado) {
+      resultadoSolicitud.refUsuarioAsignado = cambios.refUsuarioAsignado;
+      resultadoSolicitud.$addToSet = {
+        listaIncumbentes: {
+          $each: [cambios.refUsuarioAsignado]
+        }
+      };
+      resultadoSolicitud.estado = 'Asignada';
+      cambios.estado = 'Asignada';
+    }
 
-    await Solicitud.updateOne({ _id: req.params.idSolicitud }, resultadoSolicitud);
+    cambios.refUsuario = req.decoded.id
+
+    await Solicitud.updateOne({ idSolicitud: req.params.idSolicitud }, resultadoSolicitud);
 
     const cambiosSolicitud = new CambiosSolicitud();
 
@@ -30,11 +50,10 @@ module.exports = {
       }
     }
     await this.enviarCorreo(req, resultadoSolicitud, cambios.nota);
-
     try {
       await cambiosSolicitud.save();
       res.json({
-        mensaje: 'Cambios guardado.',
+        mensaje: 'Cambios guardados.',
         ok: true,
       });
     } catch (err) {
@@ -50,13 +69,13 @@ module.exports = {
     let incumbentes = [];
 
     try {
-      const solicitud = await Solicitud.findOne({ _id: req.params.idSolicitud })
+      const solicitud = await Solicitud.findOne({ idSolicitud: req.params.idSolicitud })
         .select('listaIncumbentes');
       incumbentes = solicitud.listaIncumbentes;
 
       const emailUsuarios = await Usuario.find({ _id: incumbentes }).select('email');
       const emails = emailUsuarios.map(usuario => usuario.email);
-      const { emailjsUserId, emailjsTemplateId, emailjsServiceId } = credencialesDeCorreo
+      const { emailjsUserId, emailjsTemplateId, emailjsServiceId } = credencialesDeCorreo;
 
       data = {
         service_id: emailjsServiceId,
@@ -79,6 +98,6 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-    }
+    };
   },
 }

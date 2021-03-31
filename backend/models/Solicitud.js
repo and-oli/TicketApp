@@ -7,6 +7,7 @@ const SolicitudSchema = new Schema({
     desripcion: String,
     fechaHora: Date,
     estado: String,
+    prioridad:String,
     abierta: Boolean,
     categoria: String,
     listaIncumbentes:[{type:Schema.Types.ObjectId, ref:'usuarios', unique:false}],

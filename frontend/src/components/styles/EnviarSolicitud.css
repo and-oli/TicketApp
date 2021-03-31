@@ -1,66 +1,64 @@
-.container-p{
+.container-p {
   display: flex;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
   justify-content: center;
   width: 100%;
   height: auto;
 }
-.container-p input{
-  display:flex;
-  justify-content: center;
-  border-radius: 2px solid;
-  width: 15%; 
-  height:40px;
-}
-.container-a{
+.container-a {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   height: 650px;
   width: 800px;
 }
-.container-b{
+.container-b {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   height: 650px;
   width: 800px;
 }
-.title-envio{
+.title-envio {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   width: auto;
   height: auto;
 }
-.title-envio p{
+.title-envio p {
   display: flex;
   border-radius: 5px;
   background-color: black;
   color: white;
   padding: 5px;
 }
-.button{
+.button {
   display: flex;
-  width: 100%;
+  width: 95%;
   justify-content: center;
 }
 
-.button input{
+.button .button-enviar {
   height: 35px;
-  width: 130px;
+  width: 190px;
   font-size: 15px;
   color: white;
-  background-color:rgb(0, 0, 0);
+  background-color: rgb(0, 0, 0);
   border: darkgrey;
   border-radius: 2px;
 }
 
-.form-control{
+
+.form-control {
   margin: 1px;
   width: 90%;
   align-self: center;
 }
-.select-empty{
-  margin-top:2px;
+.select-empty {
+  margin-top: 2px;
+}
+
+.button-enviar-solicitud{
+  background-color: black;
 }

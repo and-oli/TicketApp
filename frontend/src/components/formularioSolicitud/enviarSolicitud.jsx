@@ -1,13 +1,14 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import TextField from "@material-ui/core/TextField";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Button from "@material-ui/core/Button";
 import "../styles/EnviarSolicitud.css";
 
-export default class EnviarSolicitud extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+export default function EnviarSolicitud (){
+  const [loading, setloading] = useState(false);
+  const [state, setState] = useState( {
       refCliente: "",
       prioridad: "",
       resumen: "",
@@ -18,14 +19,9 @@ export default class EnviarSolicitud extends React.Component {
       requerimiento: "",
       categoria: "",
       subCategoria: "",
-      listaClientes: [],
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.enviarSolicitud = this.enviarSolicitud.bind(this);
-  }
-
-  componentDidMount() {
+    });
+  const [listaClientes, setListaClientes] = useState([])
+  useEffect(() => {
     fetch("http://localhost:3000/users/clientes", {
       method: "GET",
       headers: {
@@ -34,17 +30,16 @@ export default class EnviarSolicitud extends React.Component {
     })
       .then((res) => res.json())
       .then((getClientes) => {
-        this.setState({ listaClientes: getClientes.clientes });
+        setListaClientes(getClientes.clientes);
       });
-  }
+  }, [])
 
-  handleChange(event) {
+  const handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    setState((prevState) => ({ ...prevState, [name]: value }));
   }
 
-  enviarSolicitud(event) {
-    const state = this.state;
+  const enviarSolicitud = (event) => {
     let data = {};
     for (let info in state) {
       if (state[info] !== state.listaClientes) {
@@ -61,11 +56,14 @@ export default class EnviarSolicitud extends React.Component {
       },
     })
       .then((res) => res.json())
-      .then((json) => {});
+      .then((json) => {
+        setloading(true);
+        if (json.ok) {
+          window.location.reload();
+        }
+      });
     event.preventDefault();
   }
-
-  render() {
     function renderizarClientes(lista) {
       return lista.map((cliente) => (
         <option key={cliente.nombre} value={cliente._id}>
@@ -78,25 +76,25 @@ export default class EnviarSolicitud extends React.Component {
         <div className="title-envio">
           <p>Introduzca los detalles de la solicitud</p>
         </div>
-        <form onSubmit={this.enviarSolicitud}>
+        <form onSubmit={enviarSolicitud}>
           <div className="container-p">
             <div className="container-a">
               <FormControl className="form-control">
                 <NativeSelect
-                  value={this.state.refCliente}
+                  value={state.refCliente}
                   name="refCliente"
-                  onChange={this.handleChange}
+                  onChange={handleChange}
                   className="select-empty"
                 >
                   <option value="">Cliente</option>
-                  {renderizarClientes(this.state.listaClientes)}
+                  {renderizarClientes(listaClientes)}
                 </NativeSelect>
               </FormControl>
               <FormControl className="form-control">
                 <NativeSelect
-                  value={this.state.prioridad}
+                  value={state.prioridad}
                   name="prioridad"
-                  onChange={this.handleChange}
+                  onChange={handleChange}
                   className="select-empty"
                 >
                   <option value="Prioridad">Prioridad</option>
@@ -110,9 +108,9 @@ export default class EnviarSolicitud extends React.Component {
               </FormControl>
               <FormControl className="form-control">
                 <NativeSelect
-                  value={this.state.requerimiento}
+                  value={state.requerimiento}
                   name="requerimiento"
-                  onChange={this.handleChange}
+                  onChange={handleChange}
                   className="select-empty"
                 >
                   <option value="">Tipo de requerimiento</option>
@@ -122,9 +120,9 @@ export default class EnviarSolicitud extends React.Component {
               </FormControl>
               <FormControl className="form-control">
                 <NativeSelect
-                  value={this.state.categoria}
+                  value={state.categoria}
                   name="categoria"
-                  onChange={this.handleChange}
+                  onChange={handleChange}
                   className="select-empty"
                 >
                   <option value="">Categorias</option>
@@ -158,9 +156,9 @@ export default class EnviarSolicitud extends React.Component {
               </FormControl>
               <FormControl className="form-control">
                 <NativeSelect
-                  value={this.state.subCategoria}
+                  value={state.subCategoria}
                   name="subCategoria"
-                  onChange={this.handleChange}
+                  onChange={handleChange}
                   className="select-empty"
                 >
                   <option value="">Sub Categorias</option>
@@ -170,33 +168,33 @@ export default class EnviarSolicitud extends React.Component {
             </div>
             <div className="container-b">
               <TextField
-                value={this.state.correo}
+                value={state.correo}
                 label="Correo"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 name="correo"
                 className="form-control"
                 variant="outlined"
               />
               <TextField
-                value={this.state.ciudad}
+                value={state.ciudad}
                 label="Ciudad"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 name="ciudad"
                 className="form-control"
                 variant="outlined"
               />
               <TextField
-                value={this.state.resumen}
+                value={state.resumen}
                 label="Resumen"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 name="resumen"
                 className="form-control"
                 variant="outlined"
               />
               <TextField
-                value={this.state.descripcion}
+                value={state.descripcion}
                 label="Descripcion"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 name="descripcion"
                 className="form-control"
                 variant="outlined"
@@ -206,10 +204,24 @@ export default class EnviarSolicitud extends React.Component {
             </div>
           </div>
           <div className="button">
-            <input type="submit" value="Enviar solicitud" />
+          {loading ? (
+          <CircularProgress
+            color='action'
+            className='icon-enviar'
+            disableShrink
+          />
+        ) : (
+          <Button
+            variant="contained"
+            type="submit"
+            component="button"
+            className="button-enviar"
+          >
+            <p className="button-p">Enviar solicitud</p>
+          </Button>
+        )}
           </div>
         </form>
         </div>
     );
   }
-}

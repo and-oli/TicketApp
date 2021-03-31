@@ -1,8 +1,8 @@
-#typography{
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    width: 100%;
+#typography {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 100%;
 }
 
 #panel1a-header {

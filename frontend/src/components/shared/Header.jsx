@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRoot: {
     color: "inherit",
+    marginLeft: 10,
     width: "100%",
   },
   inputInput: {

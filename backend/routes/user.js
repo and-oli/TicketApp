@@ -40,4 +40,8 @@ router.get('/clientes', token.checkToken, async function (req, res) {
   await userService.getClientes(res);
 });
 
+router.get('/', token.checkToken, async function (req, res){
+  await userService.getUserTecnicos(req, res)
+})
+
 module.exports = router;

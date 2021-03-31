@@ -1,0 +1,13 @@
+.container-padre-cambios{
+  display:flex;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 5px;
+  line-height:5px;
+  width:400px;
+  height: auto;
+  border-radius: 2px;
+  border: 1px solid rgba(5, 47, 92, 0.645);
+}

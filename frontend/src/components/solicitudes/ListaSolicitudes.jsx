@@ -1,5 +1,4 @@
 import React from "react";
-import Typography from "@material-ui/core/Typography";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -23,7 +22,6 @@ export default function ListaSolicitudes() {
       .then((res) => res.json())
       .then((getSolicitudes) => {
         setListaSolicitudes(getSolicitudes.solicitudes);
-        console.log(listaSolicitudes);
       });
   }, []);
 
@@ -47,26 +45,22 @@ export default function ListaSolicitudes() {
   };
   return (
     <div>
-      <div id="container-padre">
-        <Typography id="typography">
-          <TableContainer component={Paper}>
-            <Table id="table" size="small" aria-label="a dense table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Número de solicitud</TableCell>
-                  <TableCell align="center">Cliente</TableCell>
-                  <TableCell align="center">Estado</TableCell>
-                  <TableCell align="center">Prioridad</TableCell>
-                  <TableCell align="center">Resumen</TableCell>
-                  <TableCell align="center">Fecha</TableCell>
-                  <TableCell align="center"></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>{renderizarInfoSolicitudes()}</TableBody>
-            </Table>
-          </TableContainer>
-        </Typography>
-      </div>
+      <TableContainer component={Paper}>
+        <Table id="table" size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Número de solicitud</TableCell>
+              <TableCell align="center">Cliente</TableCell>
+              <TableCell align="center">Estado</TableCell>
+              <TableCell align="center">Prioridad</TableCell>
+              <TableCell align="center">Resumen</TableCell>
+              <TableCell align="center">Fecha</TableCell>
+              <TableCell align="center"></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{renderizarInfoSolicitudes()}</TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }

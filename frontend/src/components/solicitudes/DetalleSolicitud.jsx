@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Paper from "@material-ui/core/Paper";
-import CambiosSolicitud from "./CambiosSolicitud";
+import CambiosSolicitud from "../formularioSolicitud/EnviarCambio";
+import ListaCambios from "./ListaCambios";
 import "../styles/DetallesSolicitud.css";
-export default function DetalleSolicitud(props) {
+export default function DetalleSolicitud() {
   let params = new URL(document.location).searchParams;
   let idSolicitud = params.get("id_solicitud");
 
   const [detalleSolicitud, setDetalleSolicitud] = useState([]);
+  const [cliente, setCliente] = useState("");
+  const [asignada, setAsignada] = useState("");
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetch(`http://localhost:3000/solicitudes/porNumero/${idSolicitud}`, {
       method: "GET",
       headers: {
@@ -18,19 +21,22 @@ export default function DetalleSolicitud(props) {
       .then((res) => res.json())
       .then((getSolicitudes) => {
         setDetalleSolicitud(getSolicitudes.solicitud);
+        setCliente(getSolicitudes.solicitud.refCliente.nombre);
+        setAsignada(getSolicitudes.solicitud.refUsuarioAsignado.name)
       });
-  }, []);
+  }, [idSolicitud]);
   return (
     <div>
       <p className="title-paper">
         # Solicitud: {idSolicitud}: {detalleSolicitud.resumen}
       </p>
       <div className="container-paper">
-        <Paper className="paper-solicitud-a" elevation={6}>
-          {/* <p>Cliente: {detalleSolicitud.refClient.nombre}</p> */}
+        <Paper className="paper-solicitud-a" elevation={10}>
+          <p>Cliente: {cliente}</p>
           <p>Fecha de envío: {detalleSolicitud.fechaHora}</p>
           <p>Prioridad: {detalleSolicitud.prioridad}</p>
           <p>Estado: {detalleSolicitud.estado}</p>
+          <p>Asignada a: {asignada}</p>
           <p>Categoria: {detalleSolicitud.categoria}</p>
           <p>Sub categoria: {detalleSolicitud.subcategoria}</p>
           <p>Descripcion:</p>
@@ -42,9 +48,13 @@ export default function DetalleSolicitud(props) {
           requerimiento={detalleSolicitud.requerimente}
           idSolicitud={idSolicitud}
           refSolicitud={detalleSolicitud._id}
-          refUsuario={detalleSolicitud.listaIncumbentes}
         />
-        <Paper className="paper-solicitud-c" elevation={4} />
+        <Paper className="paper-solicitud-c" elevation={4}>
+          <ListaCambios
+            refSolicitud={detalleSolicitud._id}
+            idSolicitud={idSolicitud}
+          />
+        </Paper>
       </div>
     </div>
   );

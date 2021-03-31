@@ -3,12 +3,12 @@ import ListaSolicitudes from "../solicitudes/ListaSolicitudes";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./Header";
 import DetalleSolicitud from "../solicitudes/DetalleSolicitud";
-import EnviarSolicitud from '../formularioSolicitud/EnviarSolicitud'
+import EnviarSolicitud from "../formularioSolicitud/EnviarSolicitud";
 export default function Navigation(props) {
   const { admin } = props;
   return (
     <Router>
-      <Header/>
+      <Header />
       <Switch>
         <Route exact path="/">
           <ListaSolicitudes admin={admin} />
@@ -17,7 +17,7 @@ export default function Navigation(props) {
           <DetalleSolicitud admin={admin} />
         </Route>
         <Route path="/nueva-solicitud">
-        <EnviarSolicitud/>
+          <EnviarSolicitud />
         </Route>
       </Switch>
     </Router>

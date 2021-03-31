@@ -11,15 +11,7 @@ import Divider from "@material-ui/core/Divider";
 import { Link } from "react-router-dom";
 import "../styles/Menu.css";
 
-class Menu extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      listaProyectos: [],
-    };
-  }
-
-  render() {
+const Menu =() => {
     return (
       <div className="container">
         <List component="nav" aria-label="main mailbox folders">
@@ -61,7 +53,6 @@ class Menu extends React.Component {
         </List>
       </div>
     );
-  }
 }
 
 export default Menu;

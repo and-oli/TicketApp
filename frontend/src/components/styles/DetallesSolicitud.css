@@ -4,9 +4,9 @@
   flex-wrap: break-word;
   flex-direction: column;
   width: 30%;
-  border: 2px solid rgba(0, 110, 255, 0.638);
+  border: 2px solid rgba(65, 65, 65, 0.638);
   min-width: 460px;
-  margin-top: 20px;
+  margin-top: 5px;
   height: 700px;
 }
 .paper-solicitud-a p {
@@ -34,9 +34,9 @@
   align-items: center;
   flex-direction: column;
   width: 30%;
-  border: 2px solid rgba(0, 110, 255, 0.638);
+  border: 2px solid rgba(65, 65, 65, 0.638);
   min-width: 460px;
-  margin-top: 20px;
+  margin-top: 5px;
   height: 700px;
 }
 .paper-solicitud-b form {
@@ -47,7 +47,6 @@
   width: 90%;
   height: 80%;
 }
-
 .paper-solicitud-b form .adjuntar-archivo {
   display: flex;
   width: 63%;
@@ -60,10 +59,13 @@
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+  overflow-y: scroll;
+  align-items: center;
   width: 30%;
-  border: 2px solid rgba(0, 110, 255, 0.638);
+  border: 2px solid rgba(65, 65, 65, 0.638);
   min-width: 460px;
-  margin-top: 20px;
+  margin-top: 5px;
+  margin-bottom: 20px;
   height: 700px;
 }
 .descripcion {
@@ -92,7 +94,23 @@
   justify-content: space-around;
   min-width: 460px;
   margin-left: 5px;
-  margin-top: 20px;
+  margin-top: 5px;
   width: 99%;
   height: 100%;
+}
+.button-guardar {
+  display: flex;
+  width: 43%;
+  height: 40px;
+  align-self: center;
+}
+.button-p {
+  display: flex;
+  align-self: center;
+  font-size: 15px;
+}
+
+.icon-enviar{
+  display: flex;
+  align-self: center;
 }

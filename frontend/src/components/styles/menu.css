@@ -1,22 +1,22 @@
-.container nav{
+.container nav {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   font-size: 10px;
   width: 100%;
 }
-.form{
-  display: flex; 
+.form {
+  display: flex;
   height: 100px;
   width: 100%;
 }
 
-.form label{
+.form label {
   display: flex;
   padding-left: 10%;
   font-size: 72%;
 }
 
-.form div{
+.form div {
   display: flex;
   align-self: center;
   width: 90%;

@@ -26,7 +26,6 @@ router.get('/porNumero/:idSolicitud', token.checkToken, async function (req, res
 });
 
 router.post('/', token.checkToken, async function (req, res) {
-  console.log(req.body)
   await solicitudesService.postSolicitud(req, res);
 });
 
