@@ -11,48 +11,48 @@ import Divider from "@material-ui/core/Divider";
 import { Link } from "react-router-dom";
 import "../styles/Menu.css";
 
-const Menu =() => {
-    return (
-      <div className="container">
-        <List component="nav" aria-label="main mailbox folders">
-          <ListItem button component={Link} to={`/`}>
-            <ListItemIcon>
-              <img
-                alt="icon"
-                style={{ height: 40 }}
-                src="https://img.icons8.com/material-sharp/96/000000/thumbnails.png"
-              />
-            </ListItemIcon>
-            <ListItemText
-              component="p"
-              className="button-label"
-              primary="Solicitudes"
+const Menu = () => {
+  return (
+    <div className="container">
+      <List component="nav" aria-label="main mailbox folders">
+        <ListItem button component={Link} to={`/`}>
+          <ListItemIcon>
+            <img
+              alt="icon"
+              style={{ height: 40 }}
+              src="https://img.icons8.com/material-sharp/96/000000/thumbnails.png"
             />
-          </ListItem>
-          <ListItem button component={Link} to={`/nueva-solicitud`}>
-            <ListItemIcon>
-              <img
-                alt="icon"
-                style={{ height: 40 }}
-                src="https://img.icons8.com/ios/100/000000/boarding-pass.png"
-              />
-            </ListItemIcon>
-            <ListItemText primary="Reportar solicitud" />
-          </ListItem>
-          <Divider />
-          <FormControl component="div" className="form">
-            <InputLabel component="label" htmlFor="grouped-select">
-              Todos los proyectos
-            </InputLabel>
-            <Select component="div" defaultValue="" id="grouped-select">
-              <MenuItem value="" style={{ height: 25 }}>
-                <em>None</em>
-              </MenuItem>
-            </Select>
-          </FormControl>
-        </List>
-      </div>
-    );
-}
+          </ListItemIcon>
+          <ListItemText
+            component="p"
+            className="button-label"
+            primary="Solicitudes"
+          />
+        </ListItem>
+        <ListItem button component={Link} to={`/nueva-solicitud`}>
+          <ListItemIcon>
+            <img
+              alt="icon"
+              style={{ height: 40 }}
+              src="https://img.icons8.com/ios/100/000000/boarding-pass.png"
+            />
+          </ListItemIcon>
+          <ListItemText primary="Reportar solicitud" />
+        </ListItem>
+        <Divider />
+        <FormControl component="div" className="form">
+          <InputLabel component="label" htmlFor="grouped-select">
+            Todos los proyectos
+          </InputLabel>
+          <Select component="div" defaultValue="" id="grouped-select">
+            <MenuItem value="" style={{ height: 25 }}>
+              <em>None</em>
+            </MenuItem>
+          </Select>
+        </FormControl>
+      </List>
+    </div>
+  );
+};
 
 export default Menu;

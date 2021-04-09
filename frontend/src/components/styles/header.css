@@ -1,7 +1,7 @@
 header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   background: black;
   color: white;
   left: 0;
@@ -9,7 +9,6 @@ header {
 }
 
 .header__img {
-  /* margin-left: min(-290px max(0px)); */
   width: 200px;
 }
 .header__menu ul {
@@ -51,4 +50,13 @@ ul:hover {
 
 .menu-item {
   color: white;
+}
+.circle-icon {
+  display: flex;
+  width: 84%;
+  padding-right: 10px;
+  margin-right: 20px;
+}
+.icon {
+  margin-left: 97%;
 }

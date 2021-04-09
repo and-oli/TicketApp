@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import "../styles/ListaCambios.css";
+import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
+import "../styles/ListaCambios.css";
 
 export default function ListaSolicitudes(props) {
   const [cambios, setCambio] = useState([]);
@@ -21,14 +22,42 @@ export default function ListaSolicitudes(props) {
         });
     }
   }, [props.refSolicitud]);
+  const cambiosDeEstado = (cambio) => {
+    if (cambio.estado) {
+      return (
+        <div>
+          <p className='title-card-cambio'>Cambio de estado:</p>
+        <div className="info-cambios">
+            <p className='cambio-realizado'>{cambio.estado}</p> 
+        </div>
+        </div>
+      );
+    }
+  };
   const renderizarCambios = () => {
     return cambios.map((cambio, i) => (
       <Paper elevation={20} key={i} className="container-padre-cambios">
-        <p>{cambio.refUsuario.name}</p>
-        <p>({cambio.refUsuario.role})</p>
-        <p>Cambios: </p>
-        <p>{cambio.estado}</p>
-        <p>{cambio.nota}</p>
+        <div>
+          <div className="info-usuario">
+            <h4>{cambio.titulo}</h4>
+            <Divider />
+             <div> 
+            <p className='title-card-cambio'>Usuario:</p>
+            <p className='user-info-cambio'>{cambio.refUsuario.name}</p>
+            <p className='user-info-cambio'>({cambio.refUsuario.role})</p>
+            </div>
+            <Divider />
+            <div>
+            <p className='title-card-cambio'>Fecha:</p>
+            <p className='fecha-info-cambio'>{cambio.fechaHora}</p> 
+            </div>
+            <Divider />
+            {cambiosDeEstado(cambio)}
+            <Divider />
+            <p className='title-card-cambio'>Nota:</p>
+          <div className='nota'>{cambio.nota}</div>
+          </div>
+        </div>
       </Paper>
     ));
   };

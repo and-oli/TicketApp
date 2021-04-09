@@ -10,6 +10,7 @@ export default function CambiosSolicitud(props) {
   const [loading, setloading] = useState(false);
   const [listaTecnicos, setTecnicos] = useState([]);
   const [state, setState] = useState({
+    titulo:'',
     refUsuarioAsignado: "",
     nota: "",
     abierta: undefined,
@@ -27,13 +28,29 @@ export default function CambiosSolicitud(props) {
   }, []);
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    let { name, value } = event.target;
+    if (name === "abierta" && value === "") {
+      value = undefined;
+    }
     setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const enviarCambio = (event) => {
+    const fecha = new Date();
     let data = {
       refSolicitud: props.refSolicitud,
+      fechaHora:
+        fecha.getDay() +
+        "/" +
+        fecha.getMonth() +
+        "/" +
+        fecha.getFullYear() +
+        "  " +
+        fecha.getHours() +
+        ":" +
+        fecha.getMinutes() +
+        ":" +
+        fecha.getSeconds(),
     };
     for (let cambio in state) {
       data[cambio] = state[cambio];
@@ -67,7 +84,10 @@ export default function CambiosSolicitud(props) {
   return (
     <Paper className="paper-solicitud-b" elevation={10}>
       <form onSubmit={enviarCambio}>
-        <FormControl className="form-control">
+        <FormControl
+          className="form-control"
+          disabled={state.abierta === undefined ? false : true}
+        >
           <label htmlFor="asignar">Asignar a:</label>
           <NativeSelect
             value={state.refUsuarioAsignado}
@@ -80,7 +100,10 @@ export default function CambiosSolicitud(props) {
           </NativeSelect>
         </FormControl>
 
-        <FormControl className="form-control">
+        <FormControl
+          className="form-control"
+          disabled={state.refUsuarioAsignado === "" ? false : true}
+        >
           <label htmlFor="abierta">Cambiar estado a:</label>
           <NativeSelect
             value={state.abierta}
@@ -92,7 +115,20 @@ export default function CambiosSolicitud(props) {
             <option value={false}>resuelta</option>
           </NativeSelect>
         </FormControl>
-
+        <TextField
+          value={state.titulo}
+          label="Titulo del cambio"
+          onChange={handleChange}
+          name="titulo"
+          className="form-control"
+          variant="outlined"
+          multiline
+          inputProps={{
+            maxLength: 150,
+          }}
+          required
+          rows={1}
+        />
         <TextField
           value={state.nota}
           label="Nota"
@@ -101,28 +137,33 @@ export default function CambiosSolicitud(props) {
           className="form-control"
           variant="outlined"
           multiline
+          inputProps={{
+            maxLength: 150,
+          }}
           required
           rows={4}
         />
         <input className="adjuntar-archivo" type="file" />
-        {loading ? (
-          <CircularProgress
-            color='action'
-            className='icon-enviar'
-            disableShrink
-          />
-        ) : (
-          <Button
-            variant="contained"
-            type="submit"
-            color="default"
-            component="button"
-            className="button-guardar"
-          >
-            <p className="button-p">Guardar cambio</p>
-          </Button>
-        )}
+        <div className="button">
+          {loading ? (
+            <CircularProgress
+              color="action"
+              className="icon-enviar"
+              disableShrink
+            />
+          ) : (
+            <Button
+              variant="contained"
+              type="submit"
+              component="button"
+              className="button-guardar"
+            >
+              <p className="button-p">Guardar cambio</p>
+            </Button>
+          )}
+        </div>
       </form>
     </Paper>
   );
 }
+//
