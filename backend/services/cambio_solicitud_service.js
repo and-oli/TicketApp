@@ -11,8 +11,9 @@ module.exports = {
 
   getCambiosPorSolicitud: async function (req, res) {
 
-    const cambios = await CambiosSolicitud.find({ refSolicitud: req.params.idSolicitud })
+    const cambios = await CambiosSolicitud.find({ refSolicitud: req.params.idSolicitud }).sort({ _id: -1 })
       .populate('refUsuario');
+
     if (!cambios) {
       res.json({ mensaje: 'No hay cambios', ok: false });
     } else {
@@ -24,9 +25,7 @@ module.exports = {
 
     const cambios = req.body;
     const resultadoSolicitud = {};
-    if (cambios.abierta !== undefined) {
-      resultadoSolicitud.abierta = cambios.abierta;
-    };
+
     if (cambios.refUsuarioAsignado) {
       resultadoSolicitud.refUsuarioAsignado = cambios.refUsuarioAsignado;
       resultadoSolicitud.$addToSet = {
@@ -37,7 +36,11 @@ module.exports = {
       resultadoSolicitud.estado = 'Asignada';
       cambios.estado = 'Asignada';
     }
-
+    if (cambios.abierta !== undefined) {
+      resultadoSolicitud.abierta = cambios.abierta;
+      resultadoSolicitud.estado = 'Resuelta';
+      cambios.estado = 'Resuelta';
+    };
     cambios.refUsuario = req.decoded.id
 
     await Solicitud.updateOne({ idSolicitud: req.params.idSolicitud }, resultadoSolicitud);
@@ -49,7 +52,7 @@ module.exports = {
         cambiosSolicitud[llave] = cambios[llave];
       }
     }
-    await this.enviarCorreo(req, resultadoSolicitud, cambios.nota);
+    // await this.enviarCorreo(req, resultadoSolicitud, cambios.nota);
     try {
       await cambiosSolicitud.save();
       res.json({

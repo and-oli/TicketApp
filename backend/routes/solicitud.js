@@ -14,7 +14,7 @@ router.use(function (req, res, next) {
 });
 
 router.get('/', token.checkToken, async function (req, res) {
-  await solicitudesService.getSolicitudes(res);
+  await solicitudesService.getSolicitudes(req, res);
 });
 
 router.get('/asignadasAUsuario/:idUsuarioMongo', token.checkToken, async function (req, res) {
@@ -25,7 +25,7 @@ router.get('/porNumero/:idSolicitud', token.checkToken, async function (req, res
   await solicitudesService.getSoliNumero(req, res);
 });
 
-router.post('/', token.checkToken, async function (req, res) {
+router.post('/nuevaSolicitud', token.checkToken, async function (req, res) {
   await solicitudesService.postSolicitud(req, res);
 });
 

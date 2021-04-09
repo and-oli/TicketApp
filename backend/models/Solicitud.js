@@ -4,13 +4,17 @@ const Schema = mongoose.Schema;
 const SolicitudSchema = new Schema({
     idSolicitud: {type:Number, unique:true},
     resumen: String,
-    desripcion: String,
-    fechaHora: Date,
+    descripcion: String,
+    fechaHora: String,
     estado: String,
     prioridad:String,
     abierta: Boolean,
     categoria: String,
     listaIncumbentes:[{type:Schema.Types.ObjectId, ref:'usuarios', unique:false}],
+    refUsuarioSolicitante:{
+        type: Schema.Types.ObjectId,
+        ref: 'usuarios'
+    },
     refUsuarioAsignado: {
         type: Schema.Types.ObjectId,
         ref: 'usuarios'

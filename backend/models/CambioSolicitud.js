@@ -5,8 +5,9 @@ const ArchivoSchema = ModuloArchivo.schema;
 const Schema = mongoose.Schema;
 
 var CambioSolicitudSchema = new Schema({
+    titulo:String,
     nota: String,
-    fechaHora: Date,
+    fechaHora: String,
     estado: String,
     refSolicitud: {
         type: Schema.Types.ObjectId,
