@@ -1,5 +1,7 @@
+const ModuloSecuenciaSolicitudes = require('../models/SecuenciaSolicitudes');
 const ModuloSolicitud = require('../models/Solicitud');
 const Solicitud = ModuloSolicitud.modelo;
+const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modelo;
 
 function enviarError(res, error) {
   console.error(error);
@@ -99,9 +101,21 @@ module.exports = {
   postSolicitud: async function (req, res) {
     const fecha = new Date();
     try {
-      const idSolicitud = await Solicitud.find({});
-      const newSolicitud = new Solicitud();
-      newSolicitud.idSolicitud = idSolicitud.length + 1;
+      const secuenciaExiste = await SecuenciaSolicitudes.countDocuments({});
+      if (!secuenciaExiste) {
+        // No hay datos en la colección de secuencia
+        const nuevaSecuencia = new SecuenciaSolicitudes();
+        nuevaSecuencia.secuencia = 0;
+        nuevaSecuencia.id = 0;
+        await nuevaSecuencia.save()
+      }
+      const secuencia = await SecuenciaSolicitudes.findOneAndUpdate(
+        { id:0 }, 
+        { $inc: { secuencia: 1 } },
+      );
+
+      const newSolicitud = new Solicitud()
+      newSolicitud.idSolicitud = secuencia.secuencia;
       newSolicitud.resumen = req.body.resumen;
       newSolicitud.descripcion = req.body.descripcion;
       newSolicitud.prioridad = req.body.prioridad;
