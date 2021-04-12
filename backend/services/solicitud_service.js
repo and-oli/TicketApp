@@ -19,21 +19,35 @@ module.exports = {
       const infoFiltro = req.query;
       const filtro = {};
 
-      if (infoFiltro.idSolicitud) {
-        const id = parseInt(infoFiltro.idSolicitud)
-        filtro.idSolicitud = id;
-      };
+      const regexNumeros = /\d+/g;
+      let posiblesIds = [];
+      const coincidencias = infoFiltro.texto.match(regexNumeros);
+      if (coincidencias) {
+        posiblesIds = coincidencias.map(c => Number.parseInt(c  ));
+      }
       
       if (infoFiltro.estado) {
-        filtro.estado = { $regex: infoFiltro.estado };
+        filtro.estado = { $regex: infoFiltro.estado, $options: 'i' };
       };
 
-      if (infoFiltro.resumen) {
-        filtro.resumen = { $regex: infoFiltro.resumen };
+      if (infoFiltro.texto) {
+        filtro.resumen = { $regex: infoFiltro.texto, $options: 'i' };
       };
-
+      console.log(filtro, posiblesIds)
       const solicitudes = await Solicitud.aggregate([
-        { $match: filtro, },
+        { 
+          $match: {
+            $or: [
+              filtro,
+              {
+                idSolicitud: {
+                  $in: posiblesIds
+                },
+              }
+            ] 
+          }, 
+        },
+
         {
           $lookup: {
             from: 'clientes',

@@ -28,27 +28,16 @@
 }
 
 .input-relacion {
-  width: 250px;
+  width: 300px;
   margin-left: 5px;
 }
 
-.input-search {
+#filter-form {
   display: flex;
   background-color: white;
   width: 95%;
   height:40px;
-}
-
-.container-filter {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.container-filter .buton-filter {
-  background-color: black;
-  border: none;
-  border-radius: 0%;
-  color: white;
+  align-items: center;
+  justify-content: center;
+  margin: 25px;
 }

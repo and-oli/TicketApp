@@ -4,9 +4,11 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
-import InputBase from "@material-ui/core/InputBase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import TextField from '@material-ui/core/TextField';
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
+import IconButton from '@material-ui/core/IconButton';
+
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -23,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 2),
     height: "100%",
     display: "flex",
-    alignSelf: "center",
+    alignItems: "center",
   },
 
   searchList: {
@@ -39,136 +41,140 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const TableCellHeader = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const TableRowAlt = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.white.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableRow);
+
 export default function ListaSolicitudes() {
   const [listaSolicitudes, setListaSolicitudes] = React.useState([]);
-  const [openDropdown, setOpenDropdown] = useState(false);
-  const [buscar, setBuscar] = useState(false);
   const [filtro, setFiltro] = useState({
-    searchId: '',
     searchTexto: "",
-    searchEstado: "",
+    searchEstado: "Todos",
   });
 
   const classes = useStyles();
 
   React.useEffect(() => {
-    fetch(`http://localhost:3000/solicitudes/?idSolicitud=${filtro.searchId}&estado=${filtro.searchEstado}&resumen=${filtro.searchTexto}`, {
-      method: "GET",
-      headers: {
-        "x-access-token": localStorage.getItem("TAToken"),
-      },
-    })
+    enviarBusqueda( "", "");
+  }, []);
+
+  function enviarBusqueda(estado, texto) {
+    fetch(
+      `http://localhost:3000/solicitudes/?estado=${estado}&texto=${texto}`,
+      {
+        method: "GET",
+        headers: {
+          "x-access-token": localStorage.getItem("TAToken"),
+        },
+      }
+    )
       .then((res) => res.json())
       .then((getSolicitudes) => {
         setListaSolicitudes(getSolicitudes.solicitudes);
       });
-  }, [buscar]);
+  }
 
   const onChangeSearch = (event) => {
     const { name, value } = event.target;
     setFiltro((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const dropdownOpen = () => {
-    setOpenDropdown(openDropdown ? false : true);
-  };
-
-  const iniciarBusqueda = () => {
-    setBuscar(buscar ? false : true);
+  const iniciarBusqueda = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
+    enviarBusqueda(estado, filtro.searchTexto);
   };
 
   const renderizarInfoSolicitudes = () => {
-    const lista = []
-    console.log(listaSolicitudes)
-    listaSolicitudes.map((sol) => {
-      return lista.push(
-        <TableRow key={sol.idSolicitud}>
-          <TableCell align="center">
-            <Link
-              className="link"
-              to={`/detalle-solicitud/?id_solicitud=${sol.idSolicitud}`}
-            >
-              {sol.idSolicitud}
-            </Link>
-          </TableCell>
-          <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
-          <TableCell align="center">{sol.usuarioSolicitante[0].name}</TableCell>
-          <TableCell align="center">{sol.estado}</TableCell>
-          <TableCell align="center">{sol.prioridad}</TableCell>
-          <TableCell align="center">{sol.resumen}</TableCell>
-          <TableCell align="center">{sol.fechaHora}</TableCell>
-        </TableRow>
-      );
+    return listaSolicitudes.map((sol) => {
+      return <TableRowAlt key={sol.idSolicitud}>
+        <TableCell align="center">
+          <Link
+            className="link"
+            to={`/detalle-solicitud/?id_solicitud=${sol.idSolicitud}`}
+          >
+            {sol.idSolicitud}
+          </Link>
+        </TableCell>
+        <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
+        <TableCell align="center">{sol.usuarioSolicitante[0].name}</TableCell>
+        <TableCell align="center">{sol.estado}</TableCell>
+        <TableCell align="center">{sol.prioridad}</TableCell>
+        <TableCell align="center">{sol.resumen}</TableCell>
+        <TableCell align="center">{sol.fechaHora}</TableCell>
+      </TableRowAlt>;
     });
-
-    return lista;
   };
 
   return (
     <div>
-        <div className="container-filter">
-          <Button
-            component={"button"}
-            className="buton-filter"
-            onClick={dropdownOpen}
+      <form id="filter-form" onSubmit={iniciarBusqueda}>
+        <FormControl className={classes.formControl}>
+          <InputLabel id="demo-controlled-open-select-label">
+            Estado
+          </InputLabel>
+          <Select
+            labelId="demo-controlled-open-select-label"
+            id="demo-controlled-open-select"
+            name="searchEstado"
+            value={filtro.searchEstado}
+            onChange={onChangeSearch}
           >
-            Filtros
-          </Button>
-          {openDropdown ? (
-            <div className="input-search">
-              <InputBase
-                className="input-id"
-                placeholder="# Solicitud..."
-                value={filtro.searchId}
-                name="searchId"
-                onChange={onChangeSearch}
-                inputProps={{ "aria-label": "search" }}
-              />
-              <InputBase
-                className="input-relacion"
-                placeholder="Buscar texto"
-                value={filtro.searchTexto}
-                name="searchTexto"
-                onChange={onChangeSearch}
-                inputProps={{ "aria-label": "search" }}
-              />
-              <FormControl className={classes.formControl}>
-                <InputLabel id="demo-controlled-open-select-label">
-                  Estado
-                </InputLabel>
-                <Select
-                  labelId="demo-controlled-open-select-label"
-                  id="demo-controlled-open-select"
-                  name="searchEstado"
-                  value={filtro.searchEstado}
-                  onChange={onChangeSearch}
-                >
-                  <MenuItem value="">todos</MenuItem>
-                  <MenuItem value="Resuelta">Resuelta</MenuItem>
-                  <MenuItem value="Asignada">Asignada</MenuItem>
-                  <MenuItem value="Sin asignar">Sin asignar</MenuItem>
-                </Select>
-              </FormControl>
-
-              <div className={classes.searchIcon}>
-                <SearchIcon onClick={iniciarBusqueda} />
-              </div>
-            </div>
-          ) : null}
-      </div>
+            <MenuItem value="Todos">Todos</MenuItem>
+            <MenuItem value="Resuelta">Resuelta</MenuItem>
+            <MenuItem value="Asignada">Asignada</MenuItem>
+            <MenuItem value="Sin asignar">Sin asignar</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          className="input-relacion"
+          label="Buscar"
+          value={filtro.searchTexto}
+          name="searchTexto"
+          onChange={onChangeSearch}
+          inputProps={{ "aria-label": "search" }}
+          variant="outlined"
+          margin="dense"
+        />
+        <div className={classes.searchIcon}>
+        <IconButton onClick={iniciarBusqueda} type="submit">
+          <SearchIcon />
+        </IconButton>
+        </div>
+      </form>
       <Divider />
       <TableContainer component={Paper}>
         <Table id="table" size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">Número de solicitud</TableCell>
-              <TableCell align="center">Cliente</TableCell>
-              <TableCell align="center">Solicitante</TableCell>
-              <TableCell align="center">Estado</TableCell>
-              <TableCell align="center">Prioridad</TableCell>
-              <TableCell align="center">Resumen</TableCell>
-              <TableCell align="center">Fecha - Hora</TableCell>
-              <TableCell align="center"></TableCell>
+              <TableCellHeader align="center">
+                Número de solicitud
+              </TableCellHeader>
+              <TableCellHeader align="center">Cliente</TableCellHeader>
+              <TableCellHeader align="center">Solicitante</TableCellHeader>
+              <TableCellHeader align="center">Estado</TableCellHeader>
+              <TableCellHeader align="center">Prioridad</TableCellHeader>
+              <TableCellHeader align="center">Resumen</TableCellHeader>
+              <TableCellHeader align="center">Fecha - Hora</TableCellHeader>
+              <TableCellHeader align="center"></TableCellHeader>
             </TableRow>
           </TableHead>
           <TableBody>{renderizarInfoSolicitudes()}</TableBody>

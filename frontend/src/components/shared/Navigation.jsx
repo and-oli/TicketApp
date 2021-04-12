@@ -6,6 +6,21 @@ import DetalleSolicitud from "../solicitudes/DetalleSolicitud";
 import EnviarSolicitud from "../formularioSolicitud/EnviarSolicitud";
 export default function Navigation(props) {
   const { admin } = props;
+  React.useEffect(
+    () => {
+      fetch('http://localhost:3000/users/validarToken', {
+        method: 'GET',
+        headers: {
+          'x-access-token': localStorage.getItem("TAToken")
+        },
+      }).then((response) => { 
+        if (response.status === 403) {
+          localStorage.removeItem("TAToken");
+          window.location.reload();
+        }
+      })
+    }, []
+  );
   return (
     <Router>
       <Header />

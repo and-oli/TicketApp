@@ -40,6 +40,10 @@ router.get('/clientes', token.checkToken, async function (req, res) {
   await userService.getClientes(res);
 });
 
+router.get('/validarToken', token.checkToken, function(req, res) {
+  res.send({ success: true, message: 'Token válido'});
+});
+
 router.get('/', token.checkToken, async function (req, res){
   await userService.getUserTecnicos(req, res)
 })
