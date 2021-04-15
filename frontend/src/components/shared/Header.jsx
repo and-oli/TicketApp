@@ -26,7 +26,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   menuButton: {
-    margin: theme.spacing(2),
+    width: "5%",
+    margin: theme.spacing(1),
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -97,27 +98,29 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [openLog, setOpenLog] = React.useState(false);
   const anchorRef = React.useRef(null);
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
 
   const handleClose = (event) => {
     localStorage.removeItem("TAToken");
     window.location.reload();
-    setOpen(false);
   };
 
   function handleListKeyDown(event) {
     if (event.key === "Tab") {
       event.preventDefault();
-      setOpen(false);
     }
   }
-  
+
+  function openLogMenu() {
+    setOpenLog(true);
+  }
+
+  function closeLogMenu() {
+    setOpenLog(false);
+  }
+
   function handleDrawerOpen() {
     setDrawerOpen(true);
   }
@@ -149,6 +152,7 @@ const Header = () => {
             ),
           }}
           open={drawerOpen}
+          onClose={handleDrawerClose}
         >
           <div className={classes.toolbarIcon}>
             <IconButton onClick={handleDrawerClose}>
@@ -156,22 +160,33 @@ const Header = () => {
             </IconButton>
           </div>
           <Divider />
-          <Menu />
+          <Menu close={handleDrawerClose} />
           <Divider />
         </Drawer>
-        <img className="header__img" src="/logoComsistelco.png" alt="Tickets" />
+        <div className="container-header-img">
+          <img
+            className="header__img"
+            src="/logoComsistelco.png"
+            alt="Tickets"
+          />
+        </div>
         <div className="circle-icon">
           <AccountCircle
             className="icon"
             ref={anchorRef}
-            aria-controls={open ? "menu-list-grow" : undefined}
+            aria-controls={openLog ? "menu-list-grow" : undefined}
             aria-haspopup="true"
-            onClick={handleToggle}
+            onClick={openLogMenu}
           />
         </div>
         <Popper
-          style={{ display: "flex", position: "absolute", marginRight: 30 }}
-          open={open}
+          style={{
+            display: "flex",
+            position: "absolute",
+            marginRight: 30,
+            zIndex: 2,
+          }}
+          open={openLog}
           anchorEl={anchorRef.current}
           role={undefined}
           transition
@@ -186,12 +201,8 @@ const Header = () => {
               }}
             >
               <Paper>
-                <ClickAwayListener>
-                  <MenuList
-                    autoFocusItem={open}
-                    id="menu-list-grow"
-                    onKeyDown={handleListKeyDown}
-                  >
+                <ClickAwayListener onClickAway={closeLogMenu}>
+                  <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
                     <MenuItem>Profile</MenuItem>
                     <MenuItem>My account</MenuItem>
                     <MenuItem onClick={handleClose}>Logout</MenuItem>

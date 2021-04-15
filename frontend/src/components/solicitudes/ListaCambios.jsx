@@ -5,6 +5,7 @@ import "../styles/ListaCambios.css";
 
 export default function ListaSolicitudes(props) {
   const [cambios, setCambio] = useState([]);
+
   React.useEffect(() => {
     if (props.refSolicitud !== undefined) {
       fetch(
@@ -22,18 +23,20 @@ export default function ListaSolicitudes(props) {
         });
     }
   }, [props.refSolicitud]);
+
   const cambiosDeEstado = (cambio) => {
     if (cambio.estado) {
       return (
         <div>
-          <p className='title-card-cambio'>Cambio de estado:</p>
-        <div className="info-cambios">
-            <p className='cambio-realizado'>{cambio.estado}</p> 
-        </div>
+          <p className="title-card-cambio">Cambio de estado:</p>
+          <div className="info-cambios">
+            <p className="cambio-realizado">{cambio.estado}</p>
+          </div>
         </div>
       );
     }
   };
+
   const renderizarCambios = () => {
     return cambios.map((cambio, i) => (
       <Paper elevation={20} key={i} className="container-padre-cambios">
@@ -41,21 +44,21 @@ export default function ListaSolicitudes(props) {
           <div className="info-usuario">
             <h4>{cambio.titulo}</h4>
             <Divider />
-             <div> 
-            <p className='title-card-cambio'>Usuario:</p>
-            <p className='user-info-cambio'>{cambio.refUsuario.name}</p>
-            <p className='user-info-cambio'>({cambio.refUsuario.role})</p>
+            <div>
+              <p className="title-card-cambio">Usuario:</p>
+              <p className="user-info-cambio">{cambio.refUsuario.name}</p>
+              <p className="user-info-cambio">({cambio.refUsuario.role})</p>
             </div>
             <Divider />
             <div>
-            <p className='title-card-cambio'>Fecha:</p>
-            <p className='fecha-info-cambio'>{cambio.fechaHora}</p> 
+              <p className="title-card-cambio">Fecha:</p>
+              <p className="fecha-info-cambio">{cambio.fechaHora}</p>
             </div>
             <Divider />
             {cambiosDeEstado(cambio)}
             <Divider />
-            <p className='title-card-cambio'>Nota:</p>
-          <div className='nota'>{cambio.nota}</div>
+            <p className="title-card-cambio">Nota:</p>
+            <div className="nota">{cambio.nota}</div>
           </div>
         </div>
       </Paper>

@@ -1,12 +1,13 @@
 .paper-solicitud-a {
   display: flex;
   justify-content: space-around;
-  flex-wrap: break-word;
+  font-size: 17px;
   flex-direction: column;
+  line-height: 15px;
   width: 30%;
+  margin-top: 5px;
   border: 2px solid rgba(65, 65, 65, 0.638);
-  min-width: 460px;
-  margin-top: 0px;
+  min-width: 330px;
   height: 750px;
 }
 .paper-solicitud-a p {
@@ -17,15 +18,21 @@
   display: flex;
   justify-content: center;
   text-align: center;
-  background-color: black;
   margin-left: 30%;
   margin-right: 30%;
-  padding: 5px;
   color: white;
   font-size: 20px;
   width: auto;
   height: auto;
   border-radius: 5px;
+}
+
+.title-paper p {
+  background-color: black;
+  padding: 2px;
+  min-width: 330px;
+  border-radius: 5px;
+  border: 1px solid;
 }
 
 .paper-solicitud-b {
@@ -34,9 +41,9 @@
   align-items: center;
   flex-direction: column;
   width: 30%;
+  margin-top: 5px;
   border: 2px solid rgba(65, 65, 65, 0.638);
-  min-width: 460px;
-  margin-top: 0px;
+  min-width: 330px;
   height: 750px;
 }
 .paper-solicitud-b form {
@@ -61,9 +68,9 @@
   flex-direction: column;
   overflow-y: scroll;
   width: 30%;
+  margin-top: 5px;
   border: 2px solid rgba(65, 65, 65, 0.638);
-  margin-top: 0px;
-  min-width: 460px;
+  min-width: 330px;
   margin-bottom: 20px;
   height: 750px;
 }
@@ -79,22 +86,23 @@
   background-color: rgba(220, 215, 215, 0.727);
   width: 90%;
   height: 1000px;
+  font-size: 15px;
 }
 
 .actualizar-button {
   height: 30px;
   width: 30%;
+  margin-top: 5px;
   align-self: center;
 }
 
 .container-paper {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  min-width: 460px;
-  margin-left: 5px;
+  justify-content:space-evenly;
+  min-width: 340px;
   margin-top: 0px;
-  width: 99%;
+  width: 100%;
   height: 80%;
 }
 

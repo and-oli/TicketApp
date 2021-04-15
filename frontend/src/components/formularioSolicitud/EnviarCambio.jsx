@@ -10,7 +10,7 @@ export default function CambiosSolicitud(props) {
   const [loading, setloading] = useState(false);
   const [listaTecnicos, setTecnicos] = useState([]);
   const [state, setState] = useState({
-    titulo:'',
+    titulo: "",
     refUsuarioAsignado: "",
     nota: "",
     abierta: undefined,
@@ -88,14 +88,15 @@ export default function CambiosSolicitud(props) {
           className="form-control"
           disabled={state.abierta === undefined ? false : true}
         >
-          <label htmlFor="asignar">Asignar a:</label>
+          <label htmlFor="asignar">Asignar:</label>
           <NativeSelect
             value={state.refUsuarioAsignado}
             name="refUsuarioAsignado"
             onChange={handleChange}
             className="select-empty"
           >
-            <option value="">seleccione usuario</option>
+            <option value="">Asignado {props.asignado}</option>
+
             {renderizarTecnicos()}
           </NativeSelect>
         </FormControl>
@@ -104,14 +105,14 @@ export default function CambiosSolicitud(props) {
           className="form-control"
           disabled={state.refUsuarioAsignado === "" ? false : true}
         >
-          <label htmlFor="abierta">Cambiar estado a:</label>
+          <label htmlFor="abierta">Estado:</label>
           <NativeSelect
             value={state.abierta}
             name="abierta"
             onChange={handleChange}
             className="select-empty"
           >
-            <option value="">Seleccione un estado</option>
+            <option value="">Estado {props.estado}</option>
             <option value={false}>resuelta</option>
           </NativeSelect>
         </FormControl>
@@ -143,7 +144,9 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
+
         <input className="adjuntar-archivo" type="file" />
+
         <div className="button">
           {loading ? (
             <CircularProgress
@@ -166,4 +169,3 @@ export default function CambiosSolicitud(props) {
     </Paper>
   );
 }
-//

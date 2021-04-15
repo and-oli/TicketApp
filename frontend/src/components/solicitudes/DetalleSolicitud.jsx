@@ -3,6 +3,7 @@ import Paper from "@material-ui/core/Paper";
 import CambiosSolicitud from "../formularioSolicitud/EnviarCambio";
 import ListaCambios from "./ListaCambios";
 import "../styles/DetallesSolicitud.css";
+
 export default function DetalleSolicitud() {
   let params = new URL(document.location).searchParams;
   let idSolicitud = params.get("id_solicitud");
@@ -10,7 +11,9 @@ export default function DetalleSolicitud() {
   const [detalleSolicitud, setDetalleSolicitud] = useState([]);
   const [cliente, setCliente] = useState("");
   const [asignada, setAsignada] = useState("");
+  const [roleAsignado, setRoleAsignado] = useState("");
   const [solicitante, setSolicitante] = useState({});
+
   React.useEffect(() => {
     fetch(`http://localhost:3000/solicitudes/porNumero/${idSolicitud}`, {
       method: "GET",
@@ -23,14 +26,18 @@ export default function DetalleSolicitud() {
         setDetalleSolicitud(getSolicitudes.solicitud);
         setCliente(getSolicitudes.solicitud.refCliente.nombre);
         setAsignada(getSolicitudes.solicitud.refUsuarioAsignado.name);
-        setSolicitante(getSolicitudes.solicitud.listaIncumbentes[0]);
+        setRoleAsignado(getSolicitudes.solicitud.refUsuarioAsignado.role);
+        setSolicitante(getSolicitudes.solicitud.refUsuarioSolicitante);
       });
   }, [idSolicitud]);
+
   return (
     <div>
-      <p className="title-paper">
-        Solicitud {idSolicitud}: {detalleSolicitud.resumen}
-      </p>
+      <div className="title-paper">
+        <p>
+          Solicitud {idSolicitud}: {detalleSolicitud.resumen}
+        </p>
+      </div>
       <div className="container-paper">
         <Paper className="paper-solicitud-a" elevation={10}>
           <p>Cliente: {cliente}</p>
@@ -39,7 +46,9 @@ export default function DetalleSolicitud() {
           <p>Correo: {solicitante.email}</p>
           <p>Prioridad: {detalleSolicitud.prioridad}</p>
           <p>Estado: {detalleSolicitud.estado}</p>
-          <p>Asignada a: {asignada}</p>
+          <p>
+            Asignada a: {asignada} ({roleAsignado})
+          </p>
           <p>Categoria: {detalleSolicitud.categoria}</p>
           <p>Descripcion:</p>
           <div className="descripcion">
@@ -47,7 +56,9 @@ export default function DetalleSolicitud() {
           </div>
         </Paper>
         <CambiosSolicitud
+          asignado={asignada}
           requerimiento={detalleSolicitud.requerimente}
+          estado={detalleSolicitud.estado}
           idSolicitud={idSolicitud}
           refSolicitud={detalleSolicitud._id}
         />

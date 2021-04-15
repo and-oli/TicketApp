@@ -11,17 +11,13 @@ import Divider from "@material-ui/core/Divider";
 import { Link } from "react-router-dom";
 import "../styles/Menu.css";
 
-const Menu = () => {
+const Menu = (props) => {
   return (
     <div className="container">
       <List component="nav" aria-label="main mailbox folders">
-        <ListItem button component={Link} to={`/`}>
+        <ListItem onClick={props.close} button component={Link} to={`/`}>
           <ListItemIcon>
-            <img
-              alt="icon"
-              style={{ height: 40 }}
-              src="https://img.icons8.com/material-sharp/96/000000/thumbnails.png"
-            />
+            <img alt="icon" style={{ height: 40 }} src="/listaIcon.png" />
           </ListItemIcon>
           <ListItemText
             component="p"
@@ -29,13 +25,14 @@ const Menu = () => {
             primary="Solicitudes"
           />
         </ListItem>
-        <ListItem button component={Link} to={`/nueva-solicitud`}>
+        <ListItem
+          onClick={props.close}
+          button
+          component={Link}
+          to={`/nueva-solicitud`}
+        >
           <ListItemIcon>
-            <img
-              alt="icon"
-              style={{ height: 40 }}
-              src="https://img.icons8.com/ios/100/000000/boarding-pass.png"
-            />
+            <img alt="icon" style={{ height: 40 }} src="/ticketIcon.png" />
           </ListItemIcon>
           <ListItemText primary="Reportar solicitud" />
         </ListItem>

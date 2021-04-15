@@ -1,15 +1,19 @@
 header {
   display: flex;
   align-items: center;
-  /* justify-content: space-between; */
   background: black;
   color: white;
   left: 0;
   top: 0;
 }
 
+.container-header-img {
+  width: 100%;
+}
+
 .header__img {
   width: 200px;
+  height: 80px;
 }
 .header__menu ul {
   margin: 0px 0px 0px -14px;
@@ -53,9 +57,9 @@ ul:hover {
 }
 .circle-icon {
   display: flex;
-  width: 84%;
+  width: 10%;
   padding-right: 10px;
-  margin-right: 20px;
+  margin-right: 35px;
 }
 .icon {
   margin-left: 97%;

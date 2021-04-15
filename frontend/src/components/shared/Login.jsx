@@ -38,7 +38,7 @@ export default function Login() {
           setloading(false);
           if (res.ok) {
             localStorage.setItem("TAToken", res.token);
-            localStorage.setItem("TAAdmin", res.amin);
+            localStorage.setItem("TAAdmin", res.admin);
             window.location.reload();
             setMessage({ text: res.mensaje, color: "green" });
           } else {
@@ -79,12 +79,19 @@ export default function Login() {
                 onChange={passwordChange}
                 required
               />
-              <h6 style={{ color: message.color, marginTop: 0 }}>
+              <h6
+                style={{
+                  color: message.color,
+                  marginTop: 0,
+                  textAlign: "center",
+                }}
+              >
                 {message.text}
               </h6>
               {loading ? (
                 <CircularProgress
                   style={{ width: 40, alignSelf: "center", marginTop: 30 }}
+                  color="action"
                   disableShrink
                 />
               ) : (
