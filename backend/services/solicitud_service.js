@@ -23,9 +23,9 @@ module.exports = {
       let posiblesIds = [];
       const coincidencias = infoFiltro.texto.match(regexNumeros);
       if (coincidencias) {
-        posiblesIds = coincidencias.map(c => Number.parseInt(c  ));
+        posiblesIds = coincidencias.map(c => Number.parseInt(c));
       }
-      
+
       if (infoFiltro.estado) {
         filtro.estado = { $regex: infoFiltro.estado, $options: 'i' };
       };
@@ -33,9 +33,9 @@ module.exports = {
       if (infoFiltro.texto) {
         filtro.resumen = { $regex: infoFiltro.texto, $options: 'i' };
       };
-      console.log(filtro, posiblesIds)
+
       const solicitudes = await Solicitud.aggregate([
-        { 
+        {
           $match: {
             $or: [
               filtro,
@@ -44,8 +44,8 @@ module.exports = {
                   $in: posiblesIds
                 },
               }
-            ] 
-          }, 
+            ]
+          },
         },
 
         {
@@ -54,7 +54,7 @@ module.exports = {
             localField: 'refCliente',
             foreignField: '_id',
             as: 'cliente',
-          }
+          },
         },
         {
           $lookup: {
@@ -62,7 +62,7 @@ module.exports = {
             localField: 'refUsuarioSolicitante',
             foreignField: '_id',
             as: 'usuarioSolicitante',
-          }
+          },
         },
         { $sort: { idSolicitud: -1 } }
       ]);
@@ -94,7 +94,13 @@ module.exports = {
   getSoliNumero: async function (req, res) {
     try {
       const solicitudesPorId = await Solicitud.find({ idSolicitud: req.params.idSolicitud })
-        .populate(['refCliente', 'refUsuarioAsignado', 'listaIncumbentes']);
+        .populate('refUsuarioAsignado', ['name', 'role'])
+        .populate('refCliente')
+        .populate(
+          'refUsuarioSolicitante',
+          ['name', 'email']
+        );
+
       if (solicitudesPorId.length === 0) {
         res.json({
           mensaje: `No se encontraron solicitudes con ese id: ${req.params.idSolicitud}`,
@@ -124,7 +130,7 @@ module.exports = {
         await nuevaSecuencia.save()
       }
       const secuencia = await SecuenciaSolicitudes.findOneAndUpdate(
-        { id:0 }, 
+        { id: 0 },
         { $inc: { secuencia: 1 } },
       );
 
