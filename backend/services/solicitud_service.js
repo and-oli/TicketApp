@@ -33,7 +33,24 @@ module.exports = {
       if (infoFiltro.texto) {
         filtro.resumen = { $regex: infoFiltro.texto, $options: 'i' };
       };
-
+      const cantidad = Number(infoFiltro.cantidad);
+      const pagina = Number(infoFiltro.pagina);
+      const resultadoCuenta = await Solicitud.aggregate([
+        {
+          $match: {
+            $or: [
+              filtro,
+              {
+                idSolicitud: {
+                  $in: posiblesIds
+                },
+              }
+            ]
+          },
+        },
+        { $count: "cuenta"},
+      ]);
+      const cuenta = resultadoCuenta[0].cuenta;
       const solicitudes = await Solicitud.aggregate([
         {
           $match: {
@@ -47,7 +64,9 @@ module.exports = {
             ]
           },
         },
-
+        { $sort: { idSolicitud: -1 } },
+        { $skip: pagina * cantidad},
+        { $limit:  cantidad},
         {
           $lookup: {
             from: 'clientes',
@@ -64,13 +83,13 @@ module.exports = {
             as: 'usuarioSolicitante',
           },
         },
-        { $sort: { idSolicitud: -1 } }
       ]);
 
       res.json({
         mensaje: 'Solicitud exitosa...',
         ok: true,
         solicitudes,
+        cuenta,
       });
     } catch (error) {
       enviarError(res, error);

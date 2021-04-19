@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -63,7 +63,19 @@ const TableRowAlt = withStyles((theme) => ({
 
 export default function ListaSolicitudes() {
   const [listaSolicitudes, setListaSolicitudes] = React.useState([]);
-  const [page, setPage] = React.useState(2);
+  const [page, setPage] = React.useState(0);
+  const [cuenta, setCuenta] = React.useState(0);
+  
+  const refPagePrevia = useRef();
+  const refRowsPerPagePrevia = useRef();
+
+  React.useEffect(() => {
+    refRowsPerPagePrevia.current = rowsPerPage;
+    refPagePrevia.current = page;
+  });
+  const pagePrevia = refPagePrevia.current;
+  const rowsPerPagePrevia = refRowsPerPagePrevia.current;
+
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filtro, setFiltro] = useState({
     searchTexto: "",
@@ -72,13 +84,13 @@ export default function ListaSolicitudes() {
 
   const classes = useStyles();
 
-  React.useEffect(() => {
-    enviarBusqueda("", "");
-  }, []);
-
-  function enviarBusqueda(estado, texto) {
+  const enviarBusqueda = useCallback (() => {
+    if (rowsPerPagePrevia === rowsPerPage && pagePrevia === page) {
+      return;
+    }
+    const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
     fetch(
-      `http://localhost:3000/solicitudes/?estado=${estado}&texto=${texto}`,
+      `http://localhost:3000/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}`,
       {
         method: "GET",
         headers: {
@@ -87,10 +99,17 @@ export default function ListaSolicitudes() {
       }
     )
       .then((res) => res.json())
-      .then((getSolicitudes) => {
-        setListaSolicitudes(getSolicitudes.solicitudes);
+      .then((resultado) => {
+        setListaSolicitudes(resultado.solicitudes);
+        setCuenta(resultado.cuenta);
       });
-  }
+  }, [filtro, page, rowsPerPage, rowsPerPagePrevia, pagePrevia])
+
+  React.useEffect(() => {
+    enviarBusqueda();
+  }, [enviarBusqueda]);
+
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -110,8 +129,7 @@ export default function ListaSolicitudes() {
     if (e) {
       e.preventDefault();
     }
-    const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
-    enviarBusqueda(estado, filtro.searchTexto);
+    enviarBusqueda();
   };
 
   const renderizarInfoSolicitudes = () => {
@@ -184,7 +202,7 @@ export default function ListaSolicitudes() {
               <TableCellHeader align="center">Estado</TableCellHeader>
               <TableCellHeader align="center">Prioridad</TableCellHeader>
               <TableCellHeader align="center">Resumen</TableCellHeader>
-              <TableCellHeader align="center">Fecha - Hora</TableCellHeader>
+              <TableCellHeader align="center" id="header-fecha">Fecha - Hora</TableCellHeader>
               <TableCellHeader align="center"></TableCellHeader>
             </TableRow>
           </TableHead>
@@ -192,10 +210,10 @@ export default function ListaSolicitudes() {
           <TableFooter style={{ width: "auto" }}>
             <TableRow>
               <TablePagination
-                count={100}
-                page={page}
-                onChangePage={handleChangePage}
+                count={cuenta}
+                page={page} 
                 rowsPerPage={rowsPerPage}
+                onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
               />
             </TableRow>
