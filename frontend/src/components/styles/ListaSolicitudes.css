@@ -40,3 +40,14 @@
   justify-content: center;
   margin: 25px;
 }
+.MuiTableSortLabel-root:hover, .MuiTableSortLabel-root.MuiTableSortLabel-active {
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.MuiTableSortLabel-root.MuiTableSortLabel-active.MuiTableSortLabel-root.MuiTableSortLabel-active .MuiTableSortLabel-icon {
+  color: white !important;
+  opacity: 1 !important;
+}
+
+

@@ -22,6 +22,8 @@ module.exports = {
       const regexNumeros = /\d+/g;
       let posiblesIds = [];
       const coincidencias = infoFiltro.texto.match(regexNumeros);
+      let ordenResultado = { idSolicitud: -1 };
+
       if (coincidencias) {
         posiblesIds = coincidencias.map(c => Number.parseInt(c));
       }
@@ -33,6 +35,12 @@ module.exports = {
       if (infoFiltro.texto) {
         filtro.resumen = { $regex: infoFiltro.texto, $options: 'i' };
       };
+
+      if (infoFiltro.ordenarPor) {
+        ordenResultado = {};
+        ordenResultado[infoFiltro.ordenarPor] = infoFiltro.orden === 'asc' ? 1 : -1;
+      };
+
       const cantidad = Number(infoFiltro.cantidad);
       const pagina = Number(infoFiltro.pagina);
       const resultadoCuenta = await Solicitud.aggregate([
@@ -64,9 +72,6 @@ module.exports = {
             ]
           },
         },
-        { $sort: { idSolicitud: -1 } },
-        { $skip: pagina * cantidad},
-        { $limit:  cantidad},
         {
           $lookup: {
             from: 'clientes',
@@ -83,6 +88,9 @@ module.exports = {
             as: 'usuarioSolicitante',
           },
         },
+        { $sort:  ordenResultado},
+        { $skip: pagina * cantidad},
+        { $limit:  cantidad},
       ]);
 
       res.json({

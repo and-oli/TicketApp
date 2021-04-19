@@ -18,6 +18,7 @@ import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableFooter from "@material-ui/core/TableFooter";
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import "../styles/ListaSolicitudes.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,32 +66,39 @@ export default function ListaSolicitudes() {
   const [listaSolicitudes, setListaSolicitudes] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [cuenta, setCuenta] = React.useState(0);
-  
-  const refPagePrevia = useRef();
-  const refRowsPerPagePrevia = useRef();
-
-  React.useEffect(() => {
-    refRowsPerPagePrevia.current = rowsPerPage;
-    refPagePrevia.current = page;
-  });
-  const pagePrevia = refPagePrevia.current;
-  const rowsPerPagePrevia = refRowsPerPagePrevia.current;
-
+  const [ordenarPor, setOrdenarPor] = React.useState('');
+  const [orden, setOrden] = React.useState('desc');
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filtro, setFiltro] = useState({
     searchTexto: "",
     searchEstado: "Todos",
   });
+  
+  const refPagePrevia = useRef();
+  const refOrdenarPorPrevia = useRef();
+  const refOrdenPrevia = useRef();
+  const refRowsPerPagePrevia = useRef();
 
+  React.useEffect(() => {
+    refPagePrevia.current = page;
+    refOrdenarPorPrevia.current = ordenarPor;
+    refOrdenPrevia.current = ordenPrevia;
+    refRowsPerPagePrevia.current = rowsPerPage;
+  });
+  const pagePrevia = refPagePrevia.current;
+  const ordenarPorPrevia = refOrdenarPorPrevia.current;
+  const ordenPrevia = refOrdenPrevia.current;
+  const rowsPerPagePrevia = refRowsPerPagePrevia.current;
+  
   const classes = useStyles();
 
   const enviarBusqueda = useCallback (() => {
-    if (rowsPerPagePrevia === rowsPerPage && pagePrevia === page) {
+    if (pagePrevia === page && ordenarPorPrevia === ordenarPor && ordenPrevia === orden && rowsPerPagePrevia === rowsPerPage) {
       return;
     }
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
     fetch(
-      `http://localhost:3000/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}`,
+      `http://localhost:3000/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
       {
         method: "GET",
         headers: {
@@ -103,7 +111,7 @@ export default function ListaSolicitudes() {
         setListaSolicitudes(resultado.solicitudes);
         setCuenta(resultado.cuenta);
       });
-  }, [filtro, page, rowsPerPage, rowsPerPagePrevia, pagePrevia])
+  }, [filtro, page, pagePrevia, rowsPerPage, rowsPerPagePrevia, ordenarPor, ordenarPorPrevia, orden, ordenPrevia])
 
   React.useEffect(() => {
     enviarBusqueda();
@@ -132,6 +140,16 @@ export default function ListaSolicitudes() {
     enviarBusqueda();
   };
 
+  const cambioOrden = (idEncabezado) => {
+    if (ordenarPor === idEncabezado) {
+      setOrden(orden === 'asc' ? 'desc' : 'asc');
+    } else {
+      setOrden( 'desc');
+    }
+    setOrdenarPor(idEncabezado);
+
+  } 
+
   const renderizarInfoSolicitudes = () => {
     return listaSolicitudes.map((sol) => {
       return (
@@ -154,6 +172,16 @@ export default function ListaSolicitudes() {
       );
     });
   };
+
+  const encabezados = [
+    {id: 'idSolicitud', titulo: 'Número de solicitud'},
+    {id: 'cliente', titulo: 'Cliente'},
+    {id: 'usuarioSolicitante', titulo: 'Solicitante'},
+    {id: 'estado', titulo: 'Estado'},
+    {id: 'prioridad', titulo: 'Prioridad'},
+    {id: 'resumen', titulo: 'Resumen'},
+    {id: 'fechaHora', titulo: 'Fecha'},
+  ]
 
   return (
     <div>
@@ -194,16 +222,21 @@ export default function ListaSolicitudes() {
         <Table id="table" size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCellHeader align="center">
-                Número de solicitud
-              </TableCellHeader>
-              <TableCellHeader align="center">Cliente</TableCellHeader>
-              <TableCellHeader align="center">Solicitante</TableCellHeader>
-              <TableCellHeader align="center">Estado</TableCellHeader>
-              <TableCellHeader align="center">Prioridad</TableCellHeader>
-              <TableCellHeader align="center">Resumen</TableCellHeader>
-              <TableCellHeader align="center" id="header-fecha">Fecha - Hora</TableCellHeader>
-              <TableCellHeader align="center"></TableCellHeader>
+              {
+                encabezados.map((encabezado, i) => {
+                  return <TableCellHeader key={i} align="center"
+                    sortDirection={ordenarPor === encabezado.id ? orden : false}
+                    >
+                      <TableSortLabel
+                        active={ordenarPor === encabezado.id}
+                        direction={ordenarPor === encabezado.id ? orden : 'asc'}
+                        onClick={()=>cambioOrden(encabezado.id)}
+                      >
+                        {encabezado.titulo}
+                      </TableSortLabel>
+                    </TableCellHeader>
+                })
+              }
             </TableRow>
           </TableHead>
           <TableBody>{renderizarInfoSolicitudes()}</TableBody>
