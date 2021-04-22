@@ -8,19 +8,20 @@ import "../styles/EnviarSolicitud.css";
 
 export default function EnviarSolicitud() {
   const [loading, setloading] = useState(false);
+  const [mensaje, setMensaje] = useState({ text: "", color: "" });
+  const [listaClientes, setListaClientes] = useState([]);
   const [state, setState] = useState({
     refCliente: "",
     prioridad: "",
     resumen: "",
     descripcion: "",
-    nombre: "",
     correo: "",
     ciudad: "",
     requerimiento: "",
     categoria: "",
     subCategoria: "",
   });
-  const [listaClientes, setListaClientes] = useState([]);
+
   useEffect(() => {
     fetch("http://localhost:3000/users/clientes", {
       method: "GET",
@@ -41,28 +42,42 @@ export default function EnviarSolicitud() {
 
   const enviarSolicitud = (event) => {
     let data = {};
+    let confirmarPost = false;
+
+    event.preventDefault();
+
     for (let info in state) {
-      if (state[info] !== state.listaClientes) {
+      if (state[info] !== "") {
         data[info] = state[info];
+        confirmarPost = true;
+      } else {
+        confirmarPost = false;
+        setMensaje({
+          text: "La informacion debe estar completa.",
+          color: "orange",
+        });
+        break;
       }
     }
-    fetch("http://localhost:3000/solicitudes/nuevaSolicitud", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "x-access-token": localStorage.getItem("TAToken"),
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        setloading(true);
-        if (json.ok) {
-          window.location.reload();
-        }
-      });
-    event.preventDefault();
+
+    if (confirmarPost) {
+      fetch("http://localhost:3000/solicitudes/nuevaSolicitud", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "x-access-token": localStorage.getItem("TAToken"),
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          setloading(true);
+          if (json.ok) {
+            window.location.reload();
+          }
+        });
+    }
   };
 
   function renderizarClientes(lista) {
@@ -205,10 +220,20 @@ export default function EnviarSolicitud() {
             />
           </div>
         </div>
+        <h6
+          style={{
+            color: mensaje.color,
+            marginTop: 0,
+            height: 10,
+            textAlign: "center",
+          }}
+        >
+          {mensaje.text}
+        </h6>
         <div className="button">
           {loading ? (
             <CircularProgress
-              color="action"
+              color="inherit"
               className="icon-enviar"
               disableShrink
             />

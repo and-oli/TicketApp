@@ -10,9 +10,11 @@ export default function CambiosSolicitud(props) {
   const [loading, setloading] = useState(false);
   const [listaTecnicos, setTecnicos] = useState([]);
   const [state, setState] = useState({
-    titulo: "",
     refUsuarioAsignado: "",
+    titulo: "",
     nota: "",
+    foto: undefined,
+    file: undefined,
     abierta: undefined,
   });
 
@@ -27,8 +29,17 @@ export default function CambiosSolicitud(props) {
       .then((json) => setTecnicos(json.tecnicos));
   }, []);
 
+  const handleSelectFile = (event) => {
+    event.preventDefault();
+    let { id, files } = event.target;
+    setState((prevState) => ({ ...prevState, [id]: files[0] }));
+  };
+
   const handleChange = (event) => {
     let { name, value } = event.target;
+
+    event.preventDefault();
+
     if (name === "abierta" && value === "") {
       value = undefined;
     }
@@ -36,24 +47,18 @@ export default function CambiosSolicitud(props) {
   };
 
   const enviarCambio = (event) => {
-    const fecha = new Date();
+    let formData = new FormData();
     let data = {
       refSolicitud: props.refSolicitud,
-      fechaHora:
-        fecha.getDay() +
-        "/" +
-        fecha.getMonth() +
-        "/" +
-        fecha.getFullYear() +
-        "  " +
-        fecha.getHours() +
-        ":" +
-        fecha.getMinutes() +
-        ":" +
-        fecha.getSeconds(),
     };
+
+    formData.append("foto", state.foto);
+    formData.append("file", state.file);
+
     for (let cambio in state) {
-      data[cambio] = state[cambio];
+      if (state[cambio] !== undefined || "") {
+        data[cambio] = state[cambio];
+      }
     }
     fetch(`http://localhost:3000/cambiosSolicitud/${props.idSolicitud}`, {
       method: "POST",
@@ -70,7 +75,7 @@ export default function CambiosSolicitud(props) {
         if (json.ok) {
           window.location.reload();
         }
-      });
+      });    
     event.preventDefault();
   };
 
@@ -113,7 +118,7 @@ export default function CambiosSolicitud(props) {
             className="select-empty"
           >
             <option value="">Estado {props.estado}</option>
-            <option value={false}>resuelta</option>
+            <option value={false}>Resuelta</option>
           </NativeSelect>
         </FormControl>
         <TextField
@@ -125,7 +130,7 @@ export default function CambiosSolicitud(props) {
           variant="outlined"
           multiline
           inputProps={{
-            maxLength: 150,
+            maxLength: 35,
           }}
           required
           rows={1}
@@ -144,13 +149,19 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
-
-        <input className="adjuntar-archivo" type="file" />
-
+            <input type="file" id="file" onChange={handleSelectFile} />
+            <input
+              type="file"
+              label='Tomar foto'
+              id="foto"
+              accept="image/*"
+              capture="camera"
+              onChange={handleSelectFile}
+            />
         <div className="button">
           {loading ? (
             <CircularProgress
-              color="action"
+              color="inherit"
               className="icon-enviar"
               disableShrink
             />

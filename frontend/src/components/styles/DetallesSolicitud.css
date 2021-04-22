@@ -7,7 +7,7 @@
   width: 30%;
   margin-top: 5px;
   border: 2px solid rgba(65, 65, 65, 0.638);
-  min-width: 330px;
+  min-width: 380px;
   height: 750px;
 }
 .paper-solicitud-a p {
@@ -43,7 +43,7 @@
   width: 30%;
   margin-top: 5px;
   border: 2px solid rgba(65, 65, 65, 0.638);
-  min-width: 330px;
+  min-width: 380px;
   height: 750px;
 }
 .paper-solicitud-b form {
@@ -70,7 +70,7 @@
   width: 30%;
   margin-top: 5px;
   border: 2px solid rgba(65, 65, 65, 0.638);
-  min-width: 330px;
+  min-width: 380px;
   margin-bottom: 20px;
   height: 750px;
 }
@@ -79,13 +79,12 @@
   overflow-y: scroll;
   align-self: center;
   text-align: left;
-  word-break: break-all;
   word-wrap: break-word;
   margin-bottom: 20px;
   border-radius: 2px;
   background-color: rgba(220, 215, 215, 0.727);
   width: 90%;
-  height: 1000px;
+  height: 150px;
   font-size: 15px;
 }
 
@@ -99,8 +98,8 @@
 .container-paper {
   display: flex;
   flex-wrap: wrap;
-  justify-content:space-evenly;
-  min-width: 340px;
+  justify-content: space-evenly;
+  min-width: 380px;
   margin-top: 0px;
   width: 100%;
   height: 80%;
@@ -125,5 +124,12 @@
 
 .icon-enviar {
   display: flex;
+  align-self: center;
+}
+
+#file {
+  align-self: center;
+}
+#foto {
   align-self: center;
 }

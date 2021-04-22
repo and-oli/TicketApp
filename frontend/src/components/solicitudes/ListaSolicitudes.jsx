@@ -18,7 +18,7 @@ import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableFooter from "@material-ui/core/TableFooter";
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 import "../styles/ListaSolicitudes.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -66,14 +66,14 @@ export default function ListaSolicitudes() {
   const [listaSolicitudes, setListaSolicitudes] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [cuenta, setCuenta] = React.useState(0);
-  const [ordenarPor, setOrdenarPor] = React.useState('');
-  const [orden, setOrden] = React.useState('desc');
+  const [ordenarPor, setOrdenarPor] = React.useState("");
+  const [orden, setOrden] = React.useState("desc");
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filtro, setFiltro] = useState({
     searchTexto: "",
     searchEstado: "Todos",
   });
-  
+
   const refPagePrevia = useRef();
   const refOrdenarPorPrevia = useRef();
   const refOrdenPrevia = useRef();
@@ -89,11 +89,16 @@ export default function ListaSolicitudes() {
   const ordenarPorPrevia = refOrdenarPorPrevia.current;
   const ordenPrevia = refOrdenPrevia.current;
   const rowsPerPagePrevia = refRowsPerPagePrevia.current;
-  
+
   const classes = useStyles();
 
-  const enviarBusqueda = useCallback (() => {
-    if (pagePrevia === page && ordenarPorPrevia === ordenarPor && ordenPrevia === orden && rowsPerPagePrevia === rowsPerPage) {
+  const enviarBusqueda = useCallback(() => {
+    if (
+      pagePrevia === page &&
+      ordenarPorPrevia === ordenarPor &&
+      ordenPrevia === orden &&
+      rowsPerPagePrevia === rowsPerPage
+    ) {
       return;
     }
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
@@ -111,13 +116,21 @@ export default function ListaSolicitudes() {
         setListaSolicitudes(resultado.solicitudes);
         setCuenta(resultado.cuenta);
       });
-  }, [filtro, page, pagePrevia, rowsPerPage, rowsPerPagePrevia, ordenarPor, ordenarPorPrevia, orden, ordenPrevia])
+  }, [
+    filtro,
+    page,
+    pagePrevia,
+    rowsPerPage,
+    rowsPerPagePrevia,
+    ordenarPor,
+    ordenarPorPrevia,
+    orden,
+    ordenPrevia,
+  ]);
 
   React.useEffect(() => {
     enviarBusqueda();
   }, [enviarBusqueda]);
-
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -142,46 +155,49 @@ export default function ListaSolicitudes() {
 
   const cambioOrden = (idEncabezado) => {
     if (ordenarPor === idEncabezado) {
-      setOrden(orden === 'asc' ? 'desc' : 'asc');
+      setOrden(orden === "asc" ? "desc" : "asc");
     } else {
-      setOrden( 'desc');
+      setOrden("desc");
     }
     setOrdenarPor(idEncabezado);
-
-  } 
+  };
 
   const renderizarInfoSolicitudes = () => {
-    return listaSolicitudes.map((sol) => {
-      return (
-        <TableRowAlt key={sol.idSolicitud}>
-          <TableCell align="center">
-            <Link
-              className="link"
-              to={`/detalle-solicitud/?id_solicitud=${sol.idSolicitud}`}
-            >
-              {sol.idSolicitud}
-            </Link>
-          </TableCell>
-          <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
-          <TableCell align="center">{sol.usuarioSolicitante[0].name}</TableCell>
-          <TableCell align="center">{sol.estado}</TableCell>
-          <TableCell align="center">{sol.prioridad}</TableCell>
-          <TableCell align="center">{sol.resumen}</TableCell>
-          <TableCell align="center">{sol.fechaHora}</TableCell>
-        </TableRowAlt>
-      );
-    });
+    if (listaSolicitudes) {
+      return listaSolicitudes.map((sol) => {
+        return (
+          <TableRowAlt key={sol.idSolicitud}>
+            <TableCell align="center">
+              <Link
+                className="link"
+                to={`/detalle-solicitud/?id_solicitud=${sol.idSolicitud}`}
+              >
+                {sol.idSolicitud}
+              </Link>
+            </TableCell>
+            <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
+            <TableCell align="center">
+              {sol.usuarioSolicitante[0].name}
+            </TableCell>
+            <TableCell align="center">{sol.estado}</TableCell>
+            <TableCell align="center">{sol.prioridad}</TableCell>
+            <TableCell align="center">{sol.resumen}</TableCell>
+            <TableCell align="center">{sol.fechaHora}</TableCell>
+          </TableRowAlt>
+        );
+      });
+    }
   };
 
   const encabezados = [
-    {id: 'idSolicitud', titulo: 'Número de solicitud'},
-    {id: 'cliente', titulo: 'Cliente'},
-    {id: 'usuarioSolicitante', titulo: 'Solicitante'},
-    {id: 'estado', titulo: 'Estado'},
-    {id: 'prioridad', titulo: 'Prioridad'},
-    {id: 'resumen', titulo: 'Resumen'},
-    {id: 'fechaHora', titulo: 'Fecha'},
-  ]
+    { id: "idSolicitud", titulo: "Número de solicitud" },
+    { id: "cliente", titulo: "Cliente" },
+    { id: "usuarioSolicitante", titulo: "Solicitante" },
+    { id: "estado", titulo: "Estado" },
+    { id: "prioridad", titulo: "Prioridad" },
+    { id: "resumen", titulo: "Resumen" },
+    { id: "fechaHora", titulo: "Fecha" },
+  ];
 
   return (
     <div>
@@ -212,7 +228,7 @@ export default function ListaSolicitudes() {
           margin="dense"
         />
         <div className={classes.searchIcon}>
-          <IconButton onClick={iniciarBusqueda} type="submit">
+          <IconButton type="submit">
             <SearchIcon />
           </IconButton>
         </div>
@@ -222,21 +238,23 @@ export default function ListaSolicitudes() {
         <Table id="table" size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              {
-                encabezados.map((encabezado, i) => {
-                  return <TableCellHeader key={i} align="center"
+              {encabezados.map((encabezado, i) => {
+                return (
+                  <TableCellHeader
+                    key={i}
+                    align="center"
                     sortDirection={ordenarPor === encabezado.id ? orden : false}
+                  >
+                    <TableSortLabel
+                      active={ordenarPor === encabezado.id}
+                      direction={ordenarPor === encabezado.id ? orden : "asc"}
+                      onClick={() => cambioOrden(encabezado.id)}
                     >
-                      <TableSortLabel
-                        active={ordenarPor === encabezado.id}
-                        direction={ordenarPor === encabezado.id ? orden : 'asc'}
-                        onClick={()=>cambioOrden(encabezado.id)}
-                      >
-                        {encabezado.titulo}
-                      </TableSortLabel>
-                    </TableCellHeader>
-                })
-              }
+                      {encabezado.titulo}
+                    </TableSortLabel>
+                  </TableCellHeader>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>{renderizarInfoSolicitudes()}</TableBody>
@@ -244,7 +262,7 @@ export default function ListaSolicitudes() {
             <TableRow>
               <TablePagination
                 count={cuenta}
-                page={page} 
+                page={page}
                 rowsPerPage={rowsPerPage}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}

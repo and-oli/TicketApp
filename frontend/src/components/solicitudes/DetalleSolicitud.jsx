@@ -56,14 +56,16 @@ export default function DetalleSolicitud() {
           </div>
         </Paper>
         <CambiosSolicitud
-          asignado={asignada}
-          requerimiento={detalleSolicitud.requerimente}
-          estado={detalleSolicitud.estado}
-          idSolicitud={idSolicitud}
-          refSolicitud={detalleSolicitud._id}
+          abierta = {detalleSolicitud.abierta}
+          asignado = {asignada}
+          requerimiento = {detalleSolicitud.requerimente}
+          estado = {detalleSolicitud.estado}
+          idSolicitud = {idSolicitud}
+          refSolicitud = {detalleSolicitud._id}
         />
         <Paper className="paper-solicitud-c" elevation={4}>
           <ListaCambios
+            asignado={asignada} 
             refSolicitud={detalleSolicitud._id}
             idSolicitud={idSolicitud}
           />
@@ -71,4 +73,4 @@ export default function DetalleSolicitud() {
       </div>
     </div>
   );
-}
+};
