@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 const users = require('./routes/user');
 const solicitudes = require('./routes/solicitud')
 const CambiosSoliciud = require('./routes/cambio_solicitud');
+const solicitudesVarias = require('./solicitudesVarias')
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/solicitudes', solicitudes);
 app.use('/users', users);
 app.use('/cambiosSolicitud', CambiosSoliciud);
+app.use('/solicitudesVarias', solicitudesVarias)
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');

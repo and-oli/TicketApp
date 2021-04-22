@@ -4,7 +4,7 @@ const Solicitud = ModuloSolicitud.modelo;
 const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modelo;
 
 function enviarError(res, error) {
-  console.error(error);
+  console.error(error.stack);
   return res.json({
     mensaje: 'Hubo un error...',
     ok: false,
@@ -56,7 +56,7 @@ module.exports = {
             ]
           },
         },
-        { $count: "cuenta"},
+        { $count: "cuenta" },
       ]);
       const cuenta = resultadoCuenta[0].cuenta;
       const solicitudes = await Solicitud.aggregate([
@@ -83,14 +83,29 @@ module.exports = {
         {
           $lookup: {
             from: 'usuarios',
-            localField: 'refUsuarioSolicitante',
-            foreignField: '_id',
-            as: 'usuarioSolicitante',
-          },
+            let: { ref: '$refUsuarioSolicitante' },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$$ref', '$_id'] }
+                    ]
+                  }
+                }
+              },
+              {
+                $project: {
+                  name: 1,
+                }
+              }
+            ],
+            as: 'usuarioSolicitante'
+          }
         },
-        { $sort:  ordenResultado},
-        { $skip: pagina * cantidad},
-        { $limit:  cantidad},
+        { $sort: ordenResultado },
+        { $skip: pagina * cantidad },
+        { $limit: cantidad },
       ]);
 
       res.json({
@@ -166,11 +181,11 @@ module.exports = {
       newSolicitud.resumen = req.body.resumen;
       newSolicitud.descripcion = req.body.descripcion;
       newSolicitud.prioridad = req.body.prioridad;
-      newSolicitud.fechaHora = fecha.getDay() + '/' + fecha.getMonth() + '/' + fecha.getFullYear() + '     ' + fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
+      newSolicitud.fechaHora = fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear() + '   ' + fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
       newSolicitud.estado = 'Sin asignar (abierta)';
       newSolicitud.abierta = true;
       newSolicitud.categoria = req.body.categoria;
-      newSolicitud.refUsuarioAsignado = '604e300ca0f34b37c07b7c3a';
+      newSolicitud.refUsuarioAsignado = '607f58617f48822d4893f69e';
       newSolicitud.refCliente = req.body.refCliente;
       newSolicitud.refUsuarioSolicitante = req.decoded.id;
       newSolicitud.listaIncumbentes = [req.decoded.id];

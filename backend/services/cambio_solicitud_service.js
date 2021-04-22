@@ -6,9 +6,8 @@ const Solicitud = require('../models/Solicitud').modelo;
 const credencialesDeCorreo = require('../config/config');
 const fetch = require('node-fetch');
 
-
 module.exports = {
-
+  
   getCambiosPorSolicitud: async function (req, res) {
 
     const cambios = await CambiosSolicitud.find({ refSolicitud: req.params.idSolicitud }).sort({ _id: -1 })
@@ -25,6 +24,7 @@ module.exports = {
 
     const cambios = req.body;
     const resultadoSolicitud = {};
+    const fecha = new Date()
 
     if (cambios.refUsuarioAsignado) {
       resultadoSolicitud.refUsuarioAsignado = cambios.refUsuarioAsignado;
@@ -52,6 +52,19 @@ module.exports = {
         cambiosSolicitud[llave] = cambios[llave];
       }
     }
+    cambiosSolicitud.fechaHora = (
+      fecha.getDate() +
+      '/' +
+      (fecha.getMonth() + 1) +
+      "/" +
+      fecha.getFullYear() +
+      "  " +
+      fecha.getHours() +
+      ":" +
+      fecha.getMinutes() +
+      ":" +
+      fecha.getSeconds()
+      );
     // await this.enviarCorreo(req, resultadoSolicitud, cambios.nota);
     try {
       await cambiosSolicitud.save();
