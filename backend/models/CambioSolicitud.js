@@ -21,7 +21,6 @@ var CambioSolicitudSchema = new Schema({
     archivos: [ArchivoSchema]
 });
 
-
 const nombreModelo = 'cambiosSolicitudes'   
 
 module.exports = {

@@ -20,21 +20,27 @@ module.exports = {
     };
   },
 
+  postFile: async function(req, res){
+    res.json({
+      ruta: 'https://www.muycomputer.com/wp-content/uploads/2016/07/portada.jpg'
+    })
+  },
+
   cambio: async function (req, res) {
 
     const cambios = req.body;
     const resultadoSolicitud = {};
     const fecha = new Date()
 
-    if (cambios.refUsuarioAsignado) {
-      resultadoSolicitud.refUsuarioAsignado = cambios.refUsuarioAsignado;
+    if (cambios.dueno) {
+      resultadoSolicitud.dueno = cambios.dueno;
       resultadoSolicitud.$addToSet = {
         listaIncumbentes: {
-          $each: [cambios.refUsuarioAsignado]
+          $each: [cambios.dueno]
         }
       };
-      resultadoSolicitud.estado = 'Asignada';
-      cambios.estado = 'Asignada';
+      resultadoSolicitud.estado = 'Asignado';
+      cambios.estado = 'Asignado';
     }
     if (cambios.abierta !== undefined) {
       resultadoSolicitud.abierta = cambios.abierta;

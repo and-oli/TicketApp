@@ -22,7 +22,8 @@ router.use(function (req, res, next) {
 });
 
 router.post('/postFile', token.checkToken, multer.single("file"), async function (req, res) {
-  // await cambioService.postFile(req, res)
+  console.log(req.body)
+  await cambioService.postFile(req, res)
 })
 
 router.post('/:idSolicitud',token.checkToken, async function (req, res) {

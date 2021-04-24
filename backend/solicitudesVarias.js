@@ -128,9 +128,6 @@ router.post('/newSolicitudes', token, async function (req, res) {
 
   try {
     const secuenciaExiste = await SecuenciaSolicitudes.countDocuments({});
-    const idCount = await SecuenciaSolicitudes.find({});
-    const count = idCount[0].secuencia;
-    const refId = [];
 
     if (!secuenciaExiste) {
       const nuevaSecuencia = new SecuenciaSolicitudes();
@@ -138,7 +135,10 @@ router.post('/newSolicitudes', token, async function (req, res) {
       nuevaSecuencia.id = 0;
       await nuevaSecuencia.save();
     }
-
+    
+    const idCount = await SecuenciaSolicitudes.find({});
+    const count = idCount[0].secuencia;
+    const refId = [];
     const idUser = await ModeloUsuario.find({}, { refCliente: 1 });
 
     idUser.map(refUser => {
@@ -159,7 +159,6 @@ router.post('/newSolicitudes', token, async function (req, res) {
       element.estado = 'Sin asignar (abierta)';
       element.abierta = true;
       element.refCliente = refUsuarioRandom.refCliente;
-      element.refUsuarioAsignado = '6081ccc63a676332bc4140a0';
       element.refUsuarioSolicitante = refUsuarioRandom._id;
       element.listaIncumbentes = [refUsuarioRandom._id];
       documentoDeSolicitudes.push(element);

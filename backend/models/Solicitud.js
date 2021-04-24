@@ -15,7 +15,7 @@ const SolicitudSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'usuarios'
     },
-    refUsuarioAsignado: {
+    dueno: {
         type: Schema.Types.ObjectId,
         ref: 'usuarios'
     },

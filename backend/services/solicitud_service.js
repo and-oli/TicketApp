@@ -136,7 +136,7 @@ module.exports = {
   getSoliNumero: async function (req, res) {
     try {
       const solicitudesPorId = await Solicitud.find({ idSolicitud: req.params.idSolicitud })
-        .populate('refUsuarioAsignado', ['name', 'role'])
+        .populate('dueno', ['name', 'role'])
         .populate('refCliente')
         .populate(
           'refUsuarioSolicitante',
@@ -185,7 +185,6 @@ module.exports = {
       newSolicitud.estado = 'Sin asignar (abierta)';
       newSolicitud.abierta = true;
       newSolicitud.categoria = req.body.categoria;
-      newSolicitud.refUsuarioAsignado = '607f58617f48822d4893f69e';
       newSolicitud.refCliente = req.body.refCliente;
       newSolicitud.refUsuarioSolicitante = req.decoded.id;
       newSolicitud.listaIncumbentes = [req.decoded.id];

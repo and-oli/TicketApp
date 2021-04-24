@@ -25,7 +25,7 @@ export default function Login() {
         username: userName,
         password: password,
       };
-      fetch("http://localhost:3000/users/authenticate", {
+      fetch("http://192.168.0.14:3000/users/authenticate", {
         method: "post",
         headers: {
           Accept: "application/json",

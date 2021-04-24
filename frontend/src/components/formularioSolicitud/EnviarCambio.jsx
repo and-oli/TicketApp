@@ -9,12 +9,14 @@ import TextField from "@material-ui/core/TextField";
 export default function CambiosSolicitud(props) {
   const [loading, setloading] = useState(false);
   const [listaTecnicos, setTecnicos] = useState([]);
-  const [state, setState] = useState({
-    refUsuarioAsignado: "",
-    titulo: "",
-    nota: "",
+  const [files, setFiles] = useState({
     foto: undefined,
     file: undefined,
+  })
+  const [state, setState] = useState({
+    dueno: "",
+    titulo: "",
+    nota: "",
     abierta: undefined,
   });
 
@@ -32,7 +34,7 @@ export default function CambiosSolicitud(props) {
   const handleSelectFile = (event) => {
     event.preventDefault();
     let { id, files } = event.target;
-    setState((prevState) => ({ ...prevState, [id]: files[0] }));
+    setFiles((prevState) => ({ ...prevState, [id]: files[0] }));
   };
 
   const handleChange = (event) => {
@@ -46,20 +48,32 @@ export default function CambiosSolicitud(props) {
     setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const enviarCambio = (event) => {
-    let formData = new FormData();
+  const enviarCambio = async (event) => {
+    const formData = new FormData();
     let data = {
       refSolicitud: props.refSolicitud,
     };
 
-    formData.append("foto", state.foto);
-    formData.append("file", state.file);
+    event.preventDefault();
 
     for (let cambio in state) {
-      if (state[cambio] !== undefined || "") {
+      if (state[cambio] !== undefined && state[cambio] !== "") {
         data[cambio] = state[cambio];
       }
     }
+
+    const response = await fetch(`http://localhost:3000/cambiosSolicitud/postFile`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "x-access-token": localStorage.getItem("TAToken"),
+      },
+    });
+    const responseJson = await response.json();
+    const ruta = responseJson.ruta;
+
+    data.ruta = ruta
+
     fetch(`http://localhost:3000/cambiosSolicitud/${props.idSolicitud}`, {
       method: "POST",
       body: JSON.stringify(data),
@@ -75,8 +89,7 @@ export default function CambiosSolicitud(props) {
         if (json.ok) {
           window.location.reload();
         }
-      });    
-    event.preventDefault();
+      });
   };
 
   const renderizarTecnicos = () => {
@@ -93,14 +106,14 @@ export default function CambiosSolicitud(props) {
           className="form-control"
           disabled={state.abierta === undefined ? false : true}
         >
-          <label htmlFor="asignar">Asignar:</label>
+          <label htmlFor="asignar">Dueño:</label>
           <NativeSelect
-            value={state.refUsuarioAsignado}
-            name="refUsuarioAsignado"
+            value={state.dueno}
+            name="dueno"
             onChange={handleChange}
             className="select-empty"
           >
-            <option value="">Asignado {props.asignado}</option>
+            <option value="">{props.asignado}</option>
 
             {renderizarTecnicos()}
           </NativeSelect>
@@ -108,7 +121,7 @@ export default function CambiosSolicitud(props) {
 
         <FormControl
           className="form-control"
-          disabled={state.refUsuarioAsignado === "" ? false : true}
+          disabled={state.dueno === "" ? false : true}
         >
           <label htmlFor="abierta">Estado:</label>
           <NativeSelect
@@ -117,7 +130,7 @@ export default function CambiosSolicitud(props) {
             onChange={handleChange}
             className="select-empty"
           >
-            <option value="">Estado {props.estado}</option>
+            <option value="">{props.estado}</option>
             <option value={false}>Resuelta</option>
           </NativeSelect>
         </FormControl>
@@ -149,15 +162,24 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
-            <input type="file" id="file" onChange={handleSelectFile} />
-            <input
-              type="file"
-              label='Tomar foto'
-              id="foto"
-              accept="image/*"
-              capture="camera"
-              onChange={handleSelectFile}
-            />
+        <div className='container-input'>
+          <label htmlFor='file' id='label-file'>
+            Adjuntar archivo
+        </label>
+          <input type="file" id="file" onChange={handleSelectFile} />
+          <h6 className='title-file'>{files.file ? files.file.name : null}</h6>
+          <label htmlFor='foto' id='label-file'>
+            Subir foto
+        </label>
+          <input
+            type="file"
+            id="foto"
+            accept="image/*"
+            capture="camera"
+            onChange={handleSelectFile}
+          />
+          <h6 className='title-file'>{files.foto ? files.foto.name : null}</h6>
+        </div>
         <div className="button">
           {loading ? (
             <CircularProgress

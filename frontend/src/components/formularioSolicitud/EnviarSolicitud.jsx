@@ -42,14 +42,13 @@ export default function EnviarSolicitud() {
 
   const enviarSolicitud = (event) => {
     let data = {};
-    let confirmarPost = false;
+    let confirmarPost = true;
 
     event.preventDefault();
 
     for (let info in state) {
       if (state[info] !== "") {
         data[info] = state[info];
-        confirmarPost = true;
       } else {
         confirmarPost = false;
         setMensaje({

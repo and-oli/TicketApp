@@ -15,7 +15,7 @@ export default function DetalleSolicitud() {
   const [solicitante, setSolicitante] = useState({});
 
   React.useEffect(() => {
-    fetch(`http://localhost:3000/solicitudes/porNumero/${idSolicitud}`, {
+    fetch(`http://192.168.0.14:3000/solicitudes/porNumero/${idSolicitud}`, {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
@@ -25,9 +25,13 @@ export default function DetalleSolicitud() {
       .then((getSolicitudes) => {
         setDetalleSolicitud(getSolicitudes.solicitud);
         setCliente(getSolicitudes.solicitud.refCliente.nombre);
-        setAsignada(getSolicitudes.solicitud.refUsuarioAsignado.name);
-        setRoleAsignado(getSolicitudes.solicitud.refUsuarioAsignado.role);
         setSolicitante(getSolicitudes.solicitud.refUsuarioSolicitante);
+        if(getSolicitudes.solicitud.dueno){
+          setRoleAsignado(getSolicitudes.solicitud.dueno.role);
+          setAsignada(getSolicitudes.solicitud.dueno.name);
+        } else {
+          setAsignada('Sin dueño');
+        }
       });
   }, [idSolicitud]);
 
