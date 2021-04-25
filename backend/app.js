@@ -14,6 +14,7 @@ const users = require('./routes/user');
 const solicitudes = require('./routes/solicitud')
 const CambiosSoliciud = require('./routes/cambio_solicitud');
 const solicitudesVarias = require('./solicitudesVarias')
+const archivo = require('./routes/archivo')
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/solicitudes', solicitudes);
 app.use('/users', users);
 app.use('/cambiosSolicitud', CambiosSoliciud);
 app.use('/solicitudesVarias', solicitudesVarias)
+app.use('/archivo', archivo)
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');

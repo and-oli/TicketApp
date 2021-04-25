@@ -127,13 +127,6 @@
   align-self: center;
 }
 
-.container-input{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  height: 100px;
-}
-
 #file{
   display: none;
 }

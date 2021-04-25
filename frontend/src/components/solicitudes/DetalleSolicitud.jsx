@@ -15,7 +15,7 @@ export default function DetalleSolicitud() {
   const [solicitante, setSolicitante] = useState({});
 
   React.useEffect(() => {
-    fetch(`http://localhost:3000/solicitudes/porNumero/${idSolicitud}`, {
+    fetch(`http://localhost:3001/solicitudes/porNumero/${idSolicitud}`, {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),

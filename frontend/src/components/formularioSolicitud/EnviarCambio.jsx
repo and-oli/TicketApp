@@ -6,13 +6,13 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
+// TODO: Determinar fuente de verdad para categorías
+const categoriasArchivos = ['Foto', 'Factura']
+
 export default function CambiosSolicitud(props) {
   const [loading, setloading] = useState(false);
   const [listaTecnicos, setTecnicos] = useState([]);
-  const [files, setFiles] = useState({
-    foto: undefined,
-    file: undefined,
-  })
+  const [archivos, setArchivos] = useState({});
   const [state, setState] = useState({
     dueno: "",
     titulo: "",
@@ -21,7 +21,10 @@ export default function CambiosSolicitud(props) {
   });
 
   useEffect(() => {
-    fetch("http://localhost:3000/users", {
+    const archObj = {};
+    categoriasArchivos.forEach(cat => archObj[cat] = undefined);
+    setArchivos(archObj)
+    fetch("http://localhost:3001/users", {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
@@ -31,10 +34,8 @@ export default function CambiosSolicitud(props) {
       .then((json) => setTecnicos(json.tecnicos));
   }, []);
 
-  const handleSelectFile = (event) => {
-    event.preventDefault();
-    let { id, files } = event.target;
-    setFiles((prevState) => ({ ...prevState, [id]: files[0] }));
+  const handleSelectFile = (files, categoria) => {
+    setArchivos((prevState) => ( {...prevState, [categoria]: files } ));
   };
 
   const handleChange = (event) => {
@@ -49,12 +50,25 @@ export default function CambiosSolicitud(props) {
   };
 
   const enviarCambio = async (event) => {
-    const formData = new FormData();
-    let data = {
-      refSolicitud: props.refSolicitud,
-    };
-
     event.preventDefault();
+
+    const formData = new FormData();
+    for (const categoria of categoriasArchivos){
+      formData.append(categoria, archivos[categoria]);
+    }
+
+    const responseArchivos = await fetch(`http://localhost:3001/gcs/postFile`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "x-access-token": localStorage.getItem("TAToken"),
+      },
+    });
+    const responseArchivosJson = await responseArchivos.json();
+
+    const data = {refSolicitud: props.refSolicitud}
+
+
 
     for (let cambio in state) {
       if (state[cambio] !== undefined && state[cambio] !== "") {
@@ -62,19 +76,9 @@ export default function CambiosSolicitud(props) {
       }
     }
 
-    const response = await fetch(`http://localhost:3000/cambiosSolicitud/postFile`, {
-      method: "POST",
-      body: formData,
-      headers: {
-        "x-access-token": localStorage.getItem("TAToken"),
-      },
-    });
-    const responseJson = await response.json();
-    const ruta = responseJson.ruta;
 
-    data.ruta = ruta
 
-    fetch(`http://localhost:3000/cambiosSolicitud/${props.idSolicitud}`, {
+    fetch(`http://localhost:3001/cambiosSolicitud/${props.idSolicitud}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -99,6 +103,27 @@ export default function CambiosSolicitud(props) {
       </option>
     ));
   };
+
+
+  const renderizarCamposArchivos = () => {
+    return categoriasArchivos.map((categoria, i) => 
+      <div className='container-item-archivo' key={i}>
+        <label htmlFor='file' id='label-file'>
+          Adjuntar {categoria.toLowerCase()}s
+        </label>
+          <input 
+            type="file"
+            id="file"
+            onChange={(e)=>handleSelectFile(e.target.files, categoria)}
+            capture="camera"
+            multiple
+            />
+          <h6 className='title-file'>{archivos[categoria] ? `${archivos[categoria].length} archivo(s) seleccionado(s)` : ''}</h6>
+      </div>
+    );
+
+  };
+
   return (
     <Paper className="paper-solicitud-b" elevation={10}>
       <form onSubmit={enviarCambio}>
@@ -162,23 +187,10 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
-        <div className='container-input'>
-          <label htmlFor='file' id='label-file'>
-            Adjuntar archivo
-        </label>
-          <input type="file" id="file" onChange={handleSelectFile} />
-          <h6 className='title-file'>{files.file ? files.file.name : null}</h6>
-          <label htmlFor='foto' id='label-file'>
-            Subir foto
-        </label>
-          <input
-            type="file"
-            id="foto"
-            accept="image/*"
-            capture="camera"
-            onChange={handleSelectFile}
-          />
-          <h6 className='title-file'>{files.foto ? files.foto.name : null}</h6>
+        <div id="container-archivos">
+          {
+            renderizarCamposArchivos()
+          }
         </div>
         <div className="button">
           {loading ? (

@@ -3,7 +3,9 @@ npm-debug.log
 workspace
 frontend/node_modules
 backend/node_modules
-backend/config/config.js
+backend/.vscode/
+frontend/.vscode/
+backend/config/
 frontend/.yarn
 backend/banners
 frontend/build/

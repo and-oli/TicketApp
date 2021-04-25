@@ -9,7 +9,7 @@ export default function ListaSolicitudes(props) {
   React.useEffect(() => {
     if (props.refSolicitud !== undefined) {
       fetch(
-        `http://localhost:3000/cambiosSolicitud/cambios/${props.refSolicitud}`,
+        `http://localhost:3001/cambiosSolicitud/cambios/${props.refSolicitud}`,
         {
           method: "GET",
           headers: {

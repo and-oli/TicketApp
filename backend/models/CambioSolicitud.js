@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const ModuloArchivo = require("./Archivo");
-const ArchivoSchema = ModuloArchivo.schema;
 
 const Schema = mongoose.Schema;
 
@@ -18,7 +16,9 @@ var CambioSolicitudSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'usuarios'
     },
-    archivos: [ArchivoSchema]
+    archivos: [{
+        type: Schema.Types.ObjectId,
+        ref: 'archivos'
 });
 
 const nombreModelo = 'cambiosSolicitudes'   

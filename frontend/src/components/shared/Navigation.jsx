@@ -8,7 +8,7 @@ export default function Navigation(props) {
   const { admin } = props;
   React.useEffect(
     () => {
-      fetch('http://localhost:3000/users/validarToken', {
+      fetch('http://localhost:3001/users/validarToken', {
         method: 'GET',
         headers: {
           'x-access-token': localStorage.getItem("TAToken")

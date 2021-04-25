@@ -54,7 +54,7 @@
 }
 
 .form-control {
-  margin: 1px;
+  margin: 10px !important;
   width: 90%;
   align-self: center;
 }
@@ -64,4 +64,18 @@
 
 .button-enviar-solicitud {
   background-color: black;
+}
+
+#container-archivos{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-item-archivo{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
 }
