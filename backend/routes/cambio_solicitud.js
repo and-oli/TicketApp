@@ -21,4 +21,8 @@ router.get('/cambios/:idSolicitud',token.checkToken, async function (req, res) {
   await cambioService.getCambiosPorSolicitud(req, res);
 });
 
+router.get('/constantes',token.checkToken, async function (req, res) {
+  await cambioService.getConstantes(res);
+});
+
 module.exports = router;
