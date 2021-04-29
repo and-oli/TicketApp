@@ -3,6 +3,8 @@ const CambiosSolicitud = ModuloCambiosSolicitud.modelo;
 const UsuarioSchema = require('../models/Usuario');
 const Usuario = UsuarioSchema.modelo;
 const Solicitud = require('../models/Solicitud').modelo;
+const categoriasDeArchivos = require('../data/categoria_archivos.json');
+const estados = require('../data/estado.json');
 const credencialesDeCorreo = require('../config/config');
 const fetch = require('node-fetch');
 
@@ -23,6 +25,13 @@ module.exports = {
   postFile: async function(req, res){
     res.json({
       ruta: 'https://www.muycomputer.com/wp-content/uploads/2016/07/portada.jpg'
+    })
+  },
+
+  getConstantes:async function(res) {
+    res.json({
+      categoriasDeArchivos,
+      estados
     })
   },
 
