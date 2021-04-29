@@ -10,6 +10,9 @@ export default function EnviarSolicitud() {
   const [loading, setloading] = useState(false);
   const [mensaje, setMensaje] = useState({ text: "", color: "" });
   const [listaClientes, setListaClientes] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [prioridad, setPrioridad] = useState([]);
+  const [requerimiento, setRequerimiento] = useState([]);
   const [state, setState] = useState({
     refCliente: "",
     prioridad: "",
@@ -34,6 +37,38 @@ export default function EnviarSolicitud() {
         setListaClientes(getClientes.clientes);
       });
   }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/solicitudes/constantes", {
+      method: "GET",
+      headers: {
+        "x-access-token": localStorage.getItem("TAToken"),
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        setCategorias(Object.values(json.categorias));
+        setPrioridad(Object.values(json.prioridad));
+        setRequerimiento(Object.values(json.requerimiento));
+      });
+  }, []);
+
+  const renderLista = (lista) => {
+    return lista.map((item, i) => (
+      <option
+        key={i}
+        value={
+          item === "Categorias" ||
+          item === "Prioridad" ||
+          item === "Tipo de requerimiento"
+            ? ""
+            : item
+        }
+      >
+        {item}
+      </option>
+    ));
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -113,13 +148,7 @@ export default function EnviarSolicitud() {
                 onChange={handleChange}
                 className="select-empty"
               >
-                <option value="Prioridad">Prioridad</option>
-                <option value="Ninguna">Ninguna</option>
-                <option value="Baja">Baja</option>
-                <option value="Normal">Normal</option>
-                <option value="Alta">Alta</option>
-                <option value="Urgente">Urgente</option>
-                <option value="Inmediata">Inmediata</option>
+                {renderLista(prioridad)}
               </NativeSelect>
             </FormControl>
             <FormControl className="form-control">
@@ -129,9 +158,7 @@ export default function EnviarSolicitud() {
                 onChange={handleChange}
                 className="select-empty"
               >
-                <option value="">Tipo de requerimiento</option>
-                <option value="Incidencia">Incidencia</option>
-                <option value="Consulta">Consulta</option>
+                {renderLista(requerimiento)}
               </NativeSelect>
             </FormControl>
             <FormControl className="form-control">
@@ -141,44 +168,7 @@ export default function EnviarSolicitud() {
                 onChange={handleChange}
                 className="select-empty"
               >
-                <option value="">Categorias</option>
-                <option value="Aires Acondicionados">
-                  Aires Acondicionados
-                </option>
-                <option value="Alquiler">Alquiler</option>
-                <option value="Backup's">Backup's</option>
-                <option value="Correo electronico">Correo electronico</option>
-                <option value="Cuentas de acceso">Cuentas de acceso</option>
-                <option value="Electricidad">Electricidad</option>
-                <option value="General">General</option>
-                <option value="Gestion documental">Gestion documental</option>
-                <option value="Hardware">Hardware</option>
-                <option value="Infraestructura - Obra Civil">
-                  Infraestructura - Obra Civil
-                </option>
-                <option value="Internet">Internet</option>
-                <option value="Monitoreo">Monitoreo</option>
-                <option value="Programación de Técnico">
-                  Programación de Técnico
-                </option>
-                <option value="Redes de Datos">Redes de Datos</option>
-                <option value="Seguridad Informática">
-                  Seguridad Informática
-                </option>
-                <option value="Software">Software</option>
-                <option value="Synergy">Synergy</option>
-                <option value="Telefonía">Telefonía</option>
-              </NativeSelect>
-            </FormControl>
-            <FormControl className="form-control">
-              <NativeSelect
-                value={state.subCategoria}
-                name="subCategoria"
-                onChange={handleChange}
-                className="select-empty"
-              >
-                <option value="">Sub Categorias</option>
-                <option value="Otros">Otros</option>
+                {renderLista(categorias)}
               </NativeSelect>
             </FormControl>
           </div>

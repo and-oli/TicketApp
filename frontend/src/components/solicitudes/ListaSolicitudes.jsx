@@ -69,6 +69,7 @@ export default function ListaSolicitudes() {
   const [ordenarPor, setOrdenarPor] = React.useState("");
   const [orden, setOrden] = React.useState("desc");
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [estados, setEstados] = React.useState([]);
   const [filtro, setFiltro] = useState({
     searchTexto: "",
     searchEstado: "Todos",
@@ -78,6 +79,21 @@ export default function ListaSolicitudes() {
   const refOrdenarPorPrevia = useRef();
   const refOrdenPrevia = useRef();
   const refRowsPerPagePrevia = useRef();
+
+  React.useEffect(() => {
+    fetch(`http://localhost:3001/cambiosSolicitud/constantes`,
+      {
+        method: "GET",
+        headers: {
+          "x-access-token": localStorage.getItem("TAToken"),
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((estado) => {
+        setEstados(Object.values(estado.estados))
+      });
+  }, []);
 
   React.useEffect(() => {
     refPagePrevia.current = page;
@@ -114,7 +130,11 @@ export default function ListaSolicitudes() {
       .then((res) => res.json())
       .then((resultado) => {
         setListaSolicitudes(resultado.solicitudes);
-        setCuenta(resultado.cuenta);
+        if(resultado.cuenta){
+          setCuenta(resultado.cuenta);
+        } else {
+          setCuenta(0);
+        }
       });
   }, [
     filtro,
@@ -160,6 +180,12 @@ export default function ListaSolicitudes() {
       setOrden("desc");
     }
     setOrdenarPor(idEncabezado);
+  };
+
+  const renderizarEstados = () => {
+    return estados.map((estado, i) => (
+      <MenuItem value={estado} key={i}>{estado}</MenuItem>
+    ))
   };
 
   const renderizarInfoSolicitudes = () => {
@@ -212,9 +238,7 @@ export default function ListaSolicitudes() {
             onChange={onChangeSearch}
           >
             <MenuItem value="Todos">Todos</MenuItem>
-            <MenuItem value="Resuelta">Resuelta</MenuItem>
-            <MenuItem value="Asignada">Asignada</MenuItem>
-            <MenuItem value="Sin asignar">Sin asignar</MenuItem>
+            {renderizarEstados()}
           </Select>
         </FormControl>
         <TextField

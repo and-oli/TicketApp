@@ -7,11 +7,11 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
 // TODO: Determinar fuente de verdad para categorías
-const categoriasArchivos = ['Foto', 'Factura']
-
 export default function CambiosSolicitud(props) {
   const [loading, setloading] = useState(false);
   const [listaTecnicos, setTecnicos] = useState([]);
+  const [categoriasArchivos, setCategoriasArchivos] = useState([]);
+  const [estados, setEstados] = useState([]);
   const [archivos, setArchivos] = useState({});
   const [state, setState] = useState({
     dueno: "",
@@ -22,8 +22,8 @@ export default function CambiosSolicitud(props) {
 
   useEffect(() => {
     const archObj = {};
-    categoriasArchivos.forEach(cat => archObj[cat] = undefined);
-    setArchivos(archObj)
+    categoriasArchivos.forEach((cat) => (archObj[cat] = undefined));
+    setArchivos(archObj);
     fetch("http://localhost:3001/users", {
       method: "GET",
       headers: {
@@ -32,10 +32,26 @@ export default function CambiosSolicitud(props) {
     })
       .then((res) => res.json())
       .then((json) => setTecnicos(json.tecnicos));
+  }, [categoriasArchivos]);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/cambiosSolicitud/constantes", {
+      method: "GET",
+      headers: {
+        "x-access-token": localStorage.getItem("TAToken"),
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        setCategoriasArchivos([...Object.values(json.categoriasDeArchivos)]);
+        setEstados([...Object.values(json.estados)]);
+      });
   }, []);
 
   const handleSelectFile = (files, categoria) => {
-    setArchivos((prevState) => ( {...prevState, [categoria]: files } ));
+    setArchivos((prevState) => ({ ...prevState, [categoria]: files }));
   };
 
   const handleChange = (event) => {
@@ -53,30 +69,29 @@ export default function CambiosSolicitud(props) {
     event.preventDefault();
 
     const formData = new FormData();
-    for (const categoria of categoriasArchivos){
-      formData.append(categoria, archivos[categoria]);
+    for (const categoria of categoriasArchivos) {
+      if (archivos[categoria] !== undefined) {
+        formData.append(categoria, archivos[categoria][0]);
+      }
     }
 
-    const responseArchivos = await fetch(`http://localhost:3001/gcs/postFile`, {
-      method: "POST",
-      body: formData,
-      headers: {
-        "x-access-token": localStorage.getItem("TAToken"),
-      },
-    });
+    const responseArchivos = await fetch(`http://localhost:3001/archivo/postFile`,{
+        method: "POST",
+        body: formData,
+        headers: {
+          "x-access-token": localStorage.getItem("TAToken"),
+        },
+      }
+    );
     const responseArchivosJson = await responseArchivos.json();
 
-    const data = {refSolicitud: props.refSolicitud}
-
-
+    const data = { refSolicitud: props.refSolicitud };
 
     for (let cambio in state) {
       if (state[cambio] !== undefined && state[cambio] !== "") {
         data[cambio] = state[cambio];
       }
     }
-
-
 
     fetch(`http://localhost:3001/cambiosSolicitud/${props.idSolicitud}`, {
       method: "POST",
@@ -104,24 +119,41 @@ export default function CambiosSolicitud(props) {
     ));
   };
 
+  const renderizarEstados = () => {
+    return estados.map((estado, i) => {
+      if (estado !== props.estado) {
+        return (
+          <option key={i} value={estado === "Resuelta" ? false : estado}>
+            {estado}
+          </option>
+        );
+      } else {
+        return null;
+      }
+    });
+  };
 
   const renderizarCamposArchivos = () => {
-    return categoriasArchivos.map((categoria, i) => 
-      <div className='container-item-archivo' key={i}>
-        <label htmlFor='file' id='label-file'>
+    return categoriasArchivos.map((categoria, i) => (
+      <div className="container-item-archivo" key={i}>
+        <label htmlFor={categoria.toLowerCase()} id="label-file">
           Adjuntar {categoria.toLowerCase()}s
         </label>
-          <input 
-            type="file"
-            id="file"
-            onChange={(e)=>handleSelectFile(e.target.files, categoria)}
-            capture="camera"
-            multiple
-            />
-          <h6 className='title-file'>{archivos[categoria] ? `${archivos[categoria].length} archivo(s) seleccionado(s)` : ''}</h6>
+        <input
+          type="file"
+          style={{ display: "none" }}
+          id={categoria.toLowerCase()}
+          onChange={(e) => handleSelectFile(e.target.files, categoria)}
+          capture="camera"
+          multiple
+        />
+        <h6 className="title-file">
+          {archivos[categoria]
+            ? `${archivos[categoria].length} archivo(s) seleccionado(s)`
+            : ""}
+        </h6>
       </div>
-    );
-
+    ));
   };
 
   return (
@@ -139,7 +171,6 @@ export default function CambiosSolicitud(props) {
             className="select-empty"
           >
             <option value="">{props.asignado}</option>
-
             {renderizarTecnicos()}
           </NativeSelect>
         </FormControl>
@@ -156,7 +187,7 @@ export default function CambiosSolicitud(props) {
             className="select-empty"
           >
             <option value="">{props.estado}</option>
-            <option value={false}>Resuelta</option>
+            {renderizarEstados()}
           </NativeSelect>
         </FormControl>
         <TextField
@@ -187,11 +218,9 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
-        <div id="container-archivos">
-          {
-            renderizarCamposArchivos()
-          }
-        </div>
+        {/* <div id="container-archivos"> */}
+        {renderizarCamposArchivos()}
+        {/* </div> */}
         <div className="button">
           {loading ? (
             <CircularProgress
