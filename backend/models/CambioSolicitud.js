@@ -19,6 +19,7 @@ var CambioSolicitudSchema = new Schema({
     archivos: [{
         type: Schema.Types.ObjectId,
         ref: 'archivos'
+    }],
 });
 
 const nombreModelo = 'cambiosSolicitudes'   
