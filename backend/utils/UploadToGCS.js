@@ -1,8 +1,8 @@
-const storage = require('@google-cloud/storage');
+const {Storage} = require('@google-cloud/storage');
 
-const gcs = storage({
+const gcs = new Storage({
   projectId: 'intelligent-213800',
-  keyFilename: "../config/secretkey.json"
+  keyFilename: "./config/secretkey.json"
 });
 const bucketName = 'intelligentimgbucket'
 const bucket = gcs.bucket(bucketName);
@@ -14,8 +14,8 @@ function getPublicUrl(filename) {
 
 let ImgUpload = {};
 
-ImgUpload.uploadToGCS = (req, fileName) => {
-  if(!req.file) return next();
+ImgUpload.uploadToGCS = (files, fileName, next) => {
+  if(!files) return next();
   return new Promise(function(resolve, reject){
     const folderName =  "TicketApp/";
     // Can optionally add a path to the gcsname below by concatenating it before the filename
@@ -24,20 +24,20 @@ ImgUpload.uploadToGCS = (req, fileName) => {
 
     const stream = file.createWriteStream({
       metadata: {
-        contentType: req.file.mimetype
+        contentType: files.mimetype
       }
     });
 
     stream.on('error', (err) => {
       console.error(err);
-      reject(error);
+      reject(err);
     });
 
     stream.on('finish', () => {
       resolve(getPublicUrl(gcsname));
     });
 
-    stream.end(req.file.buffer);
+    stream.end(files.buffer);
 
   })
 
