@@ -1,0 +1,9 @@
+{
+  "prioridad": "Prioridad",
+  "ninguna": "Ninguna",
+  "baja": "Baja",
+  "normal": "Normal",
+  "alta": "Alta",
+  "urgente": "Urgente",
+  "inmediata": "Inmediata"
+}
