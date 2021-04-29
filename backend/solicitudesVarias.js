@@ -4,6 +4,7 @@ const ModeloSolicitudes = require('./models/Solicitud').modelo;
 const ModeloProyecto = require('./models/Proyecto').modelo;
 const ModeloCliente = require('./models/Cliente').modelo;
 const token = require('./services/token_service').checkToken;
+const estado = require('./data/estado.json').sinAsignar
 const express = require('express');
 const router = express.Router();
 
@@ -156,7 +157,7 @@ router.post('/newSolicitudes', token, async function (req, res) {
       element.resumen = element.resumen + id;
       element.descripcion = element.descripcion + id;
       element.fechaHora = fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear() + '  ' + fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
-      element.estado = 'Sin asignar (abierta)';
+      element.estado = estado;
       element.abierta = true;
       element.refCliente = refUsuarioRandom.refCliente;
       element.refUsuarioSolicitante = refUsuarioRandom._id;
