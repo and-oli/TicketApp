@@ -1,5 +1,8 @@
 const ModuloSecuenciaSolicitudes = require('../models/SecuenciaSolicitudes');
 const ModuloSolicitud = require('../models/Solicitud');
+const categorias = require('../data/categorias_solicitud.json');
+const prioridad = require('../data/prioridad.json');
+const requerimiento = require('../data/tipo_de_requerimiento.json')
 const Solicitud = ModuloSolicitud.modelo;
 const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modelo;
 
@@ -119,6 +122,14 @@ module.exports = {
     };
   },
 
+  getConstantes: async function (res) {
+      res.json({
+        categorias,
+        prioridad,
+        requerimiento
+      })
+  },
+
   getSoliUsuario: async function (req, res) {
     try {
       const solicitudesPorUsuario = await Solicitud.find({ idUsuarioMongo: req.params.idUsuarioMongo })
@@ -182,7 +193,7 @@ module.exports = {
       newSolicitud.descripcion = req.body.descripcion;
       newSolicitud.prioridad = req.body.prioridad;
       newSolicitud.fechaHora = fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear() + '   ' + fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
-      newSolicitud.estado = 'Sin asignar (abierta)';
+      newSolicitud.estado = estado;
       newSolicitud.abierta = true;
       newSolicitud.categoria = req.body.categoria;
       newSolicitud.refCliente = req.body.refCliente;
