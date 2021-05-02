@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const token = require('../services/token_service');
-const UploadFile = require('../utils/UploadToGCS');
 const archivoService = require('../services/archivo_service')
 const categorias = require('../data/categoria_archivos.json')
 const Multer = require('multer');
@@ -25,18 +24,8 @@ router.use(function (req, res, next) {
 
 const categoriasArchivos = [...Object.values(categorias)]
 
-router.post('/postFile', token.checkToken, multer.fields(categoriasArchivos.map(name => ({name: name}))), async function (req, res, next) {
-  const resultadoGuardarDB = await archivoService.guardarArchivosDB(req, res, next);
-
-  // if (!resultadoGuardarDB) {
-  //  return res.json({ mensaje: 'Ocurrió un error', ok: false });
-  // }
-  //  const resultadoSubirGCS = await UploadFile.uploadToGCS(req)
-
-  // if (resultadoSubirGCS) {
-  //   return res.json({ mensaje: 'Ocurrió un error', ok: false });
-  //  }
-  //  return res.json({ mensaje: 'Archivos guardados', archivos, ok: true });
+router.post('/postFile', token.checkToken, multer.fields(categoriasArchivos.map(name => ({name: name}))), function (req, res, next) {
+  return archivoService.guardarArchivosDBYGCS(req, res, next);
 });
 
 module.exports = router;

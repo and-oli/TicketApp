@@ -21,20 +21,6 @@ export default function CambiosSolicitud(props) {
   });
 
   useEffect(() => {
-    const archObj = {};
-    categoriasArchivos.forEach((cat) => (archObj[cat] = undefined));
-    setArchivos(archObj);
-    fetch("http://localhost:3001/users", {
-      method: "GET",
-      headers: {
-        "x-access-token": localStorage.getItem("TAToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => setTecnicos(json.tecnicos));
-  }, [categoriasArchivos]);
-
-  useEffect(() => {
     fetch("http://localhost:3001/cambiosSolicitud/constantes", {
       method: "GET",
       headers: {
@@ -45,13 +31,30 @@ export default function CambiosSolicitud(props) {
     })
       .then((res) => res.json())
       .then((json) => {
-        setCategoriasArchivos([...Object.values(json.categoriasDeArchivos)]);
-        setEstados([...Object.values(json.estados)]);
+        const categoriasDeArchivos = Object.values(json.categoriasDeArchivos)
+        const archObj = {};
+        categoriasDeArchivos.forEach((cat) => (archObj[cat] = undefined));
+        setArchivos(archObj);
+        setCategoriasArchivos(categoriasDeArchivos);
+        setEstados(Object.values(json.estados));
       });
+
+      fetch("http://localhost:3001/users", {
+        method: "GET",
+        headers: {
+          "x-access-token": localStorage.getItem("TAToken"),
+        },
+      })
+        .then((res) => res.json())
+        .then((json) => setTecnicos(json.tecnicos));
   }, []);
 
   const handleSelectFile = (files, categoria) => {
-    setArchivos((prevState) => ({ ...prevState, [categoria]: files }));
+    const archivosSeleccionados = [];
+    for (let i = 0; i < files.length; i++){
+      archivosSeleccionados.push(files[i])
+    }
+    setArchivos((prevState) => ({ ...prevState, [categoria]: archivosSeleccionados }));
   };
 
   const handleChange = (event) => {
@@ -71,10 +74,11 @@ export default function CambiosSolicitud(props) {
     const formData = new FormData();
     for (const categoria of categoriasArchivos) {
       if (archivos[categoria] !== undefined) {
-        formData.append(categoria, archivos[categoria][0]);
+        for (const archivo of archivos[categoria]){
+          formData.append(categoria, archivo);
+        }
       }
     }
-
     const responseArchivos = await fetch(`http://localhost:3001/archivo/postFile`,{
         method: "POST",
         body: formData,
@@ -86,7 +90,7 @@ export default function CambiosSolicitud(props) {
     const responseArchivosJson = await responseArchivos.json();
 
     const data = { refSolicitud: props.refSolicitud };
-
+    data.archivos = responseArchivosJson.archivos;
     for (let cambio in state) {
       if (state[cambio] !== undefined && state[cambio] !== "") {
         data[cambio] = state[cambio];

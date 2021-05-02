@@ -1,41 +1,53 @@
 const UploadFile = require('../utils/UploadToGCS');
 const ModuloArchivo = require('../models/Archivo');
-const { patch } = require('../routes/archivo');
 const Archivo = ModuloArchivo.modelo;
-
-
 
 module.exports = {
 
-  guardarArchivosDB: async function (req, res, next) {
-    const files = req.files;
-    const allFiles = [];
-    let url
+  guardarArchivosDBYGCS: async function (req, res, next) {
+    const archivosEntrantes = req.files;
+    const archivosAGuardar = [];
     try {
-      for (let key in files) {
-      const file = {}
-      let fileInfo = Object(...files[key]);
-      const confirmName = await Archivo.findOne({nombreArchivo: fileInfo.originalname});
-      if (!confirmName) {
-        url = await UploadFile.uploadToGCS(fileInfo, fileInfo.originalname, next)
-      } else {
-
+      for (const categoria in archivosEntrantes) {
+        const archivosCategoriaActual = archivosEntrantes[categoria];
+        for (const archivo of archivosCategoriaActual) {
+          const esquemaArchivo = {}
+          const nombreOriginal = archivo.originalname;
+          const partesNombre = nombreOriginal.split('.');
+          const extensionArchivo = partesNombre[partesNombre.length - 1];
+          const nombreSinExtension = nombreOriginal.split(`.${extensionArchivo}`)[0];
+          const regexNombreConAutoEnumeracion = RegExp(String.raw`${nombreSinExtension}\(\d+\)\.${extensionArchivo}`);
+          const resultadoNombre = await Archivo.find({nombreArchivo: nombreOriginal});
+          const resultadosEnumerados = await Archivo.find({nombreArchivo: {$regex: regexNombreConAutoEnumeracion, $options: 'i'}});
+          if (resultadoNombre.length) {
+            // Hay archivos en la base de datos con ese nombre (es un nombre duplicado)
+            if (!resultadosEnumerados.length) {
+              // Es la primera repetición, pues no existe ese nombre con enumeración automática
+              // Enumeración automática: nombre con forma <nombre>(número).<extensión> .              
+              archivo.originalname = `${nombreSinExtension}(1).${extensionArchivo}`;
+            } else {
+              // Es por lo menos la segunda repetición, determinar el número a asignar.
+              const regexFin = RegExp(String.raw`\((\d+)\)\.${extensionArchivo}`);
+              const maximaEnumeracion = resultadosEnumerados
+                .map(archivo =>
+                  // Extraer la secuencia asignada a cada archivo.
+                  Number.parseInt(regexFin.exec(archivo.nombreArchivo)[1]))
+                .reduce((max, actual) => Math.max(max, actual));
+              archivo.originalname = `${nombreSinExtension}(${maximaEnumeracion + 1}).${extensionArchivo}` 
+            }
+          }
+          const url = 'https:// '+ archivo.originalname; // await UploadFile.uploadToGCS(archivo, next)
+          esquemaArchivo.categoriaArchivo = categoria;
+          esquemaArchivo.nombreArchivo = archivo.originalname;
+          esquemaArchivo.urlArchivo = url; 
+          archivosAGuardar.push(esquemaArchivo);
+        }
       }
-      file.categoriaArchivo = key;
-      file.nombreArchivo = fileInfo.originalname;
-      file.urlArchivo = url; 
-      allFiles.push(file);
-    }
-    await Archivo.create(allFiles)
+      const resultadoArchivosGuardados = await Archivo.create(archivosAGuardar);
+      return res.json({ok: true, mensaje:'Operación exitosa', archivos: resultadoArchivosGuardados});
     } catch (err) {
-      console.log(err)
+      console.error(err);
+      return res.json({ok: false, mensaje:'Ocurrió un error.'})
     }
-  },
-
-  subirArchivosAGCS: async function (req, res) {
-    await UploadFile.uploadToGCS(req)
-    res.json({
-      ruta: 'https://www.muycomputer.com/wp-content/uploads/2016/07/portada.jpg'
-    })
   },
 }
