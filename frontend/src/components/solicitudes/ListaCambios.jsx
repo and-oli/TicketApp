@@ -8,11 +8,10 @@ export default function ListaSolicitudes(props) {
   const [cambios, setCambio] = useState([]);
   const [loading, setloading] = useState(true);
 
-
   React.useEffect(() => {
     if (props.refSolicitud !== undefined) {
       fetch(
-        `http://localhost:3001/cambiosSolicitud/cambios/${props.refSolicitud}`,
+        `http://192.168.1.39:3001/cambiosSolicitud/cambios/${props.refSolicitud}`,
         {
           method: "GET",
           headers: {
@@ -22,10 +21,10 @@ export default function ListaSolicitudes(props) {
       )
         .then((res) => res.json())
         .then((cambio) => {
-          setloading(false)
+          setloading(false);
           setCambio(cambio.cambios);
         });
-    };
+    }
   }, [props.refSolicitud]);
 
   const cambiosDeEstado = (cambio) => {
@@ -34,12 +33,44 @@ export default function ListaSolicitudes(props) {
         <div>
           <p className="title-card-cambio">Cambio de estado:</p>
           <div className="info-cambios">
-            <p className="cambio-realizado">{cambio.estado === 'Asignado' ? cambio.estado + ' : (' + props.asignado + ')' : cambio.estado}</p>
+            <p className="cambio-realizado">
+              {cambio.estado === "Asignado"
+                ? cambio.estado + " : (" + props.asignado + ")"
+                : cambio.estado}
+            </p>
           </div>
         </div>
       );
-    };
+    }
   };
+
+  const renderizarArchivos = (cambio) => {
+    if (cambio.archivos[0]) {
+      return (
+        <div>
+          <p className="title-card-cambio">Archivo(s):</p>
+          <div className="info-files">
+            {cambio.archivos.map((archivo, i) => {
+              const punto = archivo.nombreArchivo.split(".");
+              const extencion = punto[punto.length - 1];
+              const nombreSolo = archivo.nombreArchivo.split(
+                `.${extencion}`
+              )[0];
+              const nombre = `${nombreSolo.substring(0, 8)}...${extencion}`;
+              const link = archivo.urlArchivo;
+              return (
+                  <h6 key={i}>
+                    {archivo.categoriaArchivo}: &nbsp;&nbsp;{" "}
+                    <a href={link}>{nombre}</a>
+                  </h6>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+  };
+
   const renderizarItemsCambios = () => {
     return cambios.map((cambio, i) => (
       <Paper elevation={20} key={i} className="container-padre-cambios">
@@ -58,6 +89,8 @@ export default function ListaSolicitudes(props) {
           </div>
           <Divider />
           {cambiosDeEstado(cambio)}
+          <Divider />
+          {renderizarArchivos(cambio)}
           <Divider />
           <p className="title-card-cambio">Nota:</p>
           <div className="nota">{cambio.nota}</div>
@@ -85,10 +118,10 @@ export default function ListaSolicitudes(props) {
           </div>
         );
       } else {
-        renderizarItemsCambios();
-      };
-    };
+        return renderizarItemsCambios();
+      }
+    }
   };
 
   return <div>{renderizarCambios()}</div>;
-};
+}

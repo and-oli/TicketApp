@@ -187,7 +187,7 @@ module.exports = {
         { id: 0 },
         { $inc: { secuencia: 1 } },
       );
-        console.log(secuencia.secuencia)
+      
       const newSolicitud = new Solicitud()
       newSolicitud.idSolicitud = secuencia.secuencia;
       newSolicitud.resumen = req.body.resumen;

@@ -21,7 +21,7 @@ export default function CambiosSolicitud(props) {
   });
 
   useEffect(() => {
-    fetch("http://localhost:3001/cambiosSolicitud/constantes", {
+    fetch("http://192.168.1.39:3001/cambiosSolicitud/constantes", {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
@@ -31,7 +31,7 @@ export default function CambiosSolicitud(props) {
     })
       .then((res) => res.json())
       .then((json) => {
-        const categoriasDeArchivos = Object.values(json.categoriasDeArchivos)
+        const categoriasDeArchivos = Object.values(json.categoriasDeArchivos);
         const archObj = {};
         categoriasDeArchivos.forEach((cat) => (archObj[cat] = undefined));
         setArchivos(archObj);
@@ -39,22 +39,26 @@ export default function CambiosSolicitud(props) {
         setEstados(Object.values(json.estados));
       });
 
-      fetch("http://localhost:3001/users", {
-        method: "GET",
-        headers: {
-          "x-access-token": localStorage.getItem("TAToken"),
-        },
-      })
-        .then((res) => res.json())
-        .then((json) => setTecnicos(json.tecnicos));
+    fetch("http://192.168.1.39:3001/users", {
+      method: "GET",
+      headers: {
+        "x-access-token": localStorage.getItem("TAToken"),
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => setTecnicos(json.tecnicos));
   }, []);
 
   const handleSelectFile = (files, categoria) => {
     const archivosSeleccionados = [];
-    for (let i = 0; i < files.length; i++){
-      archivosSeleccionados.push(files[i])
+    for (let i = 0; i < files.length; i++) {
+      archivosSeleccionados.push(files[i]);
     }
-    setArchivos((prevState) => ({ ...prevState, [categoria]: archivosSeleccionados }));
+    setArchivos((prevState) => ({
+      ...prevState,
+      [categoria]: archivosSeleccionados,
+    }));
+    console.log(archivos)
   };
 
   const handleChange = (event) => {
@@ -76,12 +80,14 @@ export default function CambiosSolicitud(props) {
     const formData = new FormData();
     for (const categoria of categoriasArchivos) {
       if (archivos[categoria] !== undefined) {
-        for (const archivo of archivos[categoria]){
+        for (const archivo of archivos[categoria]) {
           formData.append(categoria, archivo);
         }
       }
     }
-    const responseArchivos = await fetch(`http://localhost:3001/archivo/postFile`,{
+    const responseArchivos = await fetch(
+      `http://192.168.1.39:3001/archivo/postFile`,
+      {
         method: "POST",
         body: formData,
         headers: {
@@ -96,14 +102,14 @@ export default function CambiosSolicitud(props) {
     if (responseArchivosJson) {
       data.archivos = responseArchivosJson.archivos;
     }
-    
+
     for (let cambio in state) {
       if (state[cambio] !== undefined && state[cambio] !== "") {
         data[cambio] = state[cambio];
       }
     }
 
-    fetch(`http://localhost:3001/cambiosSolicitud/${props.idSolicitud}`, {
+    fetch(`http://192.168.1.39:3001/cambiosSolicitud/${props.idSolicitud}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -147,14 +153,14 @@ export default function CambiosSolicitud(props) {
     return categoriasArchivos.map((categoria, i) => (
       <div className="container-item-archivo" key={i}>
         <label htmlFor={categoria.toLowerCase()} id="label-file">
-          Adjuntar {categoria.toLowerCase()}s
+          {"Adjuntar  " + categoria.toLowerCase()}s
         </label>
         <input
           type="file"
           style={{ display: "none" }}
           id={categoria.toLowerCase()}
           onChange={(e) => handleSelectFile(e.target.files, categoria)}
-          capture="camera"
+          capture={categoria === "Foto" ? "camera" : false}
           multiple
         />
         <h6 className="title-file">
@@ -169,9 +175,7 @@ export default function CambiosSolicitud(props) {
   return (
     <Paper className="paper-solicitud-b" elevation={10}>
       <form onSubmit={enviarCambio}>
-        <FormControl
-          className="form-control"
-        >
+        <FormControl className="form-control">
           <label htmlFor="asignar">Dueño:</label>
           <NativeSelect
             value={state.dueno}
@@ -184,9 +188,7 @@ export default function CambiosSolicitud(props) {
           </NativeSelect>
         </FormControl>
 
-        <FormControl
-          className="form-control"
-        >
+        <FormControl className="form-control">
           <label htmlFor="abierta">Estado:</label>
           <NativeSelect
             value={state.abierta}

@@ -13,7 +13,8 @@ module.exports = {
   getCambiosPorSolicitud: async function (req, res) {
 
     const cambios = await CambiosSolicitud.find({ refSolicitud: req.params.idSolicitud }).sort({ _id: -1 })
-      .populate('refUsuario', ['name', 'role']);
+      .populate('refUsuario', ['name', 'role'])
+      .populate('archivos')
 
     if (!cambios) {
       res.json({ mensaje: 'No hay cambios', ok: false });

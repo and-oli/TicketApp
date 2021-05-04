@@ -83,7 +83,7 @@ export default function ListaSolicitudes() {
   const refRowsPerPagePrevia = useRef();
 
   React.useEffect(() => {
-    fetch(`http://localhost:3001/cambiosSolicitud/constantes`,
+    fetch(`http://192.168.1.39:3001/cambiosSolicitud/constantes`,
       {
         method: "GET",
         headers: {
@@ -121,7 +121,7 @@ export default function ListaSolicitudes() {
     }
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
     fetch(
-      `http://localhost:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
+      `http://192.168.1.39:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
       {
         method: "GET",
         headers: {
@@ -267,6 +267,7 @@ export default function ListaSolicitudes() {
               {encabezados.map((encabezado, i) => {
                 return (
                   <TableCellHeader
+                    className='header-table'
                     key={i}
                     align="center"
                     sortDirection={ordenarPor === encabezado.id ? orden : false}

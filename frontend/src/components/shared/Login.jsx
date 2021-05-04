@@ -25,7 +25,7 @@ export default function Login() {
         username: userName,
         password: password,
       };
-      fetch("http://localhost:3001/users/authenticate", {
+      fetch("http://192.168.1.39:3001/users/authenticate", {
         method: "post",
         headers: {
           Accept: "application/json",
@@ -39,6 +39,9 @@ export default function Login() {
           if (res.ok) {
             localStorage.setItem("TAToken", res.token);
             localStorage.setItem("TAAdmin", res.admin);
+            localStorage.setItem("TAUser", res.admin);
+            localStorage.setItem("TATecnico", res.admin);
+            localStorage.setItem("TAEspecialista", res.admin);
             window.location.reload();
             setMessage({ text: res.mensaje, color: "green" });
           } else {

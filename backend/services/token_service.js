@@ -2,7 +2,7 @@ const ModuloUsuario = require('../models/Usuario');
 const Usuario = ModuloUsuario.modelo;
 const jwt = require('jsonwebtoken');
 const secretKey = require('../config/config').secret
-
+const roles = require('../data/roles.json')
 module.exports = {
   checkTokenAdmin: function (req, res, next) {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -11,7 +11,7 @@ module.exports = {
         if (err) {
           res.status(403).send({ success: false, message: 'Error de autenticación, por favor refresque la aplicación.', });
         } else {
-          if (decoded.role !== 'ADMINISTRADOR') {
+          if (decoded.role !== roles.administrador) {
             res.status(403).send({
               success: false,
               message: 'No tiene permiso para realizar esta acción.',

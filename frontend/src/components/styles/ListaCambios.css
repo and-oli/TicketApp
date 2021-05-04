@@ -96,3 +96,13 @@
 .icon-loading {
   align-self: center;
 }
+
+.info-files {
+  flex-direction: column;
+  text-align: center;
+  line-height: 0px;
+}
+
+.info-usuario p {
+  font-size: 15px;
+}
