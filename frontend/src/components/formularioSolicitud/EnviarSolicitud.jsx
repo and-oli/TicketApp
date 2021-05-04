@@ -21,8 +21,7 @@ export default function EnviarSolicitud() {
     correo: "",
     ciudad: "",
     requerimiento: "",
-    categoria: "",
-    subCategoria: "",
+    categoria: ""
   });
 
   useEffect(() => {
@@ -81,11 +80,14 @@ export default function EnviarSolicitud() {
 
     event.preventDefault();
 
+    setloading(true);
+
     for (let info in state) {
       if (state[info] !== "") {
         data[info] = state[info];
       } else {
         confirmarPost = false;
+        setloading(false);
         setMensaje({
           text: "La informacion debe estar completa.",
           color: "orange",
@@ -106,8 +108,8 @@ export default function EnviarSolicitud() {
       })
         .then((res) => res.json())
         .then((json) => {
-          setloading(true);
           if (json.ok) {
+            setloading(false);
             window.location.reload();
           }
         });

@@ -3,6 +3,7 @@ const ModuloSolicitud = require('../models/Solicitud');
 const categorias = require('../data/categorias_solicitud.json');
 const prioridad = require('../data/prioridad.json');
 const requerimiento = require('../data/tipo_de_requerimiento.json')
+const estadoPredeterminado = require('../data/estado.json').sinAsignar
 const Solicitud = ModuloSolicitud.modelo;
 const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modelo;
 
@@ -186,14 +187,14 @@ module.exports = {
         { id: 0 },
         { $inc: { secuencia: 1 } },
       );
-
+        console.log(secuencia.secuencia)
       const newSolicitud = new Solicitud()
       newSolicitud.idSolicitud = secuencia.secuencia;
       newSolicitud.resumen = req.body.resumen;
       newSolicitud.descripcion = req.body.descripcion;
       newSolicitud.prioridad = req.body.prioridad;
       newSolicitud.fechaHora = fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear() + '   ' + fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
-      newSolicitud.estado = estado;
+      newSolicitud.estado = estadoPredeterminado;
       newSolicitud.abierta = true;
       newSolicitud.categoria = req.body.categoria;
       newSolicitud.refCliente = req.body.refCliente;

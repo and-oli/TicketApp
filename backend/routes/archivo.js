@@ -22,7 +22,7 @@ router.use(function (req, res, next) {
   next();
 });
 
-const categoriasArchivos = [...Object.values(categorias)]
+const categoriasArchivos = Object.values(categorias)
 
 router.post('/postFile', token.checkToken, multer.fields(categoriasArchivos.map(name => ({name: name}))), function (req, res, next) {
   return archivoService.guardarArchivosDBYGCS(req, res, next);

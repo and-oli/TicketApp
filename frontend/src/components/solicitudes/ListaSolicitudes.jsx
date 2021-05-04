@@ -9,6 +9,7 @@ import { withStyles, makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import IconButton from "@material-ui/core/IconButton";
 import Select from "@material-ui/core/Select";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import SearchIcon from "@material-ui/icons/Search";
@@ -69,6 +70,7 @@ export default function ListaSolicitudes() {
   const [ordenarPor, setOrdenarPor] = React.useState("");
   const [orden, setOrden] = React.useState("desc");
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loading, setloading] = useState(true);
   const [estados, setEstados] = React.useState([]);
   const [filtro, setFiltro] = useState({
     searchTexto: "",
@@ -130,7 +132,8 @@ export default function ListaSolicitudes() {
       .then((res) => res.json())
       .then((resultado) => {
         setListaSolicitudes(resultado.solicitudes);
-        if(resultado.cuenta){
+        if (resultado.cuenta) {
+          setloading(false)
           setCuenta(resultado.cuenta);
         } else {
           setCuenta(0);
@@ -190,28 +193,27 @@ export default function ListaSolicitudes() {
 
   const renderizarInfoSolicitudes = () => {
     if (listaSolicitudes) {
-      return listaSolicitudes.map((sol) => {
-        return (
-          <TableRowAlt key={sol.idSolicitud}>
-            <TableCell align="center">
-              <Link
-                className="link"
-                to={`/detalle-solicitud/?id_solicitud=${sol.idSolicitud}`}
-              >
-                {sol.idSolicitud}
-              </Link>
-            </TableCell>
-            <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
-            <TableCell align="center">
-              {sol.usuarioSolicitante[0].name}
-            </TableCell>
-            <TableCell align="center">{sol.estado}</TableCell>
-            <TableCell align="center">{sol.prioridad}</TableCell>
-            <TableCell align="center">{sol.resumen}</TableCell>
-            <TableCell align="center">{sol.fechaHora}</TableCell>
-          </TableRowAlt>
-        );
-      });
+      return listaSolicitudes.map((sol) => (
+        <TableRowAlt key={sol.idSolicitud}>
+          <TableCell align="center">
+            <Link
+              className="link"
+              to={`/detalle-solicitud/?id_solicitud=${sol.idSolicitud}`}
+            >
+              {sol.idSolicitud}
+            </Link>
+          </TableCell>
+          <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
+          <TableCell align="center">
+            {sol.usuarioSolicitante[0].name}
+          </TableCell>
+          <TableCell align="center">{sol.estado}</TableCell>
+          <TableCell align="center">{sol.prioridad}</TableCell>
+          <TableCell align="center">{sol.resumen}</TableCell>
+          <TableCell align="center">{sol.fechaHora}</TableCell>
+        </TableRowAlt>
+      )
+      );
     }
   };
 
@@ -281,7 +283,20 @@ export default function ListaSolicitudes() {
               })}
             </TableRow>
           </TableHead>
-          <TableBody>{renderizarInfoSolicitudes()}</TableBody>
+          <TableBody>
+            {loading ? (
+              <TableRowAlt>
+                <TableCell colSpan={7} align='center'>
+                  <CircularProgress
+                    color="inherit"
+                    className="icon-enviar"
+                    disableShrink
+                  />
+                </TableCell>
+              </TableRowAlt>
+            ) : renderizarInfoSolicitudes()
+            }
+          </TableBody>
           <TableFooter style={{ width: "auto" }}>
             <TableRow>
               <TablePagination

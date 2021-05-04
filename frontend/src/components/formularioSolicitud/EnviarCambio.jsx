@@ -71,6 +71,8 @@ export default function CambiosSolicitud(props) {
   const enviarCambio = async (event) => {
     event.preventDefault();
 
+    setloading(true);
+
     const formData = new FormData();
     for (const categoria of categoriasArchivos) {
       if (archivos[categoria] !== undefined) {
@@ -90,7 +92,11 @@ export default function CambiosSolicitud(props) {
     const responseArchivosJson = await responseArchivos.json();
 
     const data = { refSolicitud: props.refSolicitud };
-    data.archivos = responseArchivosJson.archivos;
+
+    if (responseArchivosJson) {
+      data.archivos = responseArchivosJson.archivos;
+    }
+    
     for (let cambio in state) {
       if (state[cambio] !== undefined && state[cambio] !== "") {
         data[cambio] = state[cambio];
@@ -108,8 +114,8 @@ export default function CambiosSolicitud(props) {
     })
       .then((res) => res.json())
       .then((json) => {
-        setloading(true);
         if (json.ok) {
+          setloading(false);
           window.location.reload();
         }
       });
@@ -165,7 +171,6 @@ export default function CambiosSolicitud(props) {
       <form onSubmit={enviarCambio}>
         <FormControl
           className="form-control"
-          disabled={state.abierta === undefined ? false : true}
         >
           <label htmlFor="asignar">Dueño:</label>
           <NativeSelect
@@ -181,7 +186,6 @@ export default function CambiosSolicitud(props) {
 
         <FormControl
           className="form-control"
-          disabled={state.dueno === "" ? false : true}
         >
           <label htmlFor="abierta">Estado:</label>
           <NativeSelect
@@ -222,9 +226,7 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
-        {/* <div id="container-archivos"> */}
         {renderizarCamposArchivos()}
-        {/* </div> */}
         <div className="button">
           {loading ? (
             <CircularProgress

@@ -79,3 +79,20 @@
   text-align: center;
   margin-top: 0px;
 }
+
+.loading {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: auto;
+  height: 650px;
+}
+
+.loading h4 {
+  text-align: center;
+  color: rgba(128, 128, 128, 0.808);
+}
+
+.icon-loading {
+  align-self: center;
+}

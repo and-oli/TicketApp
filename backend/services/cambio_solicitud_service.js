@@ -48,13 +48,13 @@ module.exports = {
           $each: [cambios.dueno]
         }
       };
-      resultadoSolicitud.estado = 'Asignado';
-      cambios.estado = 'Asignado';
+      resultadoSolicitud.estado = estados.asignada;
+      cambios.estado = estados.asignada;
     }
     if (cambios.abierta !== undefined) {
       resultadoSolicitud.abierta = cambios.abierta;
-      resultadoSolicitud.estado = 'Resuelta';
-      cambios.estado = 'Resuelta';
+      resultadoSolicitud.estado = estados.resuelta;
+      cambios.estado = estados.resuelta;
     };
     cambios.refUsuario = req.decoded.id
 
