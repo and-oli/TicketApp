@@ -72,7 +72,7 @@ module.exports = {
           res.json({
             mensaje: 'Usuario valido',
             idUsuario: userAuthorize.idUser,
-            admin: userAuthorize.role === 'ADMINISTRADOR',
+            user: userAuthorize.role,
             username: userAuthorize.username,
             token,
             ok: true,
