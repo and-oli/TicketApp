@@ -11,7 +11,23 @@ import Divider from "@material-ui/core/Divider";
 import { Link } from "react-router-dom";
 import "../styles/Menu.css";
 
-const Menu = (props) => {
+const especialistaMenuItems = (
+  <div>
+    <Divider />
+    <FormControl component="div" className="form">
+      <InputLabel component="label" htmlFor="grouped-select">
+        Todos los proyectos
+      </InputLabel>
+      <Select component="div" defaultValue="" id="grouped-select">
+        <MenuItem value="" style={{ height: 25 }}>
+          <em>None</em>
+        </MenuItem>
+      </Select>
+    </FormControl>
+  </div>
+);
+
+function Menu (props) {
   return (
     <div className="container">
       <List component="nav" aria-label="main mailbox folders">
@@ -36,17 +52,7 @@ const Menu = (props) => {
           </ListItemIcon>
           <ListItemText primary="Reportar solicitud" />
         </ListItem>
-        <Divider />
-        <FormControl component="div" className="form">
-          <InputLabel component="label" htmlFor="grouped-select">
-            Todos los proyectos
-          </InputLabel>
-          <Select component="div" defaultValue="" id="grouped-select">
-            <MenuItem value="" style={{ height: 25 }}>
-              <em>None</em>
-            </MenuItem>
-          </Select>
-        </FormControl>
+        {props.user === 'Especialista'? especialistaMenuItems:null}
       </List>
     </div>
   );

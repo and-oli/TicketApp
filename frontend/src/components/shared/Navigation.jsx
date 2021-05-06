@@ -5,7 +5,9 @@ import Header from "./Header";
 import DetalleSolicitud from "../solicitudes/DetalleSolicitud";
 import EnviarSolicitud from "../formularioSolicitud/EnviarSolicitud";
 export default function Navigation(props) {
-  // const { user } = props;
+
+  const { user } = props;
+
   React.useEffect(
     () => {
       fetch('http://localhost:3001/users/validarToken', {
@@ -21,15 +23,16 @@ export default function Navigation(props) {
       })
     }, []
   );
+
   return (
     <Router>
-      <Header />
+      <Header userRole={user}/>
       <Switch>
         <Route exact path="/">
           <ListaSolicitudes />
         </Route>
         <Route path="/detalle-solicitud">
-          <DetalleSolicitud />
+          <DetalleSolicitud userRole={user}/>
         </Route>
         <Route path="/nueva-solicitud">
           <EnviarSolicitud />

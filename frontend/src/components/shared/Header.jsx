@@ -96,11 +96,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = () => {
+const Header = (props) => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [openLog, setOpenLog] = React.useState(false);
   const anchorRef = React.useRef(null);
+  const {userRole} = props;
 
   const handleClose = (event) => {
     localStorage.removeItem("TAToken");
@@ -160,7 +161,7 @@ const Header = () => {
             </IconButton>
           </div>
           <Divider />
-          <Menu close={handleDrawerClose} />
+          <Menu close={handleDrawerClose} user = {userRole}/>
           <Divider />
         </Drawer>
         <div className="container-header-img">

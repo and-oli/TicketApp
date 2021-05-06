@@ -20,33 +20,41 @@ export default function CambiosSolicitud(props) {
     abierta: undefined,
   });
 
-  useEffect(() => {
-    fetch("http://localhost:3001/cambiosSolicitud/constantes", {
+  const renderizarConstantes = async () => {
+    const archObj = {};
+    const header = {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        const categoriasDeArchivos = Object.values(json.categoriasDeArchivos);
-        const archObj = {};
-        categoriasDeArchivos.forEach((cat) => (archObj[cat] = undefined));
-        setArchivos(archObj);
-        setCategoriasArchivos(categoriasDeArchivos);
-        setEstados(Object.values(json.estados));
-      });
+    };
+    const categoriasArchivos = await fetch(
+      "http://localhost:3001/constantes/categoriasArchivos",
+      header
+    );
+    const estados = await fetch(
+      "http://localhost:3001/constantes/estados",
+      header
+    );
+    const tecnicos = await fetch("http://localhost:3001/users", header);
 
-    fetch("http://localhost:3001/users", {
-      method: "GET",
-      headers: {
-        "x-access-token": localStorage.getItem("TAToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => setTecnicos(json.tecnicos));
+    const resCategoriasArchivos = await categoriasArchivos.json();
+    const resEstados = await estados.json();
+    const resTecnicos = await tecnicos.json();
+
+    setCategoriasArchivos(Object.values(resCategoriasArchivos));
+    setEstados(Object.values(resEstados));
+    setTecnicos(resTecnicos.tecnicos);
+
+    const categoriasDeArchivos = Object.values(resCategoriasArchivos);
+    categoriasDeArchivos.forEach((cat) => (archObj[cat] = undefined));
+    setArchivos(archObj);
+  };
+
+  useEffect(() => {
+    renderizarConstantes();
   }, []);
 
   const handleSelectFile = (files, categoria) => {
@@ -58,7 +66,6 @@ export default function CambiosSolicitud(props) {
       ...prevState,
       [categoria]: archivosSeleccionados,
     }));
-    console.log(archivos)
   };
 
   const handleChange = (event) => {
@@ -172,9 +179,9 @@ export default function CambiosSolicitud(props) {
     ));
   };
 
-  return (
-    <Paper className="paper-solicitud-b" elevation={10}>
-      <form onSubmit={enviarCambio}>
+  const renderizarCambiosEspecialista = () => {
+    return (
+      <div>
         <FormControl className="form-control">
           <label htmlFor="asignar">Dueño:</label>
           <NativeSelect
@@ -200,6 +207,16 @@ export default function CambiosSolicitud(props) {
             {renderizarEstados()}
           </NativeSelect>
         </FormControl>
+      </div>
+    );
+  };
+
+  return (
+    <Paper className="paper-solicitud-b" elevation={10}>
+      <form onSubmit={enviarCambio}>
+        {props.user === "Especialista" || props.user === "Tecnico"
+          ? renderizarCambiosEspecialista()
+          : null}
         <TextField
           value={state.titulo}
           label="Titulo del cambio"
@@ -228,7 +245,9 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
-        {renderizarCamposArchivos()}
+        {props.user === "Especialista" || props.user === "Tecnico"
+          ? renderizarCamposArchivos()
+          : null}
         <div className="button">
           {loading ? (
             <CircularProgress

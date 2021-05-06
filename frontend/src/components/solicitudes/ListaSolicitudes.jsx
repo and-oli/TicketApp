@@ -82,19 +82,25 @@ export default function ListaSolicitudes() {
   const refOrdenPrevia = useRef();
   const refRowsPerPagePrevia = useRef();
 
+  const renderizarConstante = async () => {
+    const header = {
+      method: "GET",
+      headers: {
+        "x-access-token": localStorage.getItem("TAToken"),
+      },
+    };
+
+    const fetchEstados = await fetch(
+      `http://localhost:3001/constantes/estados`,
+      header
+    );
+    const estados = await fetchEstados.json();
+
+    setEstados(Object.values(estados));
+  };
+
   React.useEffect(() => {
-    fetch(`http://localhost:3001/cambiosSolicitud/constantes`,
-      {
-        method: "GET",
-        headers: {
-          "x-access-token": localStorage.getItem("TAToken"),
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((estado) => {
-        setEstados(Object.values(estado.estados))
-      });
+    renderizarConstante();
   }, []);
 
   React.useEffect(() => {
@@ -133,7 +139,7 @@ export default function ListaSolicitudes() {
       .then((resultado) => {
         setListaSolicitudes(resultado.solicitudes);
         if (resultado.cuenta) {
-          setloading(false)
+          setloading(false);
           setCuenta(resultado.cuenta);
         } else {
           setCuenta(0);
@@ -187,8 +193,10 @@ export default function ListaSolicitudes() {
 
   const renderizarEstados = () => {
     return estados.map((estado, i) => (
-      <MenuItem value={estado} key={i}>{estado}</MenuItem>
-    ))
+      <MenuItem value={estado} key={i}>
+        {estado}
+      </MenuItem>
+    ));
   };
 
   const renderizarInfoSolicitudes = () => {
@@ -204,16 +212,13 @@ export default function ListaSolicitudes() {
             </Link>
           </TableCell>
           <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
-          <TableCell align="center">
-            {sol.usuarioSolicitante[0].name}
-          </TableCell>
+          <TableCell align="center">{sol.usuarioSolicitante[0].name}</TableCell>
           <TableCell align="center">{sol.estado}</TableCell>
           <TableCell align="center">{sol.prioridad}</TableCell>
           <TableCell align="center">{sol.resumen}</TableCell>
           <TableCell align="center">{sol.fechaHora}</TableCell>
         </TableRowAlt>
-      )
-      );
+      ));
     }
   };
 
@@ -267,7 +272,7 @@ export default function ListaSolicitudes() {
               {encabezados.map((encabezado, i) => {
                 return (
                   <TableCellHeader
-                    className='header-table'
+                    className="header-table"
                     key={i}
                     align="center"
                     sortDirection={ordenarPor === encabezado.id ? orden : false}
@@ -287,7 +292,7 @@ export default function ListaSolicitudes() {
           <TableBody>
             {loading ? (
               <TableRowAlt>
-                <TableCell colSpan={7} align='center'>
+                <TableCell colSpan={7} align="center">
                   <CircularProgress
                     color="inherit"
                     className="icon-enviar"
@@ -295,8 +300,9 @@ export default function ListaSolicitudes() {
                   />
                 </TableCell>
               </TableRowAlt>
-            ) : renderizarInfoSolicitudes()
-            }
+            ) : (
+              renderizarInfoSolicitudes()
+            )}
           </TableBody>
           <TableFooter style={{ width: "auto" }}>
             <TableRow>

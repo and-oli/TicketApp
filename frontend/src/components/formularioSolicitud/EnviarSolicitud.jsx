@@ -21,35 +21,50 @@ export default function EnviarSolicitud() {
     correo: "",
     ciudad: "",
     requerimiento: "",
-    categoria: ""
+    categoria: "",
   });
 
-  useEffect(() => {
-    fetch("http://localhost:3001/users/clientes", {
+  const renderizarConstantes = async () => {
+    const header = {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
       },
-    })
-      .then((res) => res.json())
-      .then((getClientes) => {
-        setListaClientes(getClientes.clientes);
-      });
-  }, []);
+    };
+
+    const getClientes = await fetch(
+      "http://localhost:3001/users/clientes",
+      header
+    );
+
+    const categoriasSolicitud = await fetch(
+      "http://localhost:3001/constantes/categoriasSolicitud",
+      header
+    );
+
+    const prioridad = await fetch(
+      "http://localhost:3001/constantes/prioridad",
+      header
+    );
+    
+    const requerimiento = await fetch(
+      "http://localhost:3001/constantes/tipoRequerimiento",
+      header
+    );
+
+    const clientes = await getClientes.json();
+    const resCategorias = await categoriasSolicitud.json();
+    const resPrioridad = await prioridad.json();
+    const resRequerimiento = await requerimiento.json();
+
+    setListaClientes(clientes.clientes);
+    setCategorias(Object.values(resCategorias));
+    setPrioridad(Object.values(resPrioridad));
+    setRequerimiento(Object.values(resRequerimiento));
+  };
 
   useEffect(() => {
-    fetch("http://localhost:3001/solicitudes/constantes", {
-      method: "GET",
-      headers: {
-        "x-access-token": localStorage.getItem("TAToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        setCategorias(Object.values(json.categorias));
-        setPrioridad(Object.values(json.prioridad));
-        setRequerimiento(Object.values(json.requerimiento));
-      });
+    renderizarConstantes();
   }, []);
 
   const renderLista = (lista) => {

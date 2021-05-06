@@ -4,7 +4,7 @@ import CambiosSolicitud from "../formularioSolicitud/EnviarCambio";
 import ListaCambios from "./ListaCambios";
 import "../styles/DetallesSolicitud.css";
 
-export default function DetalleSolicitud() {
+export default function DetalleSolicitud(props) {
   let params = new URL(document.location).searchParams;
   let idSolicitud = params.get("id_solicitud");
 
@@ -60,6 +60,7 @@ export default function DetalleSolicitud() {
           </div>
         </Paper>
         <CambiosSolicitud
+          user = {props.userRole}
           abierta = {detalleSolicitud.abierta}
           asignado = {asignada}
           requerimiento = {detalleSolicitud.requerimente}

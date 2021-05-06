@@ -17,10 +17,6 @@ router.get('/', token.checkToken, async function (req, res) {
   await solicitudesService.getSolicitudes(req, res);
 });
 
-router.get('/constantes', token.checkToken, async function (req, res) {
-  await solicitudesService.getConstantes(res);
-});
-
 router.get('/asignadasAUsuario/:idUsuarioMongo', token.checkToken, async function (req, res) {
   await solicitudesService.getSoliUsuario(req, res);
 });

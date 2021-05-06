@@ -1,8 +1,5 @@
 const ModuloSecuenciaSolicitudes = require('../models/SecuenciaSolicitudes');
 const ModuloSolicitud = require('../models/Solicitud');
-const categorias = require('../data/categorias_solicitud.json');
-const prioridad = require('../data/prioridad.json');
-const requerimiento = require('../data/tipo_de_requerimiento.json')
 const estadoPredeterminado = require('../data/estado.json').sinAsignar
 const Solicitud = ModuloSolicitud.modelo;
 const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modelo;
@@ -121,14 +118,6 @@ module.exports = {
     } catch (error) {
       enviarError(res, error);
     };
-  },
-
-  getConstantes: async function (res) {
-      res.json({
-        categorias,
-        prioridad,
-        requerimiento
-      })
   },
 
   getSoliUsuario: async function (req, res) {
