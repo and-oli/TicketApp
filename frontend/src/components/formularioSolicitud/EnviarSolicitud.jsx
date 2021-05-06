@@ -25,7 +25,7 @@ export default function EnviarSolicitud() {
   });
 
   useEffect(() => {
-    fetch("http://192.168.1.39:3001/users/clientes", {
+    fetch("http://localhost:3001/users/clientes", {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
@@ -38,7 +38,7 @@ export default function EnviarSolicitud() {
   }, []);
 
   useEffect(() => {
-    fetch("http://192.168.1.39:3001/solicitudes/constantes", {
+    fetch("http://localhost:3001/solicitudes/constantes", {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
@@ -97,7 +97,7 @@ export default function EnviarSolicitud() {
     }
 
     if (confirmarPost) {
-      fetch("http://192.168.1.39:3001/solicitudes/nuevaSolicitud", {
+      fetch("http://localhost:3001/solicitudes/nuevaSolicitud", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {

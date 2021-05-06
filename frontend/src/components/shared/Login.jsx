@@ -25,7 +25,7 @@ export default function Login() {
         username: userName,
         password: password,
       };
-      fetch("http://192.168.1.39:3001/users/authenticate", {
+      fetch("http://localhost:3001/users/authenticate", {
         method: "post",
         headers: {
           Accept: "application/json",
@@ -37,12 +37,9 @@ export default function Login() {
         .then((res) => {
           setloading(false);
           if (res.ok) {
-            localStorage.setItem("TAToken", res.token);
-            localStorage.setItem("TAAdmin", res.admin);
-            localStorage.setItem("TAUser", res.admin);
-            localStorage.setItem("TATecnico", res.admin);
-            localStorage.setItem("TAEspecialista", res.admin);
-            window.location.reload();
+              localStorage.setItem("TAToken", res.token);
+              localStorage.setItem("TAUser", res.user);
+              window.location.reload();
             setMessage({ text: res.mensaje, color: "green" });
           } else {
             setMessage({ text: res.mensaje, color: "red" });
@@ -94,7 +91,7 @@ export default function Login() {
               {loading ? (
                 <CircularProgress
                   style={{ width: 40, alignSelf: "center", marginTop: 30 }}
-                  color="action"
+                  color="inherit"
                   disableShrink
                 />
               ) : (

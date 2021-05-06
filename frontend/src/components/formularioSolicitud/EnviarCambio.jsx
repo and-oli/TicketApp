@@ -21,7 +21,7 @@ export default function CambiosSolicitud(props) {
   });
 
   useEffect(() => {
-    fetch("http://192.168.1.39:3001/cambiosSolicitud/constantes", {
+    fetch("http://localhost:3001/cambiosSolicitud/constantes", {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
@@ -39,7 +39,7 @@ export default function CambiosSolicitud(props) {
         setEstados(Object.values(json.estados));
       });
 
-    fetch("http://192.168.1.39:3001/users", {
+    fetch("http://localhost:3001/users", {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
@@ -86,7 +86,7 @@ export default function CambiosSolicitud(props) {
       }
     }
     const responseArchivos = await fetch(
-      `http://192.168.1.39:3001/archivo/postFile`,
+      `http://localhost:3001/archivo/postFile`,
       {
         method: "POST",
         body: formData,
@@ -109,7 +109,7 @@ export default function CambiosSolicitud(props) {
       }
     }
 
-    fetch(`http://192.168.1.39:3001/cambiosSolicitud/${props.idSolicitud}`, {
+    fetch(`http://localhost:3001/cambiosSolicitud/${props.idSolicitud}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {

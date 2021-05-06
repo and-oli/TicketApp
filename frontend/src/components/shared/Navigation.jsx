@@ -5,7 +5,7 @@ import Header from "./Header";
 import DetalleSolicitud from "../solicitudes/DetalleSolicitud";
 import EnviarSolicitud from "../formularioSolicitud/EnviarSolicitud";
 export default function Navigation(props) {
-  const { admin } = props;
+  // const { user } = props;
   React.useEffect(
     () => {
       fetch('http://localhost:3001/users/validarToken', {
@@ -26,10 +26,10 @@ export default function Navigation(props) {
       <Header />
       <Switch>
         <Route exact path="/">
-          <ListaSolicitudes admin={admin} />
+          <ListaSolicitudes />
         </Route>
         <Route path="/detalle-solicitud">
-          <DetalleSolicitud admin={admin} />
+          <DetalleSolicitud />
         </Route>
         <Route path="/nueva-solicitud">
           <EnviarSolicitud />
