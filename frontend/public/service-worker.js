@@ -1,5 +1,5 @@
 const cacheName = 'cache-v1';
-const cacheFetch = 'fetchCach'
+const cacheFetch = 'fetchCach';
 const urls = [
   '/',
   '/index.html',
@@ -9,43 +9,45 @@ const urls = [
   '/listaIcon.png',
   '/logoComsistelco.png',
   '/ticketIcon.png',
-]
+];
+
 self.addEventListener('install', async event => {
-  const evento = event.waitUntil(
+  event.waitUntil(
     caches.open(cacheName)
       .then(function (cache) {
         return cache.addAll(urls);
       })
   );
-  console.log(evento)
-  return evento
-});
-
-self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   event.respondWith(
     caches.open(cacheFetch).then(function (cache) {
-      return cache.match(event.request).then(function (response) {
-        return response || fetch(event.request).then(function (response) {
-          cache.put(event.request, response.clone());
-          return response;
+      return cache.match(request).then(function (response) {
+        return response || fetch(request).then(function (res) {
+          if (request.method !== 'POST') {
+            cache.put(request, res.clone())
+          }
+          return res;
         });
       });
+
     })
   );
 });
 
-self.addEventListener('notificationclick', function (e) {
-  var notification = e.notification;
-  var action = e.action;
-
-  if (action === 'close') {
-    notification.close();
-  } else {
-    clients.openWindow('http://localhost:3000');
-    notification.close();
-  }
+self.addEventListener('push', function (event) {
+  const payload = event.data ? event.data.text() : 'no payload';
+  event.waitUntil(
+    self.registration.showNotification('Notificacion', {
+      body: payload,
+      icon: '/iconComsistelco512.png',
+      vibrate: [100, 50, 100],
+      data: {
+        dateOfArrival: Date.now(),
+        primaryKey: 1
+      }
+    })
+  );
 });
