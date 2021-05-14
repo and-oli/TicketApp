@@ -11,14 +11,14 @@ mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: t
 const bodyParser = require('body-parser');
 
 const users = require('./routes/user');
-const solicitudes = require('./routes/solicitud')
+const solicitudes = require('./routes/solicitud');
 const CambiosSoliciud = require('./routes/cambio_solicitud');
-const solicitudesVarias = require('./solicitudesVarias')
-const archivo = require('./routes/archivo')
-const constantes = require('./routes/constantes')
+const solicitudesVarias = require('./solicitudesVarias');
+const archivo = require('./routes/archivo');
+const constantes = require('./routes/constantes');
+const notification = require('./routes/notification');
 
 const app = express();
-
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -34,6 +34,7 @@ app.use('/cambiosSolicitud', CambiosSoliciud);
 app.use('/solicitudesVarias', solicitudesVarias);
 app.use('/archivo', archivo);
 app.use('/constantes', constantes);
+app.use('/notification', notification);
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
