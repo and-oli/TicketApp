@@ -1,51 +1,55 @@
-async function displayNotification() {
-  if (Notification.permission === 'granted') {
-    const registration = await navigator.serviceWorker.getRegistration();
-    const options = {
-      body: 'Here is a notification body!',
-      icon: '/iconComsistelco512.png',
-      vibrate: [100, 50, 100],
-      data: {
-        dateOfArrival: Date.now(),
-        primaryKey: 1
-      }
-    };
-    return registration.showNotification('Desea recibir notificaciones', options);
-  }
-}
+async function notificationWorker() {
+  const permission = await Notification.requestPermission();
 
-async function subscribeUser() {
-  if ('serviceWorker' in navigator) {
-    try {
-      const ready = await navigator.serviceWorker.ready;
-      await ready.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: 'BIm6BvFNq5AxS4O3pUrrQjr2t3U8yKVOIvPvXd_NFhZv1ZQcT-nltoSBJ0PbOh6NR4QVc2Dd69Nl6mxgYAJaOzA'
-      });
-    } catch (err) {
-      if (Notification.permission === 'denied') {
-        console.warn('Permission for notifications was denied')
-      } else {
-        console.error('Unable to subscribe to push', err);
+  if (permission === 'granted') {
+    const urlBase64ToUint8Array = (base64String) => {
+      var padding = '='.repeat((4 - base64String.length % 4) % 4);
+      var base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+
+      var rawData = window.atob(base64);
+      var outputArray = new Uint8Array(rawData.length);
+
+      for (var i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
       }
+      return outputArray;
     }
-  }
 
-}
+    const renderSubscription = async () => {
+      const ready = await navigator.serviceWorker.ready;
+      const subscription = await ready.pushManager.getSubscription();
+      const response = await fetch('http://192.168.1.39:3001/notification/vapidPublicKey');
+      const vapidPublicKey = await response.json();
+      const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey.vapidKey);
+      if (subscription) {
+        return subscription
+      }
+      const subs = await ready.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: convertedVapidKey
+      });
+      return subs
+    };
+
+    const subscriptionVerify = await renderSubscription();
+
+    fetch('http://192.168.1.39:3001/notification/register', {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        subscription: subscriptionVerify
+      }),
+    });
+  };
+};
 
 export default async function registerW() {
   if ('serviceWorker' in navigator) {
-    try {
-      const register = await navigator.serviceWorker.register('/service-worker.js');
-      const subscription = await register.pushManager.getSubscription();
-      if (subscription === null) {
-        console.log('Not subscribed to push service!');
-      }
-
-      displayNotification();
-      subscribeUser()
-    } catch (err) {
-      console.log('Service Worker registration failed: ', err)
-    }
+    navigator.serviceWorker.register('/service-worker.js');
+    notificationWorker();
   }
-}
+};
