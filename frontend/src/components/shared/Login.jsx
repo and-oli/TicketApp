@@ -17,13 +17,16 @@ export default function Login() {
     setPassword(event.target.value);
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    const ready = await navigator.serviceWorker.ready;
+    const subscription = await ready.pushManager.getSubscription();
     if (!loading) {
       setloading(true);
       let user = {
         username: userName,
         password: password,
+        subscription,
       };
       fetch("http://localhost:3001/users/authenticate", {
         method: "post",
@@ -37,9 +40,9 @@ export default function Login() {
         .then((res) => {
           setloading(false);
           if (res.ok) {
-              localStorage.setItem("TAToken", res.token);
-              localStorage.setItem("TAUser", res.user);
-              window.location.reload();
+            localStorage.setItem("TAToken", res.token);
+            localStorage.setItem("TAUser", res.user);
+            window.location.reload();
             setMessage({ text: res.mensaje, color: "green" });
           } else {
             setMessage({ text: res.mensaje, color: "red" });

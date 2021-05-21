@@ -12,6 +12,7 @@
   justify-content: space-around;
   height: 650px;
   width: 800px;
+  min-width: 150px;
 }
 .container-b {
   display: flex;
@@ -19,6 +20,7 @@
   justify-content: space-around;
   height: 650px;
   width: 800px;
+  min-width: 150px;
 }
 .title-envio {
   display: flex;

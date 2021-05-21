@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const UsuarioSchema = new Schema({
   name: String,
+  subscription:[Array],
   email: { type: String, unique: true },
   username: { type: String, unique: true },
   password: String,

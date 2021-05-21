@@ -136,7 +136,7 @@ export default function ListaSolicitudes() {
       }
     )
       .then((res) => res.json())
-      .then((resultado) => {
+      .then(async (resultado) => {
         setListaSolicitudes(resultado.solicitudes);
         if (resultado.cuenta) {
           setloading(false);
@@ -211,6 +211,7 @@ export default function ListaSolicitudes() {
               {sol.idSolicitud}
             </Link>
           </TableCell>
+          {console.log(sol)}
           <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
           <TableCell align="center">{sol.usuarioSolicitante[0].name}</TableCell>
           <TableCell align="center">{sol.estado}</TableCell>

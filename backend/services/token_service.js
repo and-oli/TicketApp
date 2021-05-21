@@ -1,8 +1,10 @@
 const ModuloUsuario = require('../models/Usuario');
 const Usuario = ModuloUsuario.modelo;
-const jwt = require('jsonwebtoken');
+const Notificaciones = require('../models/Notification').modelo;
+const jwt = require('jsonwebtoken');const webPush = require('web-push');
 const secretKey = require('../config/config').secret
 const roles = require('../data/roles.json')
+
 module.exports = {
   checkTokenAdmin: function (req, res, next) {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -51,11 +53,22 @@ module.exports = {
   },
 
   authorizeUser: async function (user, res) {
+    async function verificarNotificaciones(refUser){
+      try {
+        const verificacionNotificaciones = await Notificaciones.find({refUsuario: refUser})
+        if(verificacionNotificaciones) {
+          verificacionNotificaciones.map(async (notificaciones) => {
+            await webPush.sendNotification(user.subscription, notificaciones.payload, {TTL:0});
+          });
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    }
     try {
-      const userInfo = await Usuario.find({ username: user.username })
+      const userInfo = await Usuario.findOneAndUpdate({ username: user.username }, {subscription: {...user.subscription}})
         .select('_id name username password role')
-
-      const userAuthorize = userInfo[0];
+      const userAuthorize = userInfo;
       if (!userAuthorize) {
         res.json({ mensaje: 'Usuario incorrecto', ok: false });
       } else {
@@ -63,6 +76,7 @@ module.exports = {
         if (!password) {
           res.json({ mensaje: 'Contraseña incorrecta', ok: false });
         } else {
+          verificarNotificaciones(userAuthorize._id);
           const token = jwt.sign({
             id: userAuthorize._id,
             name: userAuthorize.name,

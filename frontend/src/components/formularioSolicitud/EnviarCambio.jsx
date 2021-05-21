@@ -62,6 +62,7 @@ export default function CambiosSolicitud(props) {
     for (let i = 0; i < files.length; i++) {
       archivosSeleccionados.push(files[i]);
     }
+
     setArchivos((prevState) => ({
       ...prevState,
       [categoria]: archivosSeleccionados,
@@ -110,9 +111,16 @@ export default function CambiosSolicitud(props) {
       data.archivos = responseArchivosJson.archivos;
     }
 
-    for (let cambio in state) {
-      if (state[cambio] !== undefined && state[cambio] !== "") {
-        data[cambio] = state[cambio];
+    const permission = await Notification.requestPermission();
+
+    if (permission === "granted") {
+      const ready = await navigator.serviceWorker.ready;
+      const subscription = await ready.pushManager.getSubscription();
+      data.subscription = subscription;
+      for (let cambio in state) {
+        if (state[cambio] !== undefined && state[cambio] !== "") {
+          data[cambio] = state[cambio];
+        }
       }
     }
 

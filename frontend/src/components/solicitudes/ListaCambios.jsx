@@ -79,8 +79,8 @@ export default function ListaSolicitudes(props) {
           <Divider />
           <div>
             <p className="title-card-cambio">Usuario:</p>
-            <p className="user-info-cambio">{cambio.refUsuario.name}</p>
-            <p className="user-info-cambio">({cambio.refUsuario.role})</p>
+            <p className="user-info-cambio">{cambio.refUsuario[0].name}</p>
+            <p className="user-info-cambio">({cambio.refUsuario[0].role})</p>
           </div>
           <Divider />
           <div>

@@ -5,7 +5,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const config = require('./config/config');
 const mongoose = require('mongoose');
-
+mongoose.set('useFindAndModify', false);
 mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const bodyParser = require('body-parser');

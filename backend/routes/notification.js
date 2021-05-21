@@ -18,7 +18,6 @@ router.get('/vapidPublicKey', function (req, res) {
     vapid = webPush.generateVAPIDKeys();
     process.env.VAPID_PUBLIC_KEY = vapid.publicKey
     process.env.VAPID_PRIVATE_KEY = vapid.privateKey
-    console.log(vapid)
   }
   // Set the keys used for encrypting the push messages.
   webPush.setVapidDetails(
@@ -30,27 +29,14 @@ router.get('/vapidPublicKey', function (req, res) {
 
 });
 
-router.post('/register', function (req, res) {
-  res.sendStatus(201);
-});
 
-router.post('/sendNotification', function (req, res) {
+router.post('/register', function (req, res) {
   const subscription = req.body.subscription;
-  const payload = req.body.payload;
-  const options = {
-    ...req.body.options,
-    TTL: req.body.ttl
-  };
-  setTimeout(async function () {
-    try {
-      await webPush.sendNotification(subscription, payload, options);
-      res.json({ ok: true });
-    } catch (err) {
-      console.error(err)
-      res.json({ ok: false });
-    };
-  },
-    req.body.delay);
+  const subscriptions = {};
+  if (!subscriptions[subscription.endpoint]) {
+    subscriptions[subscription.endpoint] = subscription;
+  }
+  res.sendStatus(201);
 });
 
 module.exports = router

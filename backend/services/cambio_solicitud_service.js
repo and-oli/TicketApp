@@ -3,17 +3,56 @@ const CambiosSolicitud = ModuloCambiosSolicitud.modelo;
 const UsuarioSchema = require('../models/Usuario');
 const Usuario = UsuarioSchema.modelo;
 const Solicitud = require('../models/Solicitud').modelo;
+const Notificacion = require('../models/Notification').modelo;
+const sendNotification = require('../utils/sendNotification').notification;
 const credencialesDeCorreo = require('../config/config');
+const estados = require('../data/estado.json')
 const fetch = require('node-fetch');
+const mongoose = require('mongoose')
 
 module.exports = {
-  
+
   getCambiosPorSolicitud: async function (req, res) {
-
-    const cambios = await CambiosSolicitud.find({ refSolicitud: req.params.idSolicitud }).sort({ _id: -1 })
-      .populate('refUsuario', ['name', 'role'])
-      .populate('archivos')
-
+    const cambios = await CambiosSolicitud.aggregate([
+      {
+        $match: {
+          refSolicitud: mongoose.Types.ObjectId(req.params.idSolicitud)
+        }
+      },
+      {
+        $lookup: {
+          from: 'usuarios',
+          let: { ref: '$refUsuario' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$$ref', '$_id'] }
+                  ]
+                }
+              }
+            },
+            {
+              $project: {
+                name: 1,
+                role: 1,
+                subscription: 1,
+              }
+            }
+          ],
+          as: 'refUsuario'
+        }
+      },
+      {
+        $lookup: {
+          from: 'archivos',
+          localField: 'archivos',
+          foreignField: '_id',
+          as: 'archivos',
+        },
+      },
+    ])
     if (!cambios) {
       res.json({ mensaje: 'No hay cambios', ok: false });
     } else {
@@ -21,7 +60,7 @@ module.exports = {
     };
   },
 
-  postFile: async function(req, res){
+  postFile: async function (req, res) {
     res.json({
       ruta: 'https://www.muycomputer.com/wp-content/uploads/2016/07/portada.jpg'
     })
@@ -34,15 +73,21 @@ module.exports = {
     const fecha = new Date()
 
     if (cambios.dueno) {
-      resultadoSolicitud.dueno = cambios.dueno;
-      resultadoSolicitud.$addToSet = {
-        listaIncumbentes: {
-          $each: [cambios.dueno]
-        }
+      try {
+        resultadoSolicitud.dueno = cambios.dueno;
+        resultadoSolicitud.$addToSet = {
+          listaIncumbentes: {
+            $each: [cambios.dueno]
+          }
+        };
+        await Notificacion.create({ refUsuario: cambios.dueno, payload: 'A sido asignado a la solicitud' });
+      } catch (err) {
+        console.error(err)
       };
       resultadoSolicitud.estado = estados.asignada;
       cambios.estado = estados.asignada;
     }
+
     if (cambios.abierta !== undefined) {
       resultadoSolicitud.abierta = cambios.abierta;
       resultadoSolicitud.estado = estados.resuelta;
@@ -50,8 +95,7 @@ module.exports = {
     };
     cambios.refUsuario = req.decoded.id
 
-    await Solicitud.updateOne({ idSolicitud: req.params.idSolicitud }, resultadoSolicitud);
-
+    await Solicitud.updateOne({ idSolicitud: req.params.idSolicitud }, resultadoSolicitud)
     const cambiosSolicitud = new CambiosSolicitud();
 
     for (let llave in cambios) {
@@ -71,9 +115,19 @@ module.exports = {
       fecha.getMinutes() +
       ":" +
       fecha.getSeconds()
-      );
-    // await this.enviarCorreo(req, resultadoSolicitud, cambios.nota);
+    );
+
+    const solicitud = await Solicitud.findOne({ idSolicitud: req.params.idSolicitud })
+      .populate('listaIncumbentes', 'email')
+      .populate('dueno', 'subscription')
+      .select('idSolicitud');
+    const subscription = solicitud.dueno.subscription[0];
+    if (subscription) {
+      sendNotification(...subscription, cambios.titulo, { TTL: 0 })
+    }
+    // await this.enviarCorreo(req, resultadoSolicitud, cambios.nota, solicitud.listaIncumbentes, solicitud.idSolicitud);
     try {
+
       await cambiosSolicitud.save();
       res.json({
         mensaje: 'Cambios guardados.',
@@ -88,18 +142,10 @@ module.exports = {
     };
   },
 
-  enviarCorreo: async function (req, cambios, nota) {
-    let incumbentes = [];
-
+  enviarCorreo: async function (req, cambios, nota, incumbentes, idSolicitud) {
     try {
-      const solicitud = await Solicitud.findOne({ idSolicitud: req.params.idSolicitud })
-        .select('listaIncumbentes');
-      incumbentes = solicitud.listaIncumbentes;
-
-      const emailUsuarios = await Usuario.find({ _id: incumbentes }).select('email');
-      const emails = emailUsuarios.map(usuario => usuario.email);
+      const emails = incumbentes.map(usuario => usuario.email);
       const { emailjsUserId, emailjsTemplateId, emailjsServiceId } = credencialesDeCorreo;
-
       data = {
         service_id: emailjsServiceId,
         template_id: emailjsTemplateId,

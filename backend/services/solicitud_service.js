@@ -3,6 +3,8 @@ const ModuloSolicitud = require('../models/Solicitud');
 const estadoPredeterminado = require('../data/estado.json').sinAsignar
 const Solicitud = ModuloSolicitud.modelo;
 const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modelo;
+const Notification = require('../models/Notification').modelo
+const sendNotificacion = require('../utils/sendNotification').notification
 
 function enviarError(res, error) {
   console.error(error.stack);
@@ -177,7 +179,7 @@ module.exports = {
         { $inc: { secuencia: 1 } },
       );
       
-      const newSolicitud = new Solicitud()
+      const newSolicitud = new Solicitud();
       newSolicitud.idSolicitud = secuencia.secuencia;
       newSolicitud.resumen = req.body.resumen;
       newSolicitud.descripcion = req.body.descripcion;
@@ -187,9 +189,17 @@ module.exports = {
       newSolicitud.abierta = true;
       newSolicitud.categoria = req.body.categoria;
       newSolicitud.refCliente = req.body.refCliente;
+      newSolicitud.dueno = '60844f1ad198dc3ea4eb062e';
       newSolicitud.refUsuarioSolicitante = req.decoded.id;
       newSolicitud.listaIncumbentes = [req.decoded.id];
-      await newSolicitud.save();
+      const solicitudCreada = await newSolicitud.save();
+      const especialista = await Solicitud.findById({_id: solicitudCreada._id}).populate('dueno', ['_id', 'subscription']);
+      await Notification.create({ refUsuario: especialista._id, payload: 'Nueva Solicitud' })
+      const subscription = especialista.dueno.subscription[0];
+      console.log(...subscription)
+      if(especialista.dueno.subscription){
+        await sendNotification(...subscription, 'Nueva solicitud', {TTL: 0})
+      }
       res.json({
         mensaje: 'Solicitud enviada...',
         ok: true,

@@ -20,22 +20,41 @@ self.addEventListener('install', async event => {
   );
 });
 
-self.addEventListener('fetch', (event) => {
-  const request = event.request;
-  event.respondWith(
-    caches.open(cacheFetch).then(function (cache) {
-      return cache.match(request).then(function (response) {
-        return response || fetch(request).then(function (res) {
-          if (request.method !== 'POST') {
-            cache.put(request, res.clone())
-          }
-          return res;
-        });
-      });
+// self.addEventListener('fetch', async (event) => {
+//   const request = event.request;
+//   event.respondWith(
+//     caches.match(request)
+//       .then(function (response) {
+//         return response ||
+//           fetch(request)
+//             .then(function (res) {
+//               return caches.open(cacheFetch)
+//                 .then(function (cache) {
+//                   if (request.method !== 'POST') {
+//                     cache.put(request, res.clone())
+//                   }
+//                   return res;
+//                 })
+//             });
+//       })
+//   );
+// });
 
+self.addEventListener("pushsubscriptionchange", event => {
+  event.waitUntil(swRegistration.pushManager.subscribe(event.oldSubscription.options)
+    .then(subscription => {
+      return fetch('http://localhost:3001/notification/register', {
+        method: "post",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({
+          endpoint: subscription.endpoint
+        })
+      });
     })
   );
-});
+}, false)
 
 self.addEventListener('push', function (event) {
   const payload = event.data ? event.data.text() : 'no payload';

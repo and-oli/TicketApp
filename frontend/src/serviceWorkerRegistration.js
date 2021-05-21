@@ -1,4 +1,4 @@
-async function notificationWorker() {
+export async function notificationWorker() {
   const permission = await Notification.requestPermission();
 
   if (permission === 'granted') {
@@ -43,13 +43,14 @@ async function notificationWorker() {
       body: JSON.stringify({
         subscription: subscriptionVerify
       }),
-    });
+    }).catch(err => console.log(err))
   };
 };
 
-export default async function registerW() {
+
+
+export default function registerW() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js');
-    notificationWorker();
+      navigator.serviceWorker.register('/service-worker.js');
   }
 };
