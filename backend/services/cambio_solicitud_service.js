@@ -80,7 +80,6 @@ module.exports = {
             $each: [cambios.dueno]
           }
         };
-        await Notificacion.create({ refUsuario: cambios.dueno, payload: 'A sido asignado a la solicitud' });
       } catch (err) {
         console.error(err)
       };
@@ -118,19 +117,14 @@ module.exports = {
     );
 
     const solicitud = await Solicitud.findOne({ idSolicitud: req.params.idSolicitud })
-      .populate('listaIncumbentes', 'email')
-      .populate('dueno', 'subscription')
+      .populate('listaIncumbentes', 'email subscription')
       .select('idSolicitud');
-    const subscription = solicitud.dueno.subscription[0];
-    if (subscription) {
-      sendNotification(...subscription, cambios.titulo, { TTL: 0 })
-    }
     // await this.enviarCorreo(req, resultadoSolicitud, cambios.nota, solicitud.listaIncumbentes, solicitud.idSolicitud);
     try {
-
       await cambiosSolicitud.save();
       res.json({
         mensaje: 'Cambios guardados.',
+        solicitud: solicitud.listaIncumbentes,
         ok: true,
       });
     } catch (err) {

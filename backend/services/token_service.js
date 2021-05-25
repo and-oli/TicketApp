@@ -1,7 +1,6 @@
 const ModuloUsuario = require('../models/Usuario');
 const Usuario = ModuloUsuario.modelo;
-const Notificaciones = require('../models/Notification').modelo;
-const jwt = require('jsonwebtoken');const webPush = require('web-push');
+const jwt = require('jsonwebtoken'); 
 const secretKey = require('../config/config').secret
 const roles = require('../data/roles.json')
 
@@ -53,41 +52,27 @@ module.exports = {
   },
 
   authorizeUser: async function (user, res) {
-    async function verificarNotificaciones(refUser){
-      try {
-        const verificacionNotificaciones = await Notificaciones.find({refUsuario: refUser})
-        if(verificacionNotificaciones) {
-          verificacionNotificaciones.map(async (notificaciones) => {
-            await webPush.sendNotification(user.subscription, notificaciones.payload, {TTL:0});
-          });
-        }
-      } catch(err) {
-        console.log(err)
-      }
-    }
     try {
-      const userInfo = await Usuario.findOneAndUpdate({ username: user.username }, {subscription: {...user.subscription}})
+      const userInfo = await Usuario.findOneAndUpdate({ username: user.username }, { subscription: { ...user.subscription } })
         .select('_id name username password role')
-      const userAuthorize = userInfo;
-      if (!userAuthorize) {
+      if (!userInfo) {
         res.json({ mensaje: 'Usuario incorrecto', ok: false });
       } else {
-        const password = userAuthorize.comparePassword(user.password);
+        const password = userInfo.comparePassword(user.password);
         if (!password) {
           res.json({ mensaje: 'Contraseña incorrecta', ok: false });
         } else {
-          verificarNotificaciones(userAuthorize._id);
           const token = jwt.sign({
-            id: userAuthorize._id,
-            name: userAuthorize.name,
-            username: userAuthorize.username,
-            role: userAuthorize.role,
+            id: userInfo._id,
+            name: userInfo.name,
+            username: userInfo.username,
+            role: userInfo.role
           }, secretKey, { expiresIn: '24h' });
           res.json({
             mensaje: 'Usuario valido',
-            idUsuario: userAuthorize.idUser,
-            user: userAuthorize.role,
-            username: userAuthorize.username,
+            idUsuario: userInfo._id,
+            user: userInfo.role,
+            username: userInfo.username,
             token,
             ok: true,
           });
