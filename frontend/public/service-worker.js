@@ -43,7 +43,7 @@ self.addEventListener('install', async event => {
 self.addEventListener("pushsubscriptionchange", event => {
   event.waitUntil(swRegistration.pushManager.subscribe(event.oldSubscription.options)
     .then(subscription => {
-      return fetch('http://localhost:3001/notification/register', {
+      return fetch('http://192.168.1.39:3001/notification/register', {
         method: "post",
         headers: {
           "Content-type": "application/json"

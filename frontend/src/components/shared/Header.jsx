@@ -2,6 +2,7 @@ import React from "react";
 import "../styles/Header.css";
 import MenuList from "@material-ui/core/MenuList";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+import Notifications from "./Notifications";
 import { makeStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
@@ -17,7 +18,6 @@ import Menu from "./Menu";
 import clsx from "clsx";
 
 const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -101,10 +101,14 @@ const Header = (props) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [openLog, setOpenLog] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const {userRole} = props;
+  const { userRole } = props;
 
-  const handleClose = (event) => {
+  const handleClose = async () => {
+    const ready = await navigator.serviceWorker.ready;
+    const subscription = await ready.pushManager.getSubscription();
+    await subscription.unsubscribe();
     localStorage.removeItem("TAToken");
+    localStorage.removeItem("TAUser");
     window.location.reload();
   };
 
@@ -161,7 +165,7 @@ const Header = (props) => {
             </IconButton>
           </div>
           <Divider />
-          <Menu close={handleDrawerClose} user = {userRole}/>
+          <Menu close={handleDrawerClose} user={userRole} />
           <Divider />
         </Drawer>
         <div className="container-header-img">
@@ -170,49 +174,49 @@ const Header = (props) => {
             src="/logoComsistelco.png"
             alt="Tickets"
           />
+          <div className="circle-icon">
+            <Notifications recargar={true}/>
+            <AccountCircle
+              className="icon"
+              ref={anchorRef}
+              aria-controls={openLog ? "menu-list-grow" : undefined}
+              aria-haspopup="true"
+              onClick={openLogMenu}
+            />
+          </div>
+
+          <Popper
+            style={{
+              display: "flex",
+              position: "absolute",
+              marginRight: 30,
+              zIndex: 2,
+            }}
+            open={openLog}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            transition
+            disablePortal
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin:
+                    placement === "bottom" ? "center top" : "center bottom",
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={closeLogMenu}>
+                    <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </div>
-        <div className="circle-icon">
-          <AccountCircle
-            className="icon"
-            ref={anchorRef}
-            aria-controls={openLog ? "menu-list-grow" : undefined}
-            aria-haspopup="true"
-            onClick={openLogMenu}
-          />
-        </div>
-        <Popper
-          style={{
-            display: "flex",
-            position: "absolute",
-            marginRight: 30,
-            zIndex: 2,
-          }}
-          open={openLog}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          transition
-          disablePortal
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={closeLogMenu}>
-                  <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                    <MenuItem>Profile</MenuItem>
-                    <MenuItem>My account</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
       </header>
     </div>
   );

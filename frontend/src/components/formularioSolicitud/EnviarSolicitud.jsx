@@ -46,7 +46,7 @@ export default function EnviarSolicitud() {
       "http://localhost:3001/constantes/prioridad",
       header
     );
-    
+
     const requerimiento = await fetch(
       "http://localhost:3001/constantes/tipoRequerimiento",
       header
@@ -89,7 +89,7 @@ export default function EnviarSolicitud() {
     setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const enviarSolicitud = (event) => {
+  const enviarSolicitud = async (event) => {
     let data = {};
     let confirmarPost = true;
 
@@ -112,22 +112,37 @@ export default function EnviarSolicitud() {
     }
 
     if (confirmarPost) {
-      fetch("http://localhost:3001/solicitudes/nuevaSolicitud", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "x-access-token": localStorage.getItem("TAToken"),
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          if (json.ok) {
-            setloading(false);
-            window.location.reload();
+      const resFetch = await fetch(
+        "http://localhost:3001/solicitudes/nuevaSolicitud",
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "x-access-token": localStorage.getItem("TAToken"),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const resJson = await resFetch.json();
+      console.log(resJson)
+      if (resJson.ok) {
+        const resFetch = await fetch(
+          "http://localhost:3001/notification/solicitudNotifications",
+          {
+            method: "POST",
+            body: JSON.stringify(resJson.solicitud),
+            headers: {
+              "x-access-token": localStorage.getItem("TAToken"),
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
+        // const resJson = await resFetch.json();
+        setloading(false);
+        window.location.reload();
+      }
     }
   };
 

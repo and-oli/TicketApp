@@ -124,7 +124,7 @@ export default function CambiosSolicitud(props) {
       }
     }
 
-    fetch(`http://localhost:3001/cambiosSolicitud/${props.idSolicitud}`, {
+    const resCambio = await fetch(`http://localhost:3001/cambiosSolicitud/${props.idSolicitud}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -133,13 +133,22 @@ export default function CambiosSolicitud(props) {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.ok) {
-          setloading(false);
-          window.location.reload();
-        }
-      });
+    const resCambioJson = await resCambio.json();
+
+      if (resCambioJson.ok) {
+        console.log(resCambioJson)
+        await fetch('http://localhost:3001/notification/cambioNotifications',{
+          method: "post",
+          headers: {
+            "x-access-token": localStorage.getItem("TAToken"),
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(resCambioJson.solicitud)
+        })
+        setloading(false);
+        window.location.reload();
+      }
   };
 
   const renderizarTecnicos = () => {
@@ -222,7 +231,7 @@ export default function CambiosSolicitud(props) {
   return (
     <Paper className="paper-solicitud-b" elevation={10}>
       <form onSubmit={enviarCambio}>
-        {props.user === "Especialista" || props.user === "Tecnico"
+        {props.user === "Especialista" || props.user === "Tecnico" || "ADMINISTRADOR"
           ? renderizarCambiosEspecialista()
           : null}
         <TextField
@@ -253,7 +262,7 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
-        {props.user === "Especialista" || props.user === "Tecnico"
+        {props.user === "Especialista" || props.user === "Tecnico" || "ADMINISTRADOR"
           ? renderizarCamposArchivos()
           : null}
         <div className="button">

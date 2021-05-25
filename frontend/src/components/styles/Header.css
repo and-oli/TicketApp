@@ -9,6 +9,10 @@ header {
 }
 
 .container-header-img {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
   width: 100%;
 }
 
@@ -58,10 +62,14 @@ ul:hover {
 }
 .circle-icon {
   display: flex;
-  width: 10%;
-  padding-right: 10px;
-  margin-right: 35px;
+  justify-content:center;
+  width: 100px;
+  height: 40px;
 }
 .icon {
-  margin-left: 97%;
+  align-self: center;
+}
+
+.icon-notifications {
+  align-self: center;
 }

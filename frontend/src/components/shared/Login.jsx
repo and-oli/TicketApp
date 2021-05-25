@@ -28,26 +28,27 @@ export default function Login() {
         password: password,
         subscription,
       };
-      fetch("http://localhost:3001/users/authenticate", {
-        method: "post",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          setloading(false);
-          if (res.ok) {
-            localStorage.setItem("TAToken", res.token);
-            localStorage.setItem("TAUser", res.user);
-            window.location.reload();
-            setMessage({ text: res.mensaje, color: "green" });
-          } else {
-            setMessage({ text: res.mensaje, color: "red" });
-          }
-        });
+      const response = await fetch(
+        "http://localhost:3001/users/authenticate",
+        {
+          method: "post",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        }
+      );
+      const resJson = await response.json();
+      setloading(false);
+      if (resJson.ok) {
+        localStorage.setItem("TAToken", resJson.token);
+        localStorage.setItem("TAUser", resJson.user);
+        window.location.reload();
+        setMessage({ text: resJson.mensaje, color: "green" });
+      } else {
+        setMessage({ text: resJson.mensaje, color: "red" });
+      }
     }
   }
 
