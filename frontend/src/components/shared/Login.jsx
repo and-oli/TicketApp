@@ -23,11 +23,10 @@ export default function Login() {
     const subscription = await ready.pushManager.getSubscription();
     if (!loading) {
       setloading(true);
-      let user = {
-        username: userName,
-        password: password,
-        subscription,
-      };
+      let user = {};
+        user.username = userName;
+        user.password = password;
+        user.subscription = subscription;
       const response = await fetch(
         "http://localhost:3001/users/authenticate",
         {

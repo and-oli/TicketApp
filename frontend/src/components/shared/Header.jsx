@@ -2,7 +2,6 @@ import React from "react";
 import "../styles/Header.css";
 import MenuList from "@material-ui/core/MenuList";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import Notifications from "./Notifications";
 import { makeStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
@@ -14,6 +13,9 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MenuItem from "@material-ui/core/MenuItem";
+import Badge from "@material-ui/core/Badge";
+import { Link } from "react-router-dom";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import Menu from "./Menu";
 import clsx from "clsx";
 
@@ -101,7 +103,7 @@ const Header = (props) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [openLog, setOpenLog] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const { userRole } = props;
+  const { userRole, notificaciones } = props;
 
   const handleClose = async () => {
     const ready = await navigator.serviceWorker.ready;
@@ -175,7 +177,19 @@ const Header = (props) => {
             alt="Tickets"
           />
           <div className="circle-icon">
-            <Notifications recargar={true}/>
+            <IconButton
+              component={Link}
+              to='/lista-notificaciones'
+              className="icon-notifications"
+              aria-label="show 17 new notifications"
+              color="inherit"
+            >
+              <Badge badgeContent={notificaciones.length}>
+                <NotificationsIcon
+                  className="icon"
+                />
+              </Badge>
+            </IconButton>
             <AccountCircle
               className="icon"
               ref={anchorRef}
