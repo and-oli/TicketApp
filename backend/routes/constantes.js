@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const token = require('../services/token_service');
-const constantes = require('../services/const_service')
+const categoriasDeArchivos = require('../data/categoria_archivos.json')
+const categoriasSolicitud = require('../data/categorias_solicitud.json')
+const estados = require('../data/estado.json')
+const prioridad = require('../data/prioridad.json')
+const roles = require('../data/roles.json')
+const tipoDeRequerimiento = require('../data/tipo_de_requerimiento.json')
+
 router.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT');
@@ -14,27 +20,27 @@ router.use(function (req, res, next) {
 
 
 router.get('/categoriasArchivos', token.checkToken,async function (req, res) {
-  await constantes.getCategoriasArchivos(res)
+  res.json(categoriasDeArchivos)
 });
 
 router.get('/categoriasSolicitud', token.checkToken,async function (req, res) {
-  await constantes.getCategriasSolicitud(res)
+  res.json(categoriasSolicitud)
 });
 
 router.get('/estados', token.checkToken,async function (req, res) {
-  await constantes.getEstado(res)
+  res.json(estados)
 });
 
 router.get('/prioridad', token.checkToken,async function (req, res) {
-  await constantes.getPrioridad(res)
+  res.json(prioridad)
 });
 
 router.get('/roles', token.checkToken,async function (req, res) {
-  await constantes.getRoles(res)
+  res.json(roles)
 });
 
 router.get('/tipoRequerimiento', token.checkToken,async function (req, res) {
-  await constantes.getTipoDeRequerimiento(res)
+  res.json(tipoDeRequerimiento)
 });
 
 module.exports = router;

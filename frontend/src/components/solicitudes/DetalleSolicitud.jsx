@@ -15,7 +15,7 @@ export default function DetalleSolicitud(props) {
   const [solicitante, setSolicitante] = useState({});
 
   React.useEffect(() => {
-    fetch(`http://localhost:3001/solicitudes/porNumero/${idSolicitud}`, {
+    fetch(`http://192.168.1.39:3001/solicitudes/porNumero/${idSolicitud}`, {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
@@ -39,7 +39,7 @@ export default function DetalleSolicitud(props) {
     <div>
       <div className="title-paper">
         <p>
-          Solicitud {idSolicitud}: {detalleSolicitud.resumen}
+          Solicitud #{idSolicitud}: {detalleSolicitud.resumen}
         </p>
       </div>
       <div className="container-paper">

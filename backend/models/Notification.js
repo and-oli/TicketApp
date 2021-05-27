@@ -2,8 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var NotificationSchema = new Schema({
-    refUsuario:String,
-    payload: String
+    refUsuario:{type:Schema.Types.ObjectId, ref:'usuarios', unique:false},
+    payload: String,
+    titulo:String,
+    info:String,
+    url:String,
 });
 
 const nombreModelo = 'notificaciones'   

@@ -11,7 +11,7 @@ export default function ListaSolicitudes(props) {
   React.useEffect(() => {
     if (props.refSolicitud !== undefined) {
       fetch(
-        `http://localhost:3001/cambiosSolicitud/cambios/${props.refSolicitud}`,
+        `http://192.168.1.39:3001/cambiosSolicitud/cambios/${props.refSolicitud}`,
         {
           method: "GET",
           headers: {

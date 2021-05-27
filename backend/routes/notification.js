@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const webPush = require('web-push');
+const token = require('../services/token_service')
+const notificationService = require('../services/notification_service')
 
 router.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -37,6 +39,18 @@ router.post('/register', function (req, res) {
     subscriptions[subscription.endpoint] = subscription;
   }
   res.sendStatus(201);
+});
+
+router.get('/getNotifications', token.checkToken, async function (req, res) {
+  await notificationService.getNotifications(req, res)
+});
+
+router.post('/cambioNotifications', token.checkToken, async function (req, res) {
+  await notificationService.cambioNotificaciones(req, res)
+});
+
+router.post('/solicitudNotifications', token.checkToken, async function (req, res) {
+  await notificationService.solicitudNotificaciones(req, res)
 });
 
 module.exports = router

@@ -12,7 +12,7 @@ export default function Navigation(props) {
 
   const renderNotificaciones = async () => {
     const getNotificaciones = await fetch(
-      "http://localhost:3001/notification/getNotifications",
+      "http://192.168.1.39:3001/notification/getNotifications",
       {
         method: "GET",
         headers: {
@@ -26,7 +26,7 @@ export default function Navigation(props) {
 
   React.useEffect(
     () => {
-      fetch('http://localhost:3001/users/validarToken', {
+      fetch('http://192.168.1.39:3001/users/validarToken', {
         method: 'GET',
         headers: {
           'x-access-token': localStorage.getItem("TAToken")

@@ -22,20 +22,27 @@
 .container-notificaciones{
   display: flex;
   flex-direction: column;
+  max-height: 900px;
+  min-width: 395px;
+  overflow-y: scroll;
   margin-top: 20px;
-  width: 60%;
+  width: 65%;
 }
 .paper-notificaciones{
   display: flex;
   margin-top: 20px;
+  width: 98%;
+  min-width: 360px;
+  line-height: 20px;
+  text-decoration: none;
+  margin-bottom: 10px;
   flex-direction: row;
   align-items: center;
   height: 80px;
 }
 
 .contenido{
-  height: 100%px;
-  background-color: lemonchiffon;
+  height: 100%;
   flex-direction: column;
   margin-left: 10px;
   line-height:5px;
@@ -44,8 +51,9 @@
 .notificacion-icon{
   width: 60px;
   height: 60px;
+  margin-left: 5px;
   border-radius: 4px;
-  border: 1px solid black;
+  box-shadow: 2px 2px 5px rgba(72, 72, 72, 0.604);
   float: left;
   vertical-align: middle;
 }

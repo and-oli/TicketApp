@@ -1,5 +1,6 @@
 import "../styles/ListaDeNotificaciones.css"
 import Paper from "@material-ui/core/Paper";
+import { Link } from "react-router-dom";
 
 function ListaDeNotificaciones(props){
   const {notificaciones} = props
@@ -14,10 +15,15 @@ function ListaDeNotificaciones(props){
          {
            notificaciones.map((noti, i)=> {
              return (
-              <Paper elevation={20} key={i} className='paper-notificaciones'>
+              <Paper component={Link} to={noti.url} elevation={5} key={i} className='paper-notificaciones'>
                 <img alt='icono' src="/iconComsistelco512.png" className='notificacion-icon'/>
                 <div className='contenido'>
-                <p>{noti.payload}</p>
+                  <p>
+                    {noti.titulo}
+                  </p>
+                  <p>
+                    {noti.info}
+                  </p>
                 </div>
               </Paper>
              )

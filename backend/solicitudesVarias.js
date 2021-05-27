@@ -159,6 +159,7 @@ router.post('/newSolicitudes', token, async function (req, res) {
       element.fechaHora = fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear() + '  ' + fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
       element.estado = estado;
       element.abierta = true;
+      element.dueno = '60ad4a35eb3c551fc08ce68c';
       element.refCliente = refUsuarioRandom.refCliente;
       element.refUsuarioSolicitante = refUsuarioRandom._id;
       element.listaIncumbentes = [refUsuarioRandom._id];

@@ -5,7 +5,7 @@ module.exports = {
   getNotifications: async function (req, res) {
     const { id, subscription, } = req.decoded;
     try {
-      const notificaciones = await Notificacion.find({ refUsuario: `${id}` });
+      const notificaciones = await Notificacion.find({ refUsuario: `${id}` }).sort({_id: -1});
       if (notificaciones) {
         notificaciones.map(async (notific) => {
           await webPush.sendNotification(subscription, notific.payload, { TTL: 0 });
@@ -14,21 +14,30 @@ module.exports = {
       res.json({ ok: true, notificaciones })
     } catch (err) {
       console.log(err)
-      res.json({ ok: false, mensaje: 'La notificacion no pudi ser enviada.' })
+      res.json({ ok: false, mensaje: 'La notificacion no pudo ser enviada.' })
     }
   },
 
   cambioNotificaciones: async function (req, res) {
-    const infoUser = req.body;
+    const { solicitud, notificacion } = req.body;
     try {
       const notificationsUsers = [];
-      infoUser.map(user => {
-        notificationsUsers.push({ refUsuario: user._id, payload: 'Nuevo cambio en la solicitud.' });
+      const tituloNotificacion = `Nuevo cambio en la solicitud # ${solicitud.idSolicitud}`;
+      const link = `/detalle-solicitud/?id_solicitud=${solicitud.idSolicitud}`
+      solicitud.listaIncumbentes.map(user => {
+        const notificar = {
+          refUsuario: user._id,
+          payload: tituloNotificacion,
+          titulo: tituloNotificacion,
+          info: notificacion.info,
+          url: link
+        }
+        notificationsUsers.push(notificar);
       })
       await Notificacion.create(notificationsUsers);
-      infoUser.map(async (sups) => {
+      solicitud.listaIncumbentes.map(async (sups) => {
         if (sups.subscription[0]) {
-          await webPush.sendNotification(...sups.subscription[0], 'Nuevo cambio en la solicitud.', { TTL: 0 });
+          await webPush.sendNotification(...sups.subscription[0], `Nuevo cambio en la solicitud # ${solicitud.idSolicitud}`, { TTL: 0 });
         }
       })
     } catch (err) {
@@ -42,10 +51,17 @@ module.exports = {
   },
 
   solicitudNotificaciones: async function (req, res) {
-    const { subscription, _id } = req.body;
+    const { solicitud, notificacion } = req.body;
+    const notificar = {
+      payload: notificacion.titulo,
+      titulo: notificacion.titulo,
+      info: notificacion.info,
+      refUsuario: notificacion.refUsuario,
+      url: `/detalle-solicitud/?id_solicitud=${solicitud.idSolicitud}`
+    }
     try {
-      await Notificacion.create({ refUsuario: _id, payload: 'Nueva solicitud.' });
-      await webPush.sendNotification(...subscription[0], 'Nueva solicitud.', { TTL: 0 });
+      await Notificacion.create(notificar);
+      await webPush.sendNotification(...solicitud.dueno.subscription[0], `Nueva solicitud # ${solicitud.idSolicitud}\n${solicitud.refUsuarioSolicitante.name}: ${solicitud.resumen}`, { TTL: 0 });
     } catch (err) {
       if (err.statusCode === 401) {
         console.log('Notificacion no enviada')

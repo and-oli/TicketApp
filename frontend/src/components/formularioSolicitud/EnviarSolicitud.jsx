@@ -33,22 +33,22 @@ export default function EnviarSolicitud() {
     };
 
     const getClientes = await fetch(
-      "http://localhost:3001/users/clientes",
+      "http://192.168.1.39:3001/users/clientes",
       header
     );
 
     const categoriasSolicitud = await fetch(
-      "http://localhost:3001/constantes/categoriasSolicitud",
+      "http://192.168.1.39:3001/constantes/categoriasSolicitud",
       header
     );
 
     const prioridad = await fetch(
-      "http://localhost:3001/constantes/prioridad",
+      "http://192.168.1.39:3001/constantes/prioridad",
       header
     );
 
     const requerimiento = await fetch(
-      "http://localhost:3001/constantes/tipoRequerimiento",
+      "http://192.168.1.39:3001/constantes/tipoRequerimiento",
       header
     );
 
@@ -113,7 +113,7 @@ export default function EnviarSolicitud() {
 
     if (confirmarPost) {
       const resFetch = await fetch(
-        "http://localhost:3001/solicitudes/nuevaSolicitud",
+        "http://192.168.1.39:3001/solicitudes/nuevaSolicitud",
         {
           method: "POST",
           body: JSON.stringify(data),
@@ -125,13 +125,12 @@ export default function EnviarSolicitud() {
         }
       );
       const resJson = await resFetch.json();
-      console.log(resJson)
       if (resJson.ok) {
-        const resFetch = await fetch(
-          "http://localhost:3001/notification/solicitudNotifications",
+        await fetch(
+          "http://192.168.1.39:3001/notification/solicitudNotifications",
           {
             method: "POST",
-            body: JSON.stringify(resJson.solicitud),
+            body: JSON.stringify(resJson),
             headers: {
               "x-access-token": localStorage.getItem("TAToken"),
               Accept: "application/json",
@@ -139,7 +138,6 @@ export default function EnviarSolicitud() {
             },
           }
         );
-        // const resJson = await resFetch.json();
         setloading(false);
         window.location.reload();
       }

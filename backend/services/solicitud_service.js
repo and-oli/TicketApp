@@ -4,7 +4,6 @@ const estadoPredeterminado = require('../data/estado.json').sinAsignar
 const Solicitud = ModuloSolicitud.modelo;
 const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modelo;
 const Notification = require('../models/Notification').modelo
-const sendNotificacion = require('../utils/sendNotification').notification
 
 function enviarError(res, error) {
   console.error(error.stack);
@@ -165,6 +164,7 @@ module.exports = {
 
   postSolicitud: async function (req, res) {
     const fecha = new Date();
+    const notificacion = {};
     try {
       const secuenciaExiste = await SecuenciaSolicitudes.countDocuments({});
       if (!secuenciaExiste) {
@@ -194,12 +194,16 @@ module.exports = {
       newSolicitud.listaIncumbentes = [req.decoded.id];
       const createSolicitud = await Solicitud.create(newSolicitud);
       const resCreateSolicitud = await createSolicitud
-        .populate('dueno', 'subscription').execPopulate()
-
+        .populate('dueno', 'subscription')
+        .populate('refUsuarioSolicitante', 'name').execPopulate()
+      notificacion.titulo = `Nueva solicitud #${resCreateSolicitud.idSolicitud}`
+      notificacion.info = `${resCreateSolicitud.refUsuarioSolicitante.name}: ${resCreateSolicitud.resumen}`
+      notificacion.refUsuario = resCreateSolicitud.dueno
       res.json({
         mensaje: 'Solicitud enviada...',
         ok: true,
-        solicitud: resCreateSolicitud.dueno,
+        solicitud: resCreateSolicitud,
+        notificacion
       });
     } catch (error) {
       enviarError(res, error);

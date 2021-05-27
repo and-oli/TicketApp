@@ -4,7 +4,6 @@ const UsuarioSchema = require('../models/Usuario');
 const Usuario = UsuarioSchema.modelo;
 const Solicitud = require('../models/Solicitud').modelo;
 const Notificacion = require('../models/Notification').modelo;
-const sendNotification = require('../utils/sendNotification').notification;
 const credencialesDeCorreo = require('../config/config');
 const estados = require('../data/estado.json')
 const fetch = require('node-fetch');
@@ -69,9 +68,10 @@ module.exports = {
   cambio: async function (req, res) {
 
     const cambios = req.body;
+    console.log(cambios)
     const resultadoSolicitud = {};
-    const fecha = new Date()
-
+    const fecha = new Date();
+    const notificacion = {};
     if (cambios.dueno) {
       try {
         resultadoSolicitud.dueno = cambios.dueno;
@@ -91,10 +91,11 @@ module.exports = {
       resultadoSolicitud.abierta = cambios.abierta;
       resultadoSolicitud.estado = estados.resuelta;
       cambios.estado = estados.resuelta;
+      notificacion.info = `El estado de la solicitud  cambio a: ${cambios.estado}`;
     };
-    cambios.refUsuario = req.decoded.id
+    cambios.refUsuario = req.decoded.id;
 
-    await Solicitud.updateOne({ idSolicitud: req.params.idSolicitud }, resultadoSolicitud)
+    await Solicitud.updateOne({ idSolicitud: req.params.idSolicitud }, resultadoSolicitud);
     const cambiosSolicitud = new CambiosSolicitud();
 
     for (let llave in cambios) {
@@ -118,13 +119,21 @@ module.exports = {
 
     const solicitud = await Solicitud.findOne({ idSolicitud: req.params.idSolicitud })
       .populate('listaIncumbentes', 'email subscription')
+      .populate('dueno', 'name')
       .select('idSolicitud');
+    if (cambios.dueno) {
+      notificacion.info = `Se asigno a: ${solicitud.dueno.name}`;
+    }
+    if (cambios.archivos) {
+      notificacion.info = `Se agregaron ${cambios.archivos.length} archivo(s)`;
+    }
     // await this.enviarCorreo(req, resultadoSolicitud, cambios.nota, solicitud.listaIncumbentes, solicitud.idSolicitud);
     try {
       await cambiosSolicitud.save();
       res.json({
         mensaje: 'Cambios guardados.',
-        solicitud: solicitud.listaIncumbentes,
+        solicitud: solicitud,
+        notificacion,
         ok: true,
       });
     } catch (err) {
