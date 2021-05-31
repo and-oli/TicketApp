@@ -11,7 +11,7 @@ export default function ListaSolicitudes(props) {
   React.useEffect(() => {
     if (props.refSolicitud !== undefined) {
       fetch(
-        `http://192.168.1.39:3001/cambiosSolicitud/cambios/${props.refSolicitud}`,
+        `http://192.168.0.8:3001/cambiosSolicitud/cambios/${props.refSolicitud}`,
         {
           method: "GET",
           headers: {
@@ -34,7 +34,7 @@ export default function ListaSolicitudes(props) {
           <p className="title-card-cambio">Cambio de estado:</p>
           <div className="info-cambios">
             <p className="cambio-realizado">
-              {cambio.estado === "Asignado"
+              {cambio.estado === "Asignada"
                 ? cambio.estado + " : (" + props.asignado + ")"
                 : cambio.estado}
             </p>

@@ -7,6 +7,7 @@ var NotificationSchema = new Schema({
     titulo:String,
     info:String,
     url:String,
+    visto: Boolean,
 });
 
 const nombreModelo = 'notificaciones'   

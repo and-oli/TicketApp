@@ -28,7 +28,7 @@ export default function Login() {
         user.password = password;
         user.subscription = subscription;
       const response = await fetch(
-        "http://192.168.1.39:3001/users/authenticate",
+        "http://192.168.0.8:3001/users/authenticate",
         {
           method: "post",
           headers: {

@@ -91,7 +91,7 @@ export default function ListaSolicitudes() {
     };
 
     const fetchEstados = await fetch(
-      `http://192.168.1.39:3001/constantes/estados`,
+      `http://192.168.0.8:3001/constantes/estados`,
       header
     );
     const estados = await fetchEstados.json();
@@ -127,7 +127,7 @@ export default function ListaSolicitudes() {
     }
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
     fetch(
-      `http://192.168.1.39:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
+      `http://192.168.0.8:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
       {
         method: "GET",
         headers: {

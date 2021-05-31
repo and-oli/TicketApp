@@ -68,7 +68,6 @@ module.exports = {
   cambio: async function (req, res) {
 
     const cambios = req.body;
-    console.log(cambios)
     const resultadoSolicitud = {};
     const fecha = new Date();
     const notificacion = {};

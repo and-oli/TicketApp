@@ -99,11 +99,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = (props) => {
+  const { userRole, notificaciones } = props;
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [openLog, setOpenLog] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const { userRole, notificaciones } = props;
 
   const handleClose = async () => {
     const ready = await navigator.serviceWorker.ready;
@@ -184,7 +184,7 @@ const Header = (props) => {
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={notificaciones.length}>
+              <Badge badgeContent={notificaciones}>
                 <NotificationsIcon
                   className="icon"
                 />

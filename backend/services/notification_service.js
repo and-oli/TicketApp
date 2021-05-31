@@ -5,11 +5,14 @@ module.exports = {
   getNotifications: async function (req, res) {
     const { id, subscription, } = req.decoded;
     try {
-      const notificaciones = await Notificacion.find({ refUsuario: `${id}` }).sort({_id: -1});
+      const notificaciones = await Notificacion.find({ refUsuario: `${id}` }).sort({ _id: -1 });
       if (notificaciones) {
         notificaciones.map(async (notific) => {
-          await webPush.sendNotification(subscription, notific.payload, { TTL: 0 });
+          if (notific.visto === false) {
+            await webPush.sendNotification(subscription, notific.payload, { TTL: 0 });
+          }
         });
+        await Notificacion.updateMany({ refUsuario: `${id}`, visto: false }, { visto: true })
       }
       res.json({ ok: true, notificaciones })
     } catch (err) {
@@ -21,31 +24,33 @@ module.exports = {
   cambioNotificaciones: async function (req, res) {
     const { solicitud, notificacion } = req.body;
     try {
-      const notificationsUsers = [];
       const tituloNotificacion = `Nuevo cambio en la solicitud # ${solicitud.idSolicitud}`;
-      const link = `/detalle-solicitud/?id_solicitud=${solicitud.idSolicitud}`
-      solicitud.listaIncumbentes.map(user => {
+      const link = `/detalle-solicitud/?id_solicitud=${solicitud.idSolicitud}`;
+      const createNotifications = await Promise.all(solicitud.listaIncumbentes.map(async (user) => {
+        console.log(user)
+        const subscription = user.subscription[0]
         const notificar = {
           refUsuario: user._id,
-          payload: tituloNotificacion,
+          payload: `${tituloNotificacion}\n${notificacion.info}`,
           titulo: tituloNotificacion,
           info: notificacion.info,
           url: link
         }
-        notificationsUsers.push(notificar);
-      })
-      await Notificacion.create(notificationsUsers);
-      solicitud.listaIncumbentes.map(async (sups) => {
-        if (sups.subscription[0]) {
-          await webPush.sendNotification(...sups.subscription[0], `Nuevo cambio en la solicitud # ${solicitud.idSolicitud}`, { TTL: 0 });
+        if (subscription) {
+          try {
+            await webPush.sendNotification(subscription[0], `${tituloNotificacion}\n${notificacion.info}`, { TTL: 0 });
+            notificar.visto = true;
+          } catch {
+            notificar.visto = false;
+          }
+          console.log(notificar)
+          return notificar
         }
-      })
+      }))
+
+      await Notificacion.create(createNotifications);
     } catch (err) {
-      if (err.statusCode === 401) {
-        console.log('Notificacion no enviada')
-      } else {
-        console.error(err)
-      }
+      console.error(err)
     }
     res.json({ ok: true });
   },
@@ -60,15 +65,13 @@ module.exports = {
       url: `/detalle-solicitud/?id_solicitud=${solicitud.idSolicitud}`
     }
     try {
-      await Notificacion.create(notificar);
       await webPush.sendNotification(...solicitud.dueno.subscription[0], `Nueva solicitud # ${solicitud.idSolicitud}\n${solicitud.refUsuarioSolicitante.name}: ${solicitud.resumen}`, { TTL: 0 });
+      notificar.visto = true
     } catch (err) {
-      if (err.statusCode === 401) {
-        console.log('Notificacion no enviada')
-      } else {
-        console.error(err)
-      }
+      notificar.visto = false
     }
+
+    await Notificacion.create(notificar);
 
     res.json({ ok: true })
   }

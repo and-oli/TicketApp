@@ -58,8 +58,9 @@ self.addEventListener("pushsubscriptionchange", event => {
 
 self.addEventListener('push', function (event) {
   const payload = event.data ? event.data.text() : 'no payload';
+  console.log(payload)
   event.waitUntil(
-    self.registration.showNotification('Notificacion', {
+    self.registration.showNotification('TiketApp', {
       body: payload,
       icon: '/iconComsistelco512.png',
       vibrate: [100, 50, 100],

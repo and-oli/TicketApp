@@ -191,7 +191,7 @@ module.exports = {
       newSolicitud.refCliente = req.body.refCliente;
       newSolicitud.dueno = '60ad4a35eb3c551fc08ce68c';
       newSolicitud.refUsuarioSolicitante = req.decoded.id;
-      newSolicitud.listaIncumbentes = [req.decoded.id];
+      newSolicitud.listaIncumbentes = req.decoded.id !== '60ad4a35eb3c551fc08ce68c'? [req.decoded.id,'60ad4a35eb3c551fc08ce68c']: ['60ad4a35eb3c551fc08ce68c'];
       const createSolicitud = await Solicitud.create(newSolicitud);
       const resCreateSolicitud = await createSolicitud
         .populate('dueno', 'subscription')
