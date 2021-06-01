@@ -43,7 +43,7 @@ self.addEventListener('install', async event => {
 self.addEventListener("pushsubscriptionchange", event => {
   event.waitUntil(swRegistration.pushManager.subscribe(event.oldSubscription.options)
     .then(subscription => {
-      return fetch('http://192.168.1.39:3001/notification/register', {
+      return fetch('http://localhost:3001/notification/register', {
         method: "post",
         headers: {
           "Content-type": "application/json"
@@ -57,17 +57,30 @@ self.addEventListener("pushsubscriptionchange", event => {
 }, false)
 
 self.addEventListener('push', function (event) {
-  const payload = event.data ? event.data.text() : 'no payload';
-  console.log(payload)
+  const payload = event.data ? event.data.json() : 'no payload';
   event.waitUntil(
-    self.registration.showNotification('TiketApp', {
-      body: payload,
+    self.registration.showNotification(payload.title, {
+      body: payload.text,
       icon: '/iconComsistelco512.png',
+      badge:'/iconComsistelco128.png',
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
-        primaryKey: 1
-      }
+        primaryKey: 1,
+        url: payload.url,
+      },
+      actions: [{ action: 'open', title: "Abrir en el navegador" }],
     })
   );
+});
+
+self.addEventListener('notificationclick', function (event) {
+  if (!event.action) {
+    return;
+  }
+  switch (event.action) {
+    case 'open':
+      clients.openWindow(event.notification.data.url);
+      break;
+  }
 });

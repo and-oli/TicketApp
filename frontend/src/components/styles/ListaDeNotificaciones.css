@@ -22,7 +22,7 @@
 .container-notificaciones{
   display: flex;
   flex-direction: column;
-  max-height: 900px;
+  max-height: 700px;
   min-width: 395px;
   overflow-y: scroll;
   margin-top: 20px;

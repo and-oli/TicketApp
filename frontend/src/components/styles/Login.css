@@ -4,8 +4,8 @@
   flex-direction: column;
   top: 100px;
   background: white;
-  border: 2px solid rgb(0, 0, 0);
-  border-radius: 2px;
+  border: 2px solid rgba(0, 0, 0, 0.563);
+  border-radius: 20px;
   width: 350px;
   height: 450px;
   margin-top: 10%;

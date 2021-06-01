@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 var NotificationSchema = new Schema({
     refUsuario:{type:Schema.Types.ObjectId, ref:'usuarios', unique:false},
-    payload: String,
-    titulo:String,
-    info:String,
+    title:String,
+    text:String,
     url:String,
     visto: Boolean,
+    open: Boolean,
 });
 
 const nombreModelo = 'notificaciones'   

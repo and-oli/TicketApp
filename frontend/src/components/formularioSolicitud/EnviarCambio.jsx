@@ -31,14 +31,14 @@ export default function CambiosSolicitud(props) {
       },
     };
     const categoriasArchivos = await fetch(
-      "http://192.168.0.8:3001/constantes/categoriasArchivos",
+      "http://localhost:3001/constantes/categoriasArchivos",
       header
     );
     const estados = await fetch(
-      "http://192.168.0.8:3001/constantes/estados",
+      "http://localhost:3001/constantes/estados",
       header
     );
-    const tecnicos = await fetch("http://192.168.0.8:3001/users", header);
+    const tecnicos = await fetch("http://localhost:3001/users", header);
 
     const resCategoriasArchivos = await categoriasArchivos.json();
     const resEstados = await estados.json();
@@ -94,7 +94,7 @@ export default function CambiosSolicitud(props) {
       }
     }
     const responseArchivos = await fetch(
-      `http://192.168.0.8:3001/archivo/postFile`,
+      `http://localhost:3001/archivo/postFile`,
       {
         method: "POST",
         body: formData,
@@ -124,30 +124,36 @@ export default function CambiosSolicitud(props) {
       }
     }
 
-    const resCambio = await fetch(`http://192.168.0.8:3001/cambiosSolicitud/${props.idSolicitud}`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "x-access-token": localStorage.getItem("TAToken"),
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-    const resCambioJson = await resCambio.json();
-    const cambiosNoficacion = {solicitud:resCambioJson.solicitud, notificacion:resCambioJson.notificacion }
-      if (resCambioJson.ok) {
-        await fetch('http://192.168.0.8:3001/notification/cambioNotifications',{
-          method: "post",
-          headers: {
-            "x-access-token": localStorage.getItem("TAToken"),
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(cambiosNoficacion)
-        })
-        setloading(false);
-        window.location.reload();
+    const resCambio = await fetch(
+      `http://localhost:3001/cambiosSolicitud/${props.idSolicitud}`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "x-access-token": localStorage.getItem("TAToken"),
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       }
+    );
+    const resCambioJson = await resCambio.json();
+    const cambiosNoficacion = {
+      solicitud: resCambioJson.solicitud,
+      notificacion: resCambioJson.notificacion,
+    };
+    if (resCambioJson.ok) {
+      await fetch("http://localhost:3001/notification/cambioNotifications", {
+        method: "post",
+        headers: {
+          "x-access-token": localStorage.getItem("TAToken"),
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cambiosNoficacion),
+      });
+      setloading(false);
+      window.location.reload();
+    }
   };
 
   const renderizarTecnicos = () => {
@@ -230,7 +236,9 @@ export default function CambiosSolicitud(props) {
   return (
     <Paper className="paper-solicitud-b" elevation={10}>
       <form onSubmit={enviarCambio}>
-        {props.user === "Especialista" || props.user === "Tecnico" || "ADMINISTRADOR"
+        {props.user === "Especialista" ||
+        props.user === "Tecnico" ||
+        "ADMINISTRADOR"
           ? renderizarCambiosEspecialista()
           : null}
         <TextField
@@ -261,7 +269,9 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
-        {props.user === "Especialista" || props.user === "Tecnico" || "ADMINISTRADOR"
+        {props.user === "Especialista" ||
+        props.user === "Tecnico" ||
+        "ADMINISTRADOR"
           ? renderizarCamposArchivos()
           : null}
         <div className="button">

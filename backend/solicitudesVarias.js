@@ -136,12 +136,11 @@ router.post('/newSolicitudes', token, async function (req, res) {
       nuevaSecuencia.id = 0;
       await nuevaSecuencia.save();
     }
-    
+
     const idCount = await SecuenciaSolicitudes.find({});
     const count = idCount[0].secuencia;
     const refId = [];
     const idUser = await ModeloUsuario.find({}, { refCliente: 1 });
-
     idUser.map(refUser => {
       if (refUser.refCliente) {
         refId.push(refUser);
@@ -159,7 +158,7 @@ router.post('/newSolicitudes', token, async function (req, res) {
       element.fechaHora = fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear() + '  ' + fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
       element.estado = estado;
       element.abierta = true;
-      element.dueno = '60ad4a35eb3c551fc08ce68c';
+      element.dueno = '60b647519d42f8316449732b';
       element.refCliente = refUsuarioRandom.refCliente;
       element.refUsuarioSolicitante = refUsuarioRandom._id;
       element.listaIncumbentes = [refUsuarioRandom._id];

@@ -91,7 +91,7 @@ export default function ListaSolicitudes() {
     };
 
     const fetchEstados = await fetch(
-      `http://192.168.0.8:3001/constantes/estados`,
+      `http://localhost:3001/constantes/estados`,
       header
     );
     const estados = await fetchEstados.json();
@@ -127,7 +127,7 @@ export default function ListaSolicitudes() {
     }
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
     fetch(
-      `http://192.168.0.8:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
+      `http://localhost:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
       {
         method: "GET",
         headers: {
@@ -138,8 +138,8 @@ export default function ListaSolicitudes() {
       .then((res) => res.json())
       .then(async (resultado) => {
         setListaSolicitudes(resultado.solicitudes);
+        setloading(false);
         if (resultado.cuenta) {
-          setloading(false);
           setCuenta(resultado.cuenta);
         } else {
           setCuenta(0);
@@ -219,6 +219,12 @@ export default function ListaSolicitudes() {
           <TableCell align="center">{sol.fechaHora}</TableCell>
         </TableRowAlt>
       ));
+    } else {
+      return (<TableRowAlt>
+        <TableCell align="center" colSpan={7}>
+       <p>No hay solicitudes</p>
+       </TableCell>
+      </TableRowAlt>)
     }
   };
 

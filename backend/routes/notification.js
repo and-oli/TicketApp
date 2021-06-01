@@ -41,6 +41,14 @@ router.post('/register', function (req, res) {
   res.sendStatus(201);
 });
 
+router.get('/sendNotifications', token.checkToken, async function (req, res) {
+  await notificationService.sendNotifications(req, res)
+});
+
+router.get('/countNotifications', token.checkToken, async function (req, res) {
+  await notificationService.countNotifications(req, res)
+});
+
 router.get('/getNotifications', token.checkToken, async function (req, res) {
   await notificationService.getNotifications(req, res)
 });

@@ -189,15 +189,15 @@ module.exports = {
       newSolicitud.abierta = true;
       newSolicitud.categoria = req.body.categoria;
       newSolicitud.refCliente = req.body.refCliente;
-      newSolicitud.dueno = '60ad4a35eb3c551fc08ce68c';
+      newSolicitud.dueno = '60b647519d42f8316449732b';
       newSolicitud.refUsuarioSolicitante = req.decoded.id;
-      newSolicitud.listaIncumbentes = req.decoded.id !== '60ad4a35eb3c551fc08ce68c'? [req.decoded.id,'60ad4a35eb3c551fc08ce68c']: ['60ad4a35eb3c551fc08ce68c'];
+      newSolicitud.listaIncumbentes = req.decoded.id !== '60ad4a35eb3c551fc08ce68c' ? [req.decoded.id, '60ad4a35eb3c551fc08ce68c'] : ['60ad4a35eb3c551fc08ce68c'];
       const createSolicitud = await Solicitud.create(newSolicitud);
       const resCreateSolicitud = await createSolicitud
         .populate('dueno', 'subscription')
         .populate('refUsuarioSolicitante', 'name').execPopulate()
-      notificacion.titulo = `Nueva solicitud #${resCreateSolicitud.idSolicitud}`
-      notificacion.info = `${resCreateSolicitud.refUsuarioSolicitante.name}: ${resCreateSolicitud.resumen}`
+      notificacion.title = `Nueva solicitud #${resCreateSolicitud.idSolicitud}`
+      notificacion.text = `${resCreateSolicitud.refUsuarioSolicitante.name}: ${resCreateSolicitud.resumen}`
       notificacion.refUsuario = resCreateSolicitud.dueno
       res.json({
         mensaje: 'Solicitud enviada...',

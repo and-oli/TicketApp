@@ -28,7 +28,7 @@ export default function Login() {
         user.password = password;
         user.subscription = subscription;
       const response = await fetch(
-        "http://192.168.0.8:3001/users/authenticate",
+        "http://localhost:3001/users/authenticate",
         {
           method: "post",
           headers: {
@@ -43,6 +43,12 @@ export default function Login() {
       if (resJson.ok) {
         localStorage.setItem("TAToken", resJson.token);
         localStorage.setItem("TAUser", resJson.user);
+        await fetch('http://localhost:3001/notification/sendNotifications', {
+          method: 'GET',
+          headers: {
+            "x-access-token": localStorage.getItem("TAToken"),
+          },
+        })
         window.location.reload();
         setMessage({ text: resJson.mensaje, color: "green" });
       } else {

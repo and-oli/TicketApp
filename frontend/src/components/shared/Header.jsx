@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../styles/Header.css";
 import MenuList from "@material-ui/core/MenuList";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -99,11 +99,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = (props) => {
-  const { userRole, notificaciones } = props;
+  const { userRole } = props;
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [openLog, setOpenLog] = React.useState(false);
   const anchorRef = React.useRef(null);
+  const [countNotifications, setCountNotifications] = React.useState()
 
   const handleClose = async () => {
     const ready = await navigator.serviceWorker.ready;
@@ -113,6 +114,25 @@ const Header = (props) => {
     localStorage.removeItem("TAUser");
     window.location.reload();
   };
+
+  const notificationsTotalCount = async () => {
+    const count = await fetch('http://localhost:3001/notification/countNotifications', {
+      method: "GET",
+      headers: {
+        "x-access-token": localStorage.getItem("TAToken"),
+      },
+    });
+    const countJson = await count.json();
+    setCountNotifications(countJson.count);
+  }
+
+  const handleCountNotifications = () => {
+    setCountNotifications(null)
+  }
+
+  useEffect(() => {
+    notificationsTotalCount()
+  }, [])
 
   function handleListKeyDown(event) {
     if (event.key === "Tab") {
@@ -183,8 +203,9 @@ const Header = (props) => {
               className="icon-notifications"
               aria-label="show 17 new notifications"
               color="inherit"
+              onClick={handleCountNotifications}
             >
-              <Badge badgeContent={notificaciones}>
+              <Badge badgeContent={countNotifications}>
                 <NotificationsIcon
                   className="icon"
                 />

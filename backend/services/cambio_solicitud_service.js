@@ -90,7 +90,7 @@ module.exports = {
       resultadoSolicitud.abierta = cambios.abierta;
       resultadoSolicitud.estado = estados.resuelta;
       cambios.estado = estados.resuelta;
-      notificacion.info = `El estado de la solicitud  cambio a: ${cambios.estado}`;
+      notificacion.text = `El estado de la solicitud  cambio a: ${cambios.estado}`;
     };
     cambios.refUsuario = req.decoded.id;
 
@@ -121,10 +121,10 @@ module.exports = {
       .populate('dueno', 'name')
       .select('idSolicitud');
     if (cambios.dueno) {
-      notificacion.info = `Se asigno a: ${solicitud.dueno.name}`;
+      notificacion.text = `Se asigno a: ${solicitud.dueno.name}`;
     }
     if (cambios.archivos) {
-      notificacion.info = `Se agregaron ${cambios.archivos.length} archivo(s)`;
+      notificacion.text = `Se agregaron ${cambios.archivos.length} archivo(s)`;
     }
     // await this.enviarCorreo(req, resultadoSolicitud, cambios.nota, solicitud.listaIncumbentes, solicitud.idSolicitud);
     try {
