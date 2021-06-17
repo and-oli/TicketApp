@@ -4,27 +4,29 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./Header";
 import DetalleSolicitud from "../solicitudes/DetalleSolicitud";
 import EnviarSolicitud from "../formularioSolicitud/EnviarSolicitud";
-import ListaDeNotificaciones from "./ListaDeNotificaciones"
+import ListaDeNotificaciones from "./ListaDeNotificaciones";
 export default function Navigation(props) {
-
   const { user } = props;
 
-  React.useEffect(
-    () => {
-      fetch('http://localhost:3001/users/validarToken', {
-        method: 'GET',
+  const reload = async () => {
+    const response = await fetch(
+      "http://localhost:3001/users/validarToken",
+      {
+        method: "GET",
         headers: {
-          'x-access-token': localStorage.getItem("TAToken")
+          "x-access-token": localStorage.getItem("TAToken"),
         },
-      }).then((response) => { 
-        if (response.status === 403) {
-          localStorage.removeItem("TAToken");
-          window.location.reload();
-        }
-      })
+      }
+    );
+    if (response.status === 403) {
+      localStorage.removeItem("TAToken");
+      window.location.reload();
+    }
+  };
 
-    }, []
-  );
+  React.useEffect(() => {
+    reload();
+  }, []);
 
   return (
     <Router>
@@ -34,7 +36,7 @@ export default function Navigation(props) {
           <ListaSolicitudes />
         </Route>
         <Route path="/detalle-solicitud">
-          <DetalleSolicitud userRole={user}/>
+          <DetalleSolicitud userRole={user} />
         </Route>
         <Route path="/nueva-solicitud">
           <EnviarSolicitud />

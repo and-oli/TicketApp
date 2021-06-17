@@ -38,7 +38,7 @@ router.post('/register', function (req, res) {
   if (!subscriptions[subscription.endpoint]) {
     subscriptions[subscription.endpoint] = subscription;
   }
-  res.sendStatus(201);
+  res.json({ok: true});
 });
 
 router.get('/sendNotifications', token.checkToken, async function (req, res) {

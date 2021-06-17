@@ -1,9 +1,7 @@
 const ModuloCambiosSolicitud = require('../models/CambioSolicitud');
 const CambiosSolicitud = ModuloCambiosSolicitud.modelo;
 const UsuarioSchema = require('../models/Usuario');
-const Usuario = UsuarioSchema.modelo;
 const Solicitud = require('../models/Solicitud').modelo;
-const Notificacion = require('../models/Notification').modelo;
 const credencialesDeCorreo = require('../config/config');
 const estados = require('../data/estado.json')
 const fetch = require('node-fetch');
@@ -51,6 +49,7 @@ module.exports = {
           as: 'archivos',
         },
       },
+      { $sort: { _id: -1 } }
     ])
     if (!cambios) {
       res.json({ mensaje: 'No hay cambios', ok: false });
@@ -72,28 +71,22 @@ module.exports = {
     const fecha = new Date();
     const notificacion = {};
     if (cambios.dueno) {
-      try {
-        resultadoSolicitud.dueno = cambios.dueno;
-        resultadoSolicitud.$addToSet = {
-          listaIncumbentes: {
-            $each: [cambios.dueno]
-          }
-        };
-      } catch (err) {
-        console.error(err)
+      resultadoSolicitud.dueno = cambios.dueno;
+      resultadoSolicitud.$push = {
+        listaIncumbentes: { $each: [cambios.dueno], $position: 2 }
       };
       resultadoSolicitud.estado = estados.asignada;
       cambios.estado = estados.asignada;
     }
 
-    if (cambios.abierta !== undefined) {
-      resultadoSolicitud.abierta = cambios.abierta;
+    if (cambios.estado === 'Resuelta') {
+      resultadoSolicitud.abierta = false;
       resultadoSolicitud.estado = estados.resuelta;
       cambios.estado = estados.resuelta;
       notificacion.text = `El estado de la solicitud  cambio a: ${cambios.estado}`;
     };
+    
     cambios.refUsuario = req.decoded.id;
-
     await Solicitud.updateOne({ idSolicitud: req.params.idSolicitud }, resultadoSolicitud);
     const cambiosSolicitud = new CambiosSolicitud();
 
@@ -120,11 +113,19 @@ module.exports = {
       .populate('listaIncumbentes', 'email subscription')
       .populate('dueno', 'name')
       .select('idSolicitud');
-    if (cambios.dueno) {
-      notificacion.text = `Se asigno a: ${solicitud.dueno.name}`;
+
+    if (cambios.dueno && cambios.archivos) {
+      notificacion.text = `Se asigno a: ${solicitud.dueno.name},\nSe agregaron ${cambios.archivos.length} archivo(s)`;
+    } else {
+      if (cambios.dueno) {
+        notificacion.text = `Se asigno a: ${solicitud.dueno.name}`;
+      }
+      if (cambios.archivos) {
+        notificacion.text = `Se agregaron ${cambios.archivos.length} archivo(s)`;
+      }
     }
-    if (cambios.archivos) {
-      notificacion.text = `Se agregaron ${cambios.archivos.length} archivo(s)`;
+    if (!notificacion.text) {
+      notificacion.text = cambios.nota
     }
     // await this.enviarCorreo(req, resultadoSolicitud, cambios.nota, solicitud.listaIncumbentes, solicitud.idSolicitud);
     try {

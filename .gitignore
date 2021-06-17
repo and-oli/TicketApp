@@ -9,4 +9,6 @@ backend/config/
 frontend/.yarn
 backend/banners
 frontend/build/
+frontend/cypress.json
+frontend/cypress/
 .DS_Store

@@ -11,67 +11,66 @@ const urls = [
   '/ticketIcon.png',
 ];
 
-self.addEventListener('install', async event => {
-  event.waitUntil(
-    caches.open(cacheName)
-      .then(function (cache) {
-        return cache.addAll(urls);
-      })
-  );
+self.addEventListener('install', event => {
+  const instalar = async () => {
+    const cache = await caches.open(cacheName);
+    const cacheAdd = await cache.addAll(urls);
+    return cacheAdd;
+  }
+  event.waitUntil(instalar());
 });
 
-// self.addEventListener('fetch', async (event) => {
-//   const request = event.request;
-//   event.respondWith(
-//     caches.match(request)
-//       .then(function (response) {
-//         return response ||
-//           fetch(request)
-//             .then(function (res) {
-//               return caches.open(cacheFetch)
-//                 .then(function (cache) {
-//                   if (request.method !== 'POST') {
-//                     cache.put(request, res.clone())
-//                   }
-//                   return res;
-//                 })
-//             });
-//       })
-//   );
-// });
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  const noPost = request.method !== 'POST';
+  const onLine = navigator.onLine;
+  const cacheMatch = async () => {
+    if (onLine) {
+      const response = await fetch(request);
+      const cache = await caches.open(cacheFetch);
+      if (noPost) {
+        await cache.put(request, response.clone());
+      }
+      return response;
+    } else {
+      const responseCaches = await caches.match(request);
+      return responseCaches;
+    }
+  };
+  event.respondWith(cacheMatch());
+});
 
-self.addEventListener("pushsubscriptionchange", event => {
-  event.waitUntil(swRegistration.pushManager.subscribe(event.oldSubscription.options)
-    .then(subscription => {
-      return fetch('http://localhost:3001/notification/register', {
-        method: "post",
-        headers: {
-          "Content-type": "application/json"
-        },
-        body: JSON.stringify({
-          endpoint: subscription.endpoint
-        })
-      });
+self.addEventListener("pushsubscriptionchange", async event => {
+  const subscription = await swRegistration.pushManager
+    .subscribe(event.oldSubscription.options);
+  const header = {
+    method: "post",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify({
+      endpoint: subscription.endpoint,
     })
-  );
+  };
+  const resFetch = await fetch('http://192.168.1.39:3001/notification/register', header);
+  event.waitUntil(resFetch);
 }, false)
 
 self.addEventListener('push', function (event) {
   const payload = event.data ? event.data.json() : 'no payload';
-  event.waitUntil(
-    self.registration.showNotification(payload.title, {
-      body: payload.text,
-      icon: '/iconComsistelco512.png',
-      badge:'/iconComsistelco128.png',
-      vibrate: [100, 50, 100],
-      data: {
-        dateOfArrival: Date.now(),
-        primaryKey: 1,
-        url: payload.url,
-      },
-      actions: [{ action: 'open', title: "Abrir en el navegador" }],
-    })
-  );
+  const notificacion = () => self.registration.showNotification(payload.title, {
+    body: payload.text,
+    icon: '/iconComsistelco512.png',
+    badge: '/iconComsistelco128.png',
+    vibrate: [100, 50, 100],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: 1,
+      url: payload.url,
+    },
+    actions: [{ action: 'open', title: "Abrir en el navegador" }],
+  })
+  event.waitUntil(notificacion());
 });
 
 self.addEventListener('notificationclick', function (event) {

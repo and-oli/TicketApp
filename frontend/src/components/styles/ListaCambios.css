@@ -100,9 +100,16 @@
 .info-files {
   flex-direction: column;
   text-align: center;
-  line-height: 0px;
 }
 
 .info-usuario p {
   font-size: 15px;
+}
+.categoria-files {
+  line-height: 0px;
+}
+
+.categoria-files h6 {
+  margin: 20px;
+  text-align: center;
 }

@@ -116,7 +116,7 @@ export default function ListaSolicitudes() {
 
   const classes = useStyles();
 
-  const enviarBusqueda = useCallback(() => {
+  const enviarBusqueda = useCallback(async () => {
     if (
       pagePrevia === page &&
       ordenarPorPrevia === ordenarPor &&
@@ -126,7 +126,7 @@ export default function ListaSolicitudes() {
       return;
     }
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
-    fetch(
+    const resFiltro = await fetch(
       `http://localhost:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
       {
         method: "GET",
@@ -134,17 +134,15 @@ export default function ListaSolicitudes() {
           "x-access-token": localStorage.getItem("TAToken"),
         },
       }
-    )
-      .then((res) => res.json())
-      .then(async (resultado) => {
-        setListaSolicitudes(resultado.solicitudes);
-        setloading(false);
-        if (resultado.cuenta) {
-          setCuenta(resultado.cuenta);
-        } else {
-          setCuenta(0);
-        }
-      });
+    );
+    const filtroJson = await resFiltro.json();
+    setListaSolicitudes(filtroJson.solicitudes);
+    setloading(false);
+    if (filtroJson.cuenta) {
+      setCuenta(filtroJson.cuenta);
+    } else {
+      setCuenta(0);
+    }
   }, [
     filtro,
     page,
@@ -158,7 +156,7 @@ export default function ListaSolicitudes() {
   ]);
 
   React.useEffect(() => {
-    enviarBusqueda();
+    enviarBusqueda()
   }, [enviarBusqueda]);
 
   const handleChangePage = (event, newPage) => {
@@ -203,7 +201,7 @@ export default function ListaSolicitudes() {
     if (listaSolicitudes) {
       return listaSolicitudes.map((sol) => (
         <TableRowAlt key={sol.idSolicitud}>
-          <TableCell align="center">
+          <TableCell align="center" id={sol.idSolicitud}>
             <Link
               className="link"
               to={`/detalle-solicitud/?id_solicitud=${sol.idSolicitud}`}
@@ -220,11 +218,13 @@ export default function ListaSolicitudes() {
         </TableRowAlt>
       ));
     } else {
-      return (<TableRowAlt>
-        <TableCell align="center" colSpan={7}>
-       <p>No hay solicitudes</p>
-       </TableCell>
-      </TableRowAlt>)
+      return (
+        <TableRowAlt>
+          <TableCell align="center" colSpan={7}>
+            <p>No hay solicitudes</p>
+          </TableCell>
+        </TableRowAlt>
+      );
     }
   };
 

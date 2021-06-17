@@ -73,9 +73,9 @@ export default function EnviarSolicitud() {
         key={i}
         value={
           item === "Categorias" ||
-          item === "Prioridad" ||
-          item === "Tipo de requerimiento"
-            ? ""
+            item === "Prioridad" ||
+            item === "Tipo de requerimiento"
+            ? "" 
             : item
         }
       >
@@ -112,32 +112,26 @@ export default function EnviarSolicitud() {
     }
 
     if (confirmarPost) {
+      const header = {
+        method: "POST",
+        headers: {
+          "x-access-token": localStorage.getItem("TAToken"),
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      };
+      header.body = JSON.stringify(data);
       const resFetch = await fetch(
         "http://localhost:3001/solicitudes/nuevaSolicitud",
-        {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: {
-            "x-access-token": localStorage.getItem("TAToken"),
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
+        header
       );
       const resJson = await resFetch.json();
-      console.log(resJson.notificacion)
+
       if (resJson.ok) {
+        header.body = JSON.stringify(resJson);
         await fetch(
           "http://localhost:3001/notification/solicitudNotifications",
-          {
-            method: "POST",
-            body: JSON.stringify(resJson),
-            headers: {
-              "x-access-token": localStorage.getItem("TAToken"),
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          }
+          header
         );
         setloading(false);
         window.location.reload();

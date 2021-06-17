@@ -10,17 +10,24 @@ import TextField from "@material-ui/core/TextField";
 export default function CambiosSolicitud(props) {
   const [loading, setloading] = useState(false);
   const [listaTecnicos, setTecnicos] = useState([]);
-  const [categoriasArchivos, setCategoriasArchivos] = useState([]);
   const [estados, setEstados] = useState([]);
   const [archivos, setArchivos] = useState({});
   const [state, setState] = useState({
     dueno: "",
     titulo: "",
     nota: "",
-    abierta: undefined,
+    estado: "",
   });
+  const {
+    categoriasArchivos,
+    estado,
+    referenciaSolicitud,
+    idSolicitud,
+    user,
+    asignado,
+  } = props;
 
-  const renderizarConstantes = async () => {
+  const renderizarConstantes = async (categorias) => {
     const archObj = {};
     const header = {
       method: "GET",
@@ -30,39 +37,31 @@ export default function CambiosSolicitud(props) {
         "Content-Type": "application/json",
       },
     };
-    const categoriasArchivos = await fetch(
-      "http://localhost:3001/constantes/categoriasArchivos",
-      header
-    );
     const estados = await fetch(
       "http://localhost:3001/constantes/estados",
       header
     );
     const tecnicos = await fetch("http://localhost:3001/users", header);
 
-    const resCategoriasArchivos = await categoriasArchivos.json();
     const resEstados = await estados.json();
     const resTecnicos = await tecnicos.json();
 
-    setCategoriasArchivos(Object.values(resCategoriasArchivos));
     setEstados(Object.values(resEstados));
     setTecnicos(resTecnicos.tecnicos);
-
-    const categoriasDeArchivos = Object.values(resCategoriasArchivos);
+    const categoriasDeArchivos = Object.values(categorias);
     categoriasDeArchivos.forEach((cat) => (archObj[cat] = undefined));
     setArchivos(archObj);
   };
 
   useEffect(() => {
-    renderizarConstantes();
-  }, []);
+    renderizarConstantes(categoriasArchivos);
+  }, [categoriasArchivos]);
 
   const handleSelectFile = (files, categoria) => {
     const archivosSeleccionados = [];
     for (let i = 0; i < files.length; i++) {
       archivosSeleccionados.push(files[i]);
     }
-
     setArchivos((prevState) => ({
       ...prevState,
       [categoria]: archivosSeleccionados,
@@ -73,10 +72,6 @@ export default function CambiosSolicitud(props) {
     let { name, value } = event.target;
 
     event.preventDefault();
-
-    if (name === "abierta" && value === "") {
-      value = undefined;
-    }
     setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
@@ -105,7 +100,7 @@ export default function CambiosSolicitud(props) {
     );
     const responseArchivosJson = await responseArchivos.json();
 
-    const data = { refSolicitud: props.refSolicitud };
+    const data = { refSolicitud: referenciaSolicitud };
 
     if (responseArchivosJson) {
       data.archivos = responseArchivosJson.archivos;
@@ -125,7 +120,7 @@ export default function CambiosSolicitud(props) {
     }
 
     const resCambio = await fetch(
-      `http://localhost:3001/cambiosSolicitud/${props.idSolicitud}`,
+      `http://localhost:3001/cambiosSolicitud/${idSolicitud}`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -157,19 +152,23 @@ export default function CambiosSolicitud(props) {
   };
 
   const renderizarTecnicos = () => {
-    return listaTecnicos.map((tecnico) => (
-      <option key={tecnico._id} value={tecnico._id}>
-        {tecnico.name}
-      </option>
-    ));
+    return listaTecnicos.map((tecnico) => {
+      if (tecnico.name !== asignado) {
+        return (
+          <option key={tecnico._id} value={tecnico._id}>
+            {tecnico.name}
+          </option>
+        );
+      } else return null;
+    });
   };
 
   const renderizarEstados = () => {
-    return estados.map((estado, i) => {
-      if (estado !== props.estado) {
+    return estados.map((estadoActual, i) => {
+      if (estadoActual !== estado) {
         return (
-          <option key={i} value={estado === "Resuelta" ? false : estado}>
-            {estado}
+          <option key={i} value={estadoActual}>
+            {estadoActual}
           </option>
         );
       } else {
@@ -202,48 +201,50 @@ export default function CambiosSolicitud(props) {
   };
 
   const renderizarCambiosEspecialista = () => {
-    return (
-      <div>
-        <FormControl className="form-control">
-          <label htmlFor="asignar">Dueño:</label>
-          <NativeSelect
-            value={state.dueno}
-            name="dueno"
-            onChange={handleChange}
-            className="select-empty"
-          >
-            <option value="">{props.asignado}</option>
-            {renderizarTecnicos()}
-          </NativeSelect>
-        </FormControl>
+    if (user !== "Usuario") {
+      return (
+        <div>
+          <FormControl className="form-control">
+            <label htmlFor="asignar"><p>Dueño:</p></label>
+            <NativeSelect
+              value={state.dueno}
+              name="dueno"
+              id="dueno"
+              onChange={handleChange}
+              className="select-empty"
+            >
+              <option value="">{asignado}</option>
+              {renderizarTecnicos()}
+            </NativeSelect>
+          </FormControl>
 
-        <FormControl className="form-control">
-          <label htmlFor="abierta">Estado:</label>
-          <NativeSelect
-            value={state.abierta}
-            name="abierta"
-            onChange={handleChange}
-            className="select-empty"
-          >
-            <option value="">{props.estado}</option>
-            {renderizarEstados()}
-          </NativeSelect>
-        </FormControl>
-      </div>
-    );
+          <FormControl className="form-control">
+            <label htmlFor="abierta"><p>Estado:</p></label>
+            <NativeSelect
+              value={state.abierta}
+              name="estado"
+              id="estado"
+              onChange={handleChange}
+              className="select-empty"
+            >
+              <option value="">{estado}</option>
+              {renderizarEstados()}
+            </NativeSelect>
+          </FormControl>
+        </div>
+      );
+    }
   };
 
   return (
-    <Paper className="paper-solicitud-b" elevation={10}>
+    <Paper className="paper-solicitud-b" elevation={5}>
+      <h3 className='title-papers'>Modificar solicitud</h3>
       <form onSubmit={enviarCambio}>
-        {props.user === "Especialista" ||
-        props.user === "Tecnico" ||
-        "ADMINISTRADOR"
-          ? renderizarCambiosEspecialista()
-          : null}
+        {renderizarCambiosEspecialista()}
         <TextField
           value={state.titulo}
           label="Titulo del cambio"
+          id="titulo-de-cambio"
           onChange={handleChange}
           name="titulo"
           className="form-control"
@@ -258,6 +259,7 @@ export default function CambiosSolicitud(props) {
         <TextField
           value={state.nota}
           label="Nota"
+          id="nota-de-cambio"
           onChange={handleChange}
           name="nota"
           className="form-control"
@@ -269,11 +271,7 @@ export default function CambiosSolicitud(props) {
           required
           rows={4}
         />
-        {props.user === "Especialista" ||
-        props.user === "Tecnico" ||
-        "ADMINISTRADOR"
-          ? renderizarCamposArchivos()
-          : null}
+        {renderizarCamposArchivos()}
         <div className="button">
           {loading ? (
             <CircularProgress

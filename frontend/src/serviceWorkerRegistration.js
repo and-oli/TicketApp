@@ -34,8 +34,7 @@ export async function notificationWorker() {
     };
 
     const subscriptionVerify = await renderSubscription();
-
-    fetch('http://localhost:3001/notification/register', {
+    await fetch('http://localhost:3001/notification/register', {
       method: 'post',
       headers: {
         'Content-type': 'application/json'
@@ -43,7 +42,7 @@ export async function notificationWorker() {
       body: JSON.stringify({
         subscription: subscriptionVerify
       }),
-    }).catch(err => console.log(err))
+    })
   };
 };
 

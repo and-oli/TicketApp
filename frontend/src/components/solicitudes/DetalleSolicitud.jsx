@@ -5,34 +5,54 @@ import ListaCambios from "./ListaCambios";
 import "../styles/DetallesSolicitud.css";
 
 export default function DetalleSolicitud(props) {
+  const { userRole } = props;
   let params = new URL(document.location).searchParams;
   let idSolicitud = params.get("id_solicitud");
 
   const [detalleSolicitud, setDetalleSolicitud] = useState([]);
   const [cliente, setCliente] = useState("");
   const [asignada, setAsignada] = useState("");
+  const [categoriasArchivos, setCategoriasArchivos] = useState([]);
   const [roleAsignado, setRoleAsignado] = useState("");
   const [solicitante, setSolicitante] = useState({});
 
-  React.useEffect(() => {
-    fetch(`http://localhost:3001/solicitudes/porNumero/${idSolicitud}`, {
+  const renderizarInfoSolicitud = async (id) => {
+    const header = {
       method: "GET",
       headers: {
         "x-access-token": localStorage.getItem("TAToken"),
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-    })
-      .then((res) => res.json())
-      .then((getSolicitudes) => {
-        setDetalleSolicitud(getSolicitudes.solicitud);
-        setCliente(getSolicitudes.solicitud.refCliente.nombre);
-        setSolicitante(getSolicitudes.solicitud.refUsuarioSolicitante);
-        if(getSolicitudes.solicitud.dueno){
-          setRoleAsignado(getSolicitudes.solicitud.dueno.role);
-          setAsignada(getSolicitudes.solicitud.dueno.name);
-        } else {
-          setAsignada('Sin dueño');
-        }
-      });
+    };
+
+    const resDetalles = await fetch(
+      `http://localhost:3001/solicitudes/porNumero/${id}`,
+      header
+    );
+
+    const categoriasArchivos = await fetch(
+      "http://localhost:3001/constantes/categoriasArchivos",
+      header
+    );
+
+    const detallesJson = await resDetalles.json();
+    const resCategoriasArchivos = await categoriasArchivos.json();
+
+    setDetalleSolicitud(detallesJson.solicitud);
+    setCategoriasArchivos(Object.values(resCategoriasArchivos));
+    setCliente(detallesJson.solicitud.refCliente.nombre);
+    setSolicitante(detallesJson.solicitud.refUsuarioSolicitante);
+    if (detallesJson.solicitud.dueno) {
+      setRoleAsignado(detallesJson.solicitud.dueno.role);
+      setAsignada(detallesJson.solicitud.dueno.name);
+    } else {
+      setAsignada("Sin dueño");
+    }
+  };
+
+  React.useEffect(() => {
+    renderizarInfoSolicitud(idSolicitud);
   }, [idSolicitud]);
 
   return (
@@ -43,34 +63,37 @@ export default function DetalleSolicitud(props) {
         </p>
       </div>
       <div className="container-paper">
-        <Paper className="paper-solicitud-a" elevation={10}>
-          <p>Cliente: {cliente}</p>
-          <p>Fecha de envío: {detalleSolicitud.fechaHora}</p>
-          <p>Nombre del solicitante: {solicitante.name}</p>
-          <p>Correo: {solicitante.email}</p>
-          <p>Prioridad: {detalleSolicitud.prioridad}</p>
-          <p>Estado: {detalleSolicitud.estado}</p>
+        <Paper className="paper-solicitud-a" elevation={5}>
+          <h3>Informacion de la solicitud</h3>
+          <p><h3> Cliente:</h3> {cliente}</p>
+          <p><h3>Fecha de envío:</h3> {detalleSolicitud.fechaHora}</p>
+          <p><h3>Nombre del solicitante:</h3> {solicitante.name}</p>
+          <p><h3>Correo:</h3> {solicitante.email}</p>
+          <p><h3>Prioridad:</h3> {detalleSolicitud.prioridad}</p>
+          <p><h3>Estado:</h3> {detalleSolicitud.estado}</p>
           <p>
-            Asignada a: {asignada} ({roleAsignado})
+          <h3> Asignada a:</h3> {asignada} ({roleAsignado})
           </p>
-          <p>Categoria: {detalleSolicitud.categoria}</p>
-          <p>Descripcion:</p>
+          <p><h3>Categoria:</h3> {detalleSolicitud.categoria}</p>
+          <p><h3>Descripcion:</h3></p>
           <div className="descripcion">
             <p>{detalleSolicitud.descripcion}</p>
           </div>
         </Paper>
         <CambiosSolicitud
-          user = {props.userRole}
-          abierta = {detalleSolicitud.abierta}
-          asignado = {asignada}
-          requerimiento = {detalleSolicitud.requerimente}
-          estado = {detalleSolicitud.estado}
-          idSolicitud = {idSolicitud}
-          refSolicitud = {detalleSolicitud._id}
+          user={userRole}
+          categoriasArchivos={categoriasArchivos}
+          abierta={detalleSolicitud.abierta}
+          asignado={asignada}
+          requerimiento={detalleSolicitud.requerimente}
+          estado={detalleSolicitud.estado}
+          idSolicitud={idSolicitud}
+          referenciaSolicitud={detalleSolicitud._id}
         />
         <Paper className="paper-solicitud-c" elevation={4}>
           <ListaCambios
-            asignado={asignada} 
+            categoriasArchivos={categoriasArchivos}
+            asignado={asignada}
             refSolicitud={detalleSolicitud._id}
             idSolicitud={idSolicitud}
           />
@@ -78,4 +101,4 @@ export default function DetalleSolicitud(props) {
       </div>
     </div>
   );
-};
+}

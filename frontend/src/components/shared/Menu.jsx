@@ -27,11 +27,12 @@ const especialistaMenuItems = (
   </div>
 );
 
-function Menu (props) {
+function Menu(props) {
+  const {close, user} = props
   return (
     <div className="container">
       <List component="nav" aria-label="main mailbox folders">
-        <ListItem onClick={props.close} button component={Link} to={`/`}>
+        <ListItem onClick={close} button component={Link} to={`/`}>
           <ListItemIcon>
             <img alt="icon" style={{ height: 40 }} src="/listaIcon.png" />
           </ListItemIcon>
@@ -42,7 +43,7 @@ function Menu (props) {
           />
         </ListItem>
         <ListItem
-          onClick={props.close}
+          onClick={close}
           button
           component={Link}
           to={`/nueva-solicitud`}
@@ -52,7 +53,7 @@ function Menu (props) {
           </ListItemIcon>
           <ListItemText primary="Reportar solicitud" />
         </ListItem>
-        {props.user === 'Especialista'? especialistaMenuItems:null}
+        {user === 'Especialista' ? especialistaMenuItems : null}
       </List>
     </div>
   );

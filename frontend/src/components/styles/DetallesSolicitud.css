@@ -3,10 +3,8 @@
   justify-content: space-around;
   font-size: 17px;
   flex-direction: column;
-  line-height: 15px;
   width: 30%;
   margin-top: 5px;
-  border: 2px solid rgba(65, 65, 65, 0.638);
   min-width: 380px;
   height: 750px;
 }
@@ -14,6 +12,17 @@
   margin-left: 35px;
   margin-right: 40px;
 }
+
+.paper-solicitud-a h3 {
+  font-weight: 700;
+  text-align: center;
+}
+
+.paper-solicitud-a p h3 {
+  font-weight: 600;
+  display:inline;
+}
+
 .title-paper {
   display: flex;
   justify-content: center;
@@ -27,6 +36,17 @@
   border-radius: 5px;
 }
 
+.paper-solicitud-b p {
+  font-weight: 600; 
+  margin:0px
+}
+
+.paper-solicitud-b h3 {
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0;
+}
+
 .title-paper p {
   background-color: black;
   padding: 2px;
@@ -37,12 +57,10 @@
 
 .paper-solicitud-b {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   flex-direction: column;
   width: 30%;
   margin-top: 5px;
-  border: 2px solid rgba(65, 65, 65, 0.638);
   min-width: 380px;
   height: 750px;
 }
@@ -50,7 +68,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: 40px;
+  padding-top: 20px;
   width: 90%;
   height: 80%;
 }
@@ -74,6 +92,7 @@
   margin-bottom: 20px;
   height: 750px;
 }
+
 .descripcion {
   display: flex;
   overflow-y: scroll;

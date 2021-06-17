@@ -24,9 +24,9 @@ export default function Login() {
     if (!loading) {
       setloading(true);
       let user = {};
-        user.username = userName;
-        user.password = password;
-        user.subscription = subscription;
+      user.username = userName;
+      user.password = password;
+      user.subscription = subscription;
       const response = await fetch(
         "http://localhost:3001/users/authenticate",
         {
@@ -43,12 +43,12 @@ export default function Login() {
       if (resJson.ok) {
         localStorage.setItem("TAToken", resJson.token);
         localStorage.setItem("TAUser", resJson.user);
-        await fetch('http://localhost:3001/notification/sendNotifications', {
-          method: 'GET',
+        await fetch("http://localhost:3001/notification/sendNotifications", {
+          method: "GET",
           headers: {
             "x-access-token": localStorage.getItem("TAToken"),
           },
-        })
+        });
         window.location.reload();
         setMessage({ text: resJson.mensaje, color: "green" });
       } else {
@@ -72,6 +72,7 @@ export default function Login() {
           <div>
             <form className="container-title" onSubmit={handleSubmit}>
               <TextField
+                id='usuario'
                 type="text"
                 label="Usuario"
                 style={{ width: 200, alignSelf: "center" }}
@@ -81,6 +82,7 @@ export default function Login() {
                 required
               />
               <TextField
+                id='password'
                 type="password"
                 label="Contraseña"
                 style={{ width: 200, alignSelf: "center" }}

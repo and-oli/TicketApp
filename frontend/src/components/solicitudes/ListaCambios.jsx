@@ -1,31 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import "../styles/ListaCambios.css";
 
 export default function ListaSolicitudes(props) {
-  const [cambios, setCambio] = useState([]);
+  const [cambios, setCambios] = useState([]);
   const [loading, setloading] = useState(true);
+  const { refSolicitud, categoriasArchivos, asignado } = props;
 
-  React.useEffect(() => {
-    if (props.refSolicitud !== undefined) {
-      fetch(
-        `http://localhost:3001/cambiosSolicitud/cambios/${props.refSolicitud}`,
+  const getCambios = useCallback(async (ref) => {
+    if (ref !== undefined) {
+      const resCambios = await fetch(
+        `http://localhost:3001/cambiosSolicitud/cambios/${ref}`,
         {
           method: "GET",
           headers: {
             "x-access-token": localStorage.getItem("TAToken"),
           },
         }
-      )
-        .then((res) => res.json())
-        .then((cambio) => {
-          setloading(false);
-          setCambio(cambio.cambios);
-        });
+      );
+
+      const cambiosJson = await resCambios.json();
+      setloading(false);
+      setCambios(cambiosJson.cambios);
     }
-  }, [props.refSolicitud]);
+  }, []);
+
+  React.useEffect(() => {
+    getCambios(refSolicitud);
+  }, [refSolicitud, getCambios]);
 
   const cambiosDeEstado = (cambio) => {
     if (cambio.estado) {
@@ -35,7 +39,7 @@ export default function ListaSolicitudes(props) {
           <div className="info-cambios">
             <p className="cambio-realizado">
               {cambio.estado === "Asignada"
-                ? cambio.estado + " : (" + props.asignado + ")"
+                ? cambio.estado + " : (" + asignado + ")"
                 : cambio.estado}
             </p>
           </div>
@@ -44,28 +48,60 @@ export default function ListaSolicitudes(props) {
     }
   };
 
-  const renderizarArchivos = (cambio) => {
-    if (cambio.archivos[0]) {
+  const renderizarArchivos = (archivos) => {
+    if (archivos[0]) {
+
+      const renderizarArchivosPorCategoria = () => {
+        const categorias = {};
+        categoriasArchivos.forEach((categoria) => {
+          categorias[categoria] = [];
+          archivos.forEach((archivoPorCategora) => {
+            if (archivoPorCategora.categoriaArchivo === categoria) {
+              categorias[categoria].push(archivoPorCategora);
+            }
+          });
+        });
+
+        const mapNombresArchivos = categoria => (archivos.map((archivo, i) => {
+          const punto = archivo.nombreArchivo.split(".");
+          const extencion = punto[punto.length - 1];
+          const nombreSolo = archivo.nombreArchivo.split(`.${extencion}`)[0];
+          let nombre
+          if (nombreSolo.length > 15) {
+            nombre = `${nombreSolo.substring(0, 15)}...${extencion}`;
+          } else {
+            nombre = archivo.nombreArchivo;
+          }
+          const link = archivo.urlArchivo;
+          if (archivo.categoriaArchivo === categoria) {
+            return (
+              <h6 key={i}>
+                <a href={link}>{nombre}</a>
+              </h6>
+            );
+          } else return null;
+        }))
+
+        const mapArchivos = categoriasArchivos.map(categoria => {
+          if (categorias[categoria].length) {
+            return (
+              <div className="categoria-files" key={categoria}>
+                <h6>{categoria}:</h6>
+                <div className="info-files">
+                  {mapNombresArchivos(categoria)}
+                </div>
+              </div>
+            );
+          } else return null;
+        });
+
+        return mapArchivos;
+      };
+
       return (
         <div>
           <p className="title-card-cambio">Archivo(s):</p>
-          <div className="info-files">
-            {cambio.archivos.map((archivo, i) => {
-              const punto = archivo.nombreArchivo.split(".");
-              const extencion = punto[punto.length - 1];
-              const nombreSolo = archivo.nombreArchivo.split(
-                `.${extencion}`
-              )[0];
-              const nombre = `${nombreSolo.substring(0, 8)}...${extencion}`;
-              const link = archivo.urlArchivo;
-              return (
-                  <h6 key={i}>
-                    {archivo.categoriaArchivo}: &nbsp;&nbsp;{" "}
-                    <a href={link}>{nombre}</a>
-                  </h6>
-              );
-            })}
-          </div>
+          {renderizarArchivosPorCategoria()}
         </div>
       );
     }
@@ -90,7 +126,7 @@ export default function ListaSolicitudes(props) {
           <Divider />
           {cambiosDeEstado(cambio)}
           <Divider />
-          {renderizarArchivos(cambio)}
+          {renderizarArchivos(cambio.archivos)}
           <Divider />
           <p className="title-card-cambio">Nota:</p>
           <div className="nota">{cambio.nota}</div>

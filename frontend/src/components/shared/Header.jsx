@@ -116,14 +116,18 @@ const Header = (props) => {
   };
 
   const notificationsTotalCount = async () => {
-    const count = await fetch('http://localhost:3001/notification/countNotifications', {
-      method: "GET",
-      headers: {
-        "x-access-token": localStorage.getItem("TAToken"),
-      },
-    });
-    const countJson = await count.json();
-    setCountNotifications(countJson.count);
+    if (window.location.href !== 'http://localhost:3000/lista-notificaciones') {
+      const count = await fetch('http://localhost:3001/notification/countNotifications', {
+        method: "GET",
+        headers: {
+          "x-access-token": localStorage.getItem("TAToken"),
+        },
+      });
+      const countJson = await count.json();
+      setCountNotifications(countJson.count);
+    } else {
+      setCountNotifications(0);
+    }
   }
 
   const handleCountNotifications = () => {
@@ -212,6 +216,7 @@ const Header = (props) => {
               </Badge>
             </IconButton>
             <AccountCircle
+              id='icon'
               className="icon"
               ref={anchorRef}
               aria-controls={openLog ? "menu-list-grow" : undefined}
@@ -244,7 +249,7 @@ const Header = (props) => {
                 <Paper>
                   <ClickAwayListener onClickAway={closeLogMenu}>
                     <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      <MenuItem id='logout' onClick={handleClose}>Logout</MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>

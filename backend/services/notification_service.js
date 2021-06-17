@@ -47,7 +47,6 @@ module.exports = {
   },
 
   cambioNotificaciones: async function (req, res) {
-
     const { solicitud, notificacion } = req.body;
     try {
       const tituloNotificacion = `Nuevo cambio en la solicitud # ${solicitud.idSolicitud}`;
@@ -73,10 +72,12 @@ module.exports = {
           } catch {
             notificar.visto = false;
           }
-          return notificar
+        } else {
+          notificar.visto = false
         }
+          return notificar
+         
       }))
-
       await Notificacion.create(createNotifications);
     } catch (err) {
       console.error(err)
@@ -85,7 +86,6 @@ module.exports = {
   },
 
   solicitudNotificaciones: async function (req, res) {
-
     const { solicitud, notificacion } = req.body;
     const notificar = {
       title: notificacion.title,

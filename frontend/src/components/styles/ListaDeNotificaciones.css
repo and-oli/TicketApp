@@ -30,22 +30,33 @@
 }
 .paper-notificaciones{
   display: flex;
+  flex-wrap: wrap;
   margin-top: 20px;
   width: 98%;
   min-width: 360px;
-  line-height: 20px;
   text-decoration: none;
   margin-bottom: 10px;
   flex-direction: row;
   align-items: center;
-  height: 80px;
+  height: auto;
 }
 
 .contenido{
-  height: 100%;
+  flex-wrap: wrap;
   flex-direction: column;
   margin-left: 10px;
-  line-height:5px;
+  line-height:17px;
+}
+
+.contenido h5{
+  margin: 0px;
+  margin-top: 8px;
+  line-height: 5px;
+}
+
+.contenido p{
+  margin-top: 12px;
+  margin-bottom: 10px;
 }
 
 .notificacion-icon{

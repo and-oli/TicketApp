@@ -3,8 +3,7 @@ const ModuloSolicitud = require('../models/Solicitud');
 const estadoPredeterminado = require('../data/estado.json').sinAsignar
 const Solicitud = ModuloSolicitud.modelo;
 const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modelo;
-const Notification = require('../models/Notification').modelo
-
+const mongoose = require('mongoose')
 function enviarError(res, error) {
   console.error(error.stack);
   return res.json({
@@ -17,9 +16,13 @@ module.exports = {
 
   getSolicitudes: async function (req, res) {
     try {
-
+      const userInfo = req.decoded;
       const infoFiltro = req.query;
       const filtro = {};
+
+      if (userInfo.role !== 'ADMINISTRADOR') {
+        filtro.refUsuarioSolicitante = mongoose.Types.ObjectId(userInfo.id);
+      }
 
       const regexNumeros = /\d+/g;
       let posiblesIds = [];
@@ -42,7 +45,6 @@ module.exports = {
         ordenResultado = {};
         ordenResultado[infoFiltro.ordenarPor] = infoFiltro.orden === 'asc' ? 1 : -1;
       };
-
       const cantidad = Number(infoFiltro.cantidad);
       const pagina = Number(infoFiltro.pagina);
       const resultadoCuenta = await Solicitud.aggregate([
@@ -60,6 +62,7 @@ module.exports = {
         },
         { $count: "cuenta" },
       ]);
+
       const cuenta = resultadoCuenta[0].cuenta;
       const solicitudes = await Solicitud.aggregate([
         {
@@ -189,9 +192,9 @@ module.exports = {
       newSolicitud.abierta = true;
       newSolicitud.categoria = req.body.categoria;
       newSolicitud.refCliente = req.body.refCliente;
-      newSolicitud.dueno = '60b647519d42f8316449732b';
+      newSolicitud.dueno = '60bfa4ac77ba960a2404c56d';
       newSolicitud.refUsuarioSolicitante = req.decoded.id;
-      newSolicitud.listaIncumbentes = req.decoded.id !== '60ad4a35eb3c551fc08ce68c' ? [req.decoded.id, '60ad4a35eb3c551fc08ce68c'] : ['60ad4a35eb3c551fc08ce68c'];
+      newSolicitud.listaIncumbentes = req.decoded.id !== '60bfa4ac77ba960a2404c56d' ? [req.decoded.id, '60bfa4ac77ba960a2404c56d'] : ['60bfa4ac77ba960a2404c56d'];
       const createSolicitud = await Solicitud.create(newSolicitud);
       const resCreateSolicitud = await createSolicitud
         .populate('dueno', 'subscription')

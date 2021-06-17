@@ -20,8 +20,8 @@ function ListaDeNotificaciones() {
     );
     const notificacionesJson = await getNotificaciones.json();
     const notificacionesTodas = notificacionesJson.notificaciones;
-      setLoading(false);
-      setNotificaciones(notificacionesTodas);
+    setLoading(false);
+    setNotificaciones(notificacionesTodas);
   }
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function ListaDeNotificaciones() {
             className="notificacion-icon"
           />
           <div className="contenido">
-            <p>{noti.title}</p>
+            <h5>{noti.title}</h5>
             <p>{noti.text}</p>
           </div>
         </Paper>
