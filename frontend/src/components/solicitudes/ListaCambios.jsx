@@ -35,7 +35,7 @@ export default function ListaSolicitudes(props) {
     if (cambio.estado) {
       return (
         <div>
-          <p className="title-card-cambio">Cambio de estado:</p>
+          <p className="title-card-cambio"><b>Cambio de estado:</b></p>
           <div className="info-cambios">
             <p className="cambio-realizado">
               {cambio.estado === "Asignada"
@@ -100,7 +100,7 @@ export default function ListaSolicitudes(props) {
 
       return (
         <div>
-          <p className="title-card-cambio">Archivo(s):</p>
+          <p className="title-card-cambio"><b>Archivo(s):</b></p>
           {renderizarArchivosPorCategoria()}
         </div>
       );
@@ -109,18 +109,18 @@ export default function ListaSolicitudes(props) {
 
   const renderizarItemsCambios = () => {
     return cambios.map((cambio, i) => (
-      <Paper elevation={20} key={i} className="container-padre-cambios">
+      <Paper elevation={10} key={i} className="container-padre-cambios">
         <div className="info-usuario">
           <h4>{cambio.titulo}</h4>
           <Divider />
           <div>
-            <p className="title-card-cambio">Usuario:</p>
+            <p className="title-card-cambio"><b>Usuario:</b></p>
             <p className="user-info-cambio">{cambio.refUsuario[0].name}</p>
             <p className="user-info-cambio">({cambio.refUsuario[0].role})</p>
           </div>
           <Divider />
           <div>
-            <p className="title-card-cambio">Fecha:</p>
+            <p className="title-card-cambio"><b>Fecha:</b></p>
             <p className="fecha-info-cambio">{cambio.fechaHora}</p>
           </div>
           <Divider />
@@ -128,7 +128,7 @@ export default function ListaSolicitudes(props) {
           <Divider />
           {renderizarArchivos(cambio.archivos)}
           <Divider />
-          <p className="title-card-cambio">Nota:</p>
+          <p className="title-card-cambio"><b>Nota:</b></p>
           <div className="nota">{cambio.nota}</div>
         </div>
       </Paper>
@@ -159,5 +159,13 @@ export default function ListaSolicitudes(props) {
     }
   };
 
-  return <div>{renderizarCambios()}</div>;
+  return (
+    <Paper className="paper-solicitud-c" elevation={4}>
+      <h2>Historial</h2>
+      <Divider />
+      <div className='historial-container'>
+        {renderizarCambios()}
+      </div>
+    </Paper>
+  );
 }

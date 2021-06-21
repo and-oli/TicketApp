@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Paper from "@material-ui/core/Paper";
+import Divider from "@material-ui/core/Divider";
 import CambiosSolicitud from "../formularioSolicitud/EnviarCambio";
 import ListaCambios from "./ListaCambios";
 import "../styles/DetallesSolicitud.css";
@@ -64,18 +65,17 @@ export default function DetalleSolicitud(props) {
       </div>
       <div className="container-paper">
         <Paper className="paper-solicitud-a" elevation={5}>
-          <h3>Informacion de la solicitud</h3>
-          <p><h3> Cliente:</h3> {cliente}</p>
-          <p><h3>Fecha de envío:</h3> {detalleSolicitud.fechaHora}</p>
-          <p><h3>Nombre del solicitante:</h3> {solicitante.name}</p>
-          <p><h3>Correo:</h3> {solicitante.email}</p>
-          <p><h3>Prioridad:</h3> {detalleSolicitud.prioridad}</p>
-          <p><h3>Estado:</h3> {detalleSolicitud.estado}</p>
-          <p>
-          <h3> Asignada a:</h3> {asignada} ({roleAsignado})
-          </p>
-          <p><h3>Categoria:</h3> {detalleSolicitud.categoria}</p>
-          <p><h3>Descripcion:</h3></p>
+          <h2>Informacion de la solicitud</h2>
+          <Divider />
+          <p><b>Cliente:</b> {cliente}</p>
+          <p><b>Fecha de envío:</b> {detalleSolicitud.fechaHora}</p>
+          <p><b>Nombre del solicitante:</b> {solicitante.name}</p>
+          <p><b>Correo:</b> {solicitante.email}</p>
+          <p><b>Prioridad:</b> {detalleSolicitud.prioridad}</p>
+          <p><b>Estado:</b> {detalleSolicitud.estado}</p>
+          <p><b>Asignada a:</b> {asignada} ({roleAsignado})</p>
+          <p><b>Categoria:</b> {detalleSolicitud.categoria}</p>
+          <p><b>Descripcion:</b></p>
           <div className="descripcion">
             <p>{detalleSolicitud.descripcion}</p>
           </div>
@@ -90,14 +90,12 @@ export default function DetalleSolicitud(props) {
           idSolicitud={idSolicitud}
           referenciaSolicitud={detalleSolicitud._id}
         />
-        <Paper className="paper-solicitud-c" elevation={4}>
           <ListaCambios
             categoriasArchivos={categoriasArchivos}
             asignado={asignada}
             refSolicitud={detalleSolicitud._id}
             idSolicitud={idSolicitud}
           />
-        </Paper>
       </div>
     </div>
   );

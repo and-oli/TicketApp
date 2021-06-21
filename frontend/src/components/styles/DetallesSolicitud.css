@@ -1,6 +1,5 @@
 .paper-solicitud-a {
   display: flex;
-  justify-content: space-around;
   font-size: 17px;
   flex-direction: column;
   width: 30%;
@@ -8,19 +7,21 @@
   min-width: 380px;
   height: 750px;
 }
-.paper-solicitud-a p {
-  margin-left: 35px;
-  margin-right: 40px;
+
+hr {
+  width: 100%;
 }
 
-.paper-solicitud-a h3 {
+h2 {
+  position:static;
   font-weight: 700;
+  font-size: 19px;
+  margin: 19px;
   text-align: center;
 }
 
-.paper-solicitud-a p h3 {
-  font-weight: 600;
-  display:inline;
+.paper-solicitud-a p {
+  margin: 18px;
 }
 
 .title-paper {
@@ -34,17 +35,6 @@
   width: auto;
   height: auto;
   border-radius: 5px;
-}
-
-.paper-solicitud-b p {
-  font-weight: 600; 
-  margin:0px
-}
-
-.paper-solicitud-b h3 {
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 0;
 }
 
 .title-paper p {
@@ -82,29 +72,41 @@
 
 .paper-solicitud-c {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   flex-direction: column;
-  overflow-y: scroll;
   width: 30%;
   margin-top: 5px;
+  overflow: hidden;
   border: 2px solid rgba(65, 65, 65, 0.638);
   min-width: 380px;
   margin-bottom: 20px;
   height: 750px;
 }
 
+.historial-container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 700px;
+}
+
 .descripcion {
   display: flex;
-  overflow-y: scroll;
+  overflow-y: auto;
   align-self: center;
   text-align: left;
   word-wrap: break-word;
   margin-bottom: 20px;
   border-radius: 2px;
-  background-color: rgba(220, 215, 215, 0.727);
+  background-color: rgba(0, 81, 255, 0.205);
   width: 90%;
   height: 150px;
   font-size: 15px;
+}
+
+.descripcion p {
+  margin: 5px;
 }
 
 .actualizar-button {

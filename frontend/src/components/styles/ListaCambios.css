@@ -1,14 +1,10 @@
 .container-padre-cambios {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  align-self: center;
   margin-top: 15px;
   margin-bottom: 15px;
-  margin-left: 15px;
-  margin-right: 10px;
   width: 90%;
   height: auto;
-  border: 1px solid rgba(5, 47, 92, 0.645);
 }
 
 .info-usuario {
@@ -65,14 +61,15 @@
   margin-top: 20px;
   margin-left: 10px;
   margin-bottom: 10px;
+  overflow-y: auto;
   padding: 3px;
   padding-left: 10px;
   padding-right: 10px;
-  height: auto;
+  height: 100px;
   width: 90%;
   line-height: 20px;
   word-wrap: break-word;
-  background-color: rgba(220, 215, 215, 0.727);
+  background-color: rgba(255, 255, 0, 0.219);
 }
 
 .cambio-realizado {

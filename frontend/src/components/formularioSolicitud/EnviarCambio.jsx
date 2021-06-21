@@ -4,6 +4,7 @@ import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
 
 // TODO: Determinar fuente de verdad para categorías
@@ -184,6 +185,7 @@ export default function CambiosSolicitud(props) {
           {"Adjuntar  " + categoria.toLowerCase()}s
         </label>
         <input
+          accept={categoria === "Foto"?"image/png, image/gif, image/jpeg":null}
           type="file"
           style={{ display: "none" }}
           id={categoria.toLowerCase()}
@@ -205,7 +207,20 @@ export default function CambiosSolicitud(props) {
       return (
         <div>
           <FormControl className="form-control">
-            <label htmlFor="asignar"><p>Dueño:</p></label>
+            <label htmlFor="abierta"><b>Estado:</b></label>
+            <NativeSelect
+              value={state.abierta}
+              name="estado"
+              id="estado"
+              onChange={handleChange}
+              className="select-empty"
+            >
+              <option value="">{estado}</option>
+              {renderizarEstados()}
+            </NativeSelect>
+          </FormControl>
+          <FormControl className="form-control">
+            <label htmlFor="asignar"><b>Dueño:</b></label>
             <NativeSelect
               value={state.dueno}
               name="dueno"
@@ -218,19 +233,6 @@ export default function CambiosSolicitud(props) {
             </NativeSelect>
           </FormControl>
 
-          <FormControl className="form-control">
-            <label htmlFor="abierta"><p>Estado:</p></label>
-            <NativeSelect
-              value={state.abierta}
-              name="estado"
-              id="estado"
-              onChange={handleChange}
-              className="select-empty"
-            >
-              <option value="">{estado}</option>
-              {renderizarEstados()}
-            </NativeSelect>
-          </FormControl>
         </div>
       );
     }
@@ -238,7 +240,8 @@ export default function CambiosSolicitud(props) {
 
   return (
     <Paper className="paper-solicitud-b" elevation={5}>
-      <h3 className='title-papers'>Modificar solicitud</h3>
+      <h2>Modificar solicitud</h2>
+      <Divider />
       <form onSubmit={enviarCambio}>
         {renderizarCambiosEspecialista()}
         <TextField
@@ -266,7 +269,7 @@ export default function CambiosSolicitud(props) {
           variant="outlined"
           multiline
           inputProps={{
-            maxLength: 150,
+            maxLength: 250,
           }}
           required
           rows={4}
