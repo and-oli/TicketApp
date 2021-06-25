@@ -72,9 +72,6 @@ module.exports = {
     const notificacion = {};
     if (cambios.dueno) {
       resultadoSolicitud.dueno = cambios.dueno;
-      resultadoSolicitud.$push = {
-        listaIncumbentes: { $each: [cambios.dueno], $position: 2 }
-      };
       resultadoSolicitud.estado = estados.asignada;
       cambios.estado = estados.asignada;
     }

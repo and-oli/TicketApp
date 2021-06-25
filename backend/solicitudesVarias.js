@@ -166,10 +166,8 @@ async function nuevasSolicitudes() {
       solicitud.abierta = true;
       solicitud.prioridad = prioridad;
       solicitud.categoria = categoria;
-      solicitud.dueno = refAdmin;
       solicitud.refCliente = refUsuarioRandom.refCliente;
       solicitud.refUsuarioSolicitante = refUsuarioRandom._id;
-      solicitud.listaIncumbentes = [refUsuarioRandom._id, refAdmin];
 
       documentoDeSolicitudes.push(solicitud);
     }

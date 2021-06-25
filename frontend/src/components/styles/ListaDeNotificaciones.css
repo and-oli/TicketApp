@@ -15,6 +15,7 @@
   border-radius: 2px;
   padding-left: 10px;
   padding-right: 10px;
+  padding-bottom: 5px;
   height: 30px;
   width: auto;
 }
@@ -30,15 +31,16 @@
 }
 .paper-notificaciones{
   display: flex;
-  flex-wrap: wrap;
   margin-top: 20px;
   width: 98%;
   min-width: 360px;
   text-decoration: none;
-  margin-bottom: 10px;
   flex-direction: row;
   align-items: center;
   height: auto;
+}
+.paper-notificaciones:hover {
+  background-color: rgba(255, 225, 1, 0.207);
 }
 
 .contenido{
@@ -60,11 +62,17 @@
 }
 
 .notificacion-icon{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 60px;
+  height: 100%;
+  margin: 5px;
+}
+
+.notificacion-icon img {
   width: 60px;
   height: 60px;
-  margin-left: 5px;
   border-radius: 4px;
   box-shadow: 2px 2px 5px rgba(72, 72, 72, 0.604);
-  float: left;
-  vertical-align: middle;
 }

@@ -1,7 +1,14 @@
+.title-envio {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: auto;
+  height: auto;
+}
+
 .container-p {
   display: flex;
   flex-wrap: wrap;
-  overflow:hidden;
   justify-content: center;
   width: 100%;
   height: auto;
@@ -14,6 +21,11 @@
   width: 800px;
   min-width: 150px;
 }
+.form-control {
+  margin: 10px !important;
+  width: 90%;
+  align-self: center;
+}
 .container-b {
   display: flex;
   flex-direction: column;
@@ -22,13 +34,7 @@
   width: 800px;
   min-width: 150px;
 }
-.title-envio {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: auto;
-  height: auto;
-}
+
 .title-envio p {
   display: flex;
   border-radius: 5px;
@@ -55,29 +61,10 @@
   border-radius: 2px;
 }
 
-.form-control {
-  margin: 10px !important;
-  width: 90%;
-  align-self: center;
-}
 .select-empty {
   margin-top: 2px;
 }
 
 .button-enviar-solicitud {
   background-color: black;
-}
-
-#container-archivos{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.container-item-archivo{
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  padding: 10px;
 }

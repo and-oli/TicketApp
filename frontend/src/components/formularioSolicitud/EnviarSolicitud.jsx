@@ -221,6 +221,9 @@ export default function EnviarSolicitud() {
               name="resumen"
               className="form-control"
               variant="outlined"
+              inputProps={{
+                maxLength: 35,
+              }}
             />
             <TextField
               value={state.descripcion}

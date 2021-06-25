@@ -9,7 +9,6 @@ export default function DetalleSolicitud(props) {
   const { userRole } = props;
   let params = new URL(document.location).searchParams;
   let idSolicitud = params.get("id_solicitud");
-
   const [detalleSolicitud, setDetalleSolicitud] = useState([]);
   const [cliente, setCliente] = useState("");
   const [asignada, setAsignada] = useState("");
@@ -64,21 +63,23 @@ export default function DetalleSolicitud(props) {
         </p>
       </div>
       <div className="container-paper">
-        <Paper className="paper-solicitud-a" elevation={5}>
-          <h2>Informacion de la solicitud</h2>
+        <Paper className="paper-solicitud-a" elevation={10}>
+          <div className="detalles-titles">
+            <h2>Informacion de la solicitud</h2>
+          </div>
           <Divider />
-          <p><b>Cliente:</b> {cliente}</p>
-          <p><b>Fecha de envío:</b> {detalleSolicitud.fechaHora}</p>
-          <p><b>Nombre del solicitante:</b> {solicitante.name}</p>
-          <p><b>Correo:</b> {solicitante.email}</p>
-          <p><b>Prioridad:</b> {detalleSolicitud.prioridad}</p>
-          <p><b>Estado:</b> {detalleSolicitud.estado}</p>
-          <p><b>Asignada a:</b> {asignada} ({roleAsignado})</p>
-          <p><b>Categoria:</b> {detalleSolicitud.categoria}</p>
           <p><b>Descripcion:</b></p>
           <div className="descripcion">
-            <p>{detalleSolicitud.descripcion}</p>
+          <p>{detalleSolicitud.descripcion}</p>
           </div>
+          <p><b>Cliente:</b> {cliente}</p>
+          <p><b>Nombre del solicitante:</b> {solicitante.name}</p>
+          <p><b>Correo:</b> {solicitante.email}</p>
+          <p><b>Categoria:</b> {detalleSolicitud.categoria}</p>
+          <p><b>Prioridad:</b> {detalleSolicitud.prioridad}</p>
+          <p><b>Fecha de envío:</b> {detalleSolicitud.fechaHora}</p>
+          <p><b>Estado:</b> {detalleSolicitud.estado}</p>
+          <p><b>Asignada a:</b> {asignada} ({roleAsignado})</p>
         </Paper>
         <CambiosSolicitud
           user={userRole}
@@ -90,12 +91,12 @@ export default function DetalleSolicitud(props) {
           idSolicitud={idSolicitud}
           referenciaSolicitud={detalleSolicitud._id}
         />
-          <ListaCambios
-            categoriasArchivos={categoriasArchivos}
-            asignado={asignada}
-            refSolicitud={detalleSolicitud._id}
-            idSolicitud={idSolicitud}
-          />
+        <ListaCambios
+          categoriasArchivos={categoriasArchivos}
+          asignado={asignada}
+          refSolicitud={detalleSolicitud._id}
+          idSolicitud={idSolicitud}
+        />
       </div>
     </div>
   );

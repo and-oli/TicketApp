@@ -1,119 +1,16 @@
-.paper-solicitud-a {
-  display: flex;
-  font-size: 17px;
-  flex-direction: column;
-  width: 30%;
-  margin-top: 5px;
-  min-width: 380px;
-  height: 750px;
-}
-
-hr {
-  width: 100%;
-}
-
-h2 {
-  position:static;
-  font-weight: 700;
-  font-size: 19px;
-  margin: 19px;
-  text-align: center;
-}
-
-.paper-solicitud-a p {
-  margin: 18px;
-}
-
 .title-paper {
   display: flex;
   justify-content: center;
   text-align: center;
-  margin-left: 30%;
-  margin-right: 30%;
   color: white;
-  font-size: 20px;
-  width: auto;
-  height: auto;
-  border-radius: 5px;
 }
 
 .title-paper p {
   background-color: black;
-  padding: 2px;
+  padding: 3px;
+  padding-bottom: 6px;
   min-width: 380px;
-  border-radius: 5px;
-  border: 1px solid;
-}
-
-.paper-solicitud-b {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  width: 30%;
-  margin-top: 5px;
-  min-width: 380px;
-  height: 750px;
-}
-.paper-solicitud-b form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-top: 20px;
-  width: 90%;
-  height: 80%;
-}
-.paper-solicitud-b form .adjuntar-archivo {
-  display: flex;
-  width: 63%;
-  align-self: center;
-  border-radius: 2px;
-  background-color: rgba(2, 13, 28, 0.392);
-}
-
-.paper-solicitud-c {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  width: 30%;
-  margin-top: 5px;
-  overflow: hidden;
-  border: 2px solid rgba(65, 65, 65, 0.638);
-  min-width: 380px;
-  margin-bottom: 20px;
-  height: 750px;
-}
-
-.historial-container {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  overflow-y: auto;
-  height: 700px;
-}
-
-.descripcion {
-  display: flex;
-  overflow-y: auto;
-  align-self: center;
-  text-align: left;
-  word-wrap: break-word;
-  margin-bottom: 20px;
-  border-radius: 2px;
-  background-color: rgba(0, 81, 255, 0.205);
-  width: 90%;
-  height: 150px;
-  font-size: 15px;
-}
-
-.descripcion p {
-  margin: 5px;
-}
-
-.actualizar-button {
-  height: 30px;
-  width: 30%;
-  margin-top: 5px;
-  align-self: center;
+  border-radius: 3px;
 }
 
 .container-paper {
@@ -121,16 +18,110 @@ h2 {
   flex-wrap: wrap;
   justify-content: space-evenly;
   min-width: 380px;
-  margin-top: 0px;
-  width: 100%;
+}
+
+.paper-solicitud-a {
+  display: flex;
+  font-size: 17px;
+  flex-direction: column;
+  font-family: 'Roboto';
+  width: 30%;
+  margin-top: 5px;
+  min-width: 380px;
+  height: 750px;
+}
+
+.paper-solicitud-a b{
+  font-weight: 650;
+}
+
+.paper-solicitud-a p {
+  margin: 18px;
+}
+
+.detalles-titles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 50px;
+}
+
+.detalles-titles h2{
+  font-size: 19px;
+  text-align: center;
+}
+
+.descripcion {
+  display: flex;
+  overflow-y: auto;
+  align-self: center;
+  word-wrap: break-word;
+  border-radius: 2px;
+  background-color: rgba(0, 153, 255, 0.392);
+  width: 95%;
+  height: 150px;
+  font-size: 15px;
+}
+
+.descripcion p {
+  margin: 5px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  line-height: 20px;
+}
+
+.paper-solicitud-b {
+  display: flex;
+  align-items: center;
+  font-family: 'Roboto';
+  flex-direction: column;
+  width: 30%;
+  margin-top: 5px;
+  min-width: 380px;
+  height: 750px;
+}
+
+.paper-solicitud-b form {
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  justify-content: space-between;
+  padding-top: 10px;
+  line-height: 0px;
+  width: 90%;
   height: 80%;
 }
 
-.button {
+.paper-solicitud-b form p {
+  margin: 5px;
+  margin-left: 0px;
+}
+
+#label-file{
   display: flex;
-  width: 95%;
-  background-color: black;
   justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.939);
+  border-radius: 3px;
+  color: white;
+  padding: 3px;
+  font-size: 10px;
+  width: 160px;
+  height: auto;
+  line-height: 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#label-file p{
+  margin: 3px;
+}
+
+#label-file:hover {
+  background-color: #d5d5d5;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+   0px 2px 2px 0px rgb(0 0 0 / 14%),
+   0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
 .button .button-guardar {
@@ -143,30 +134,218 @@ h2 {
   border-radius: 2px;
 }
 
-.icon-enviar {
+.paper-solicitud-c {
   display: flex;
-  align-self: center;
-}
-
-#label-file{
-  display: flex;
-  align-self: center;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.939);
-  border-radius: 3px;
-  color: white;
-  padding-left: 5px;
-  padding-right: 5px;
-  font-size: 15px;
-  height: 29px;
-  cursor: pointer;
+  flex-direction: column;
+  font-family: 'Roboto';
+  width: 30%;
+  margin-top: 5px;
+  min-width: 380px;
+  margin-bottom: 20px;
+  height: 750px;
 }
 
 .title-file{
   display: flex;
   justify-content: center;
-  margin: 0px;
+  margin: 5px;
   margin-bottom: 5px;
   height: 10px;
+}
+
+hr {
+  width: 100%;
+}
+
+#container-archivos{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-item-archivo{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  line-height: 10px;
+  text-align: center;
+  width: 200px;
+  height: 40px;
+  padding: 4px;
+}
+
+.select-empty option {
+  font-size: 15px;
+}
+
+.select-empty select{
+  font-size: 17px;
+}
+
+.form-control-agregar-lista {
+  display: flex;
+  margin-top: 15px;
+  align-self: center;
+}
+
+.input-agregar {
+  width: 100%;
+  height: 40px;
+}
+
+.input-agregar label{
+  font-size: 15px;
+}
+
+.input-agregar textarea {
+  font-size: 15px;
+}
+
+.input-agregar fieldset {
+  height: 42px;
+}
+
+.input-agregar fieldset legend {
+  width: 115px;
+}
+
+.input-agregar .MuiInputLabel-outlined.MuiInputLabel-shrink {
+  transform: translate(14px, 0px) scale(0.75) !important;
+}
+
+.input-agregar .MuiOutlinedInput-multiline {
+  padding: 7px;
+  padding-left: 15px;
+  transform: translate(0px, 7px) scale(1) !important;
+}
+
+#label-agregar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.939);
+  width: 90px;
+  height: 30px;
+  border-radius: 3px;
+  margin-top: 10px;
+  color: white;
+  font-size: 15px;
+  margin-left: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#label-agregar:hover {
+  background-color: #d5d5d5;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+   0px 2px 2px 0px rgb(0 0 0 / 14%),
+   0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.ajuste-categorias-archivos {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  width: 100%;
+  height: auto;
+}
+
+.ajuste-listado-incumbentes {
+  align-self: center;
+  width: 95%;
+}
+
+.form-text-cambio {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-control-nota {
+  display: flex;
+  align-self: center;
+  margin: 5px;
+  height: 100px;
+  width: 95%;
+}
+
+.form-control-titulo {
+  display: flex;
+  align-self: center;
+  margin: 10px;
+  height: 70px;
+  width: 95%;
+}
+
+.form-control-cambio {
+  margin: 10px !important;
+  line-height: 0px;
+  width: 95%;
+}
+
+.form-control-cambio .select-empty-cambio {
+  margin: 0px;
+}
+
+.form-control-cambio select{
+  font-size: 17px;
+}
+
+.form-control-nota textarea {
+  height: 70px;
+  font-size: 15px;
+}
+
+.form-control-titulo textarea {
+  font-size: 15px;
+}
+
+.form-control-titulo fieldset {
+  height: 55px;
+}
+
+.form-control-nota fieldset {
+  height: 100px;
+}
+
+.form-control-nota label{
+  font-size: 14px;
+}
+
+.form-control-titulo label{
+  font-size: 14px;
+}
+
+.lista-de-incumbentes {
+  height: 85px;
+  width: 100%;
+  overflow-y: auto;
+  border: 1px solid rgba(0, 0, 0, 0.275);
+  border-radius: 2px;
+  color: black;
+  margin-top: 10px;
+}
+
+.chip-incumbente {
+  margin: 3px;
+}
+
+.chip-incumbente span {
+  padding: 15px;
+  color: rgb(0, 0, 0);
+}
+
+.MuiChip-deleteIcon {
+  color: rgba(0, 0, 0, 0.741) !important;
+}
+
+.MuiChip-deleteIcon:hover {
+  color: rgb(0, 0, 0) !important;
+}
+
+.MuiChip-root {
+  background-color: rgba(255, 255, 255, 0.864) !important;
+  border: solid 1px rgb(155, 154, 154) !important;
 }

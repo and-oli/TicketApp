@@ -37,11 +37,11 @@ module.exports = {
   },
 
   getUserTecnicos:async function (req, res) {
-    const tecnicos = await Usuario.find({role:'Tecnico'});
+    const tecnicos = await Usuario.find({});
     if(!tecnicos){
       res.json({ mensaje: 'no hay tecnicos', ok: false });
     } else {
-      res.json({ mensaje: 'solicitud exitosa', tecnicos, ok: false });
+      res.json({ mensaje: 'solicitud exitosa', tecnicos, ok: true });
     }
   },
 

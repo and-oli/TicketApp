@@ -35,6 +35,7 @@ export default function ListaSolicitudes(props) {
     if (cambio.estado) {
       return (
         <div>
+          <Divider />
           <p className="title-card-cambio"><b>Cambio de estado:</b></p>
           <div className="info-cambios">
             <p className="cambio-realizado">
@@ -75,9 +76,9 @@ export default function ListaSolicitudes(props) {
           const link = archivo.urlArchivo;
           if (archivo.categoriaArchivo === categoria) {
             return (
-              <h6 key={i}>
+              <p key={i}>
                 <a href={link}>{nombre}</a>
-              </h6>
+              </p>
             );
           } else return null;
         }))
@@ -86,7 +87,7 @@ export default function ListaSolicitudes(props) {
           if (categorias[categoria].length) {
             return (
               <div className="categoria-files" key={categoria}>
-                <h6>{categoria}:</h6>
+                <h6>{categoria}(s):</h6>
                 <div className="info-files">
                   {mapNombresArchivos(categoria)}
                 </div>
@@ -94,14 +95,15 @@ export default function ListaSolicitudes(props) {
             );
           } else return null;
         });
-
         return mapArchivos;
       };
-
       return (
         <div>
+          <Divider />
           <p className="title-card-cambio"><b>Archivo(s):</b></p>
-          {renderizarArchivosPorCategoria()}
+          <div className='archivos-por-categoria'>
+            {renderizarArchivosPorCategoria()}
+          </div>
         </div>
       );
     }
@@ -109,7 +111,7 @@ export default function ListaSolicitudes(props) {
 
   const renderizarItemsCambios = () => {
     return cambios.map((cambio, i) => (
-      <Paper elevation={10} key={i} className="container-padre-cambios">
+      <Paper elevation={5} key={i} className="container-padre-cambios">
         <div className="info-usuario">
           <h4>{cambio.titulo}</h4>
           <Divider />
@@ -123,9 +125,7 @@ export default function ListaSolicitudes(props) {
             <p className="title-card-cambio"><b>Fecha:</b></p>
             <p className="fecha-info-cambio">{cambio.fechaHora}</p>
           </div>
-          <Divider />
           {cambiosDeEstado(cambio)}
-          <Divider />
           {renderizarArchivos(cambio.archivos)}
           <Divider />
           <p className="title-card-cambio"><b>Nota:</b></p>
@@ -138,7 +138,7 @@ export default function ListaSolicitudes(props) {
   const renderizarCambios = () => {
     if (loading) {
       return (
-        <div className="loading">
+        <div className="detalles-titles-sin-cambios">
           <CircularProgress
             color="inherit"
             className="icon-loading"
@@ -149,7 +149,7 @@ export default function ListaSolicitudes(props) {
     } else {
       if (!cambios.length) {
         return (
-          <div className="loading">
+          <div className="detalles-titles-sin-cambios">
             <h4>No hay cambios</h4>
           </div>
         );
@@ -160,8 +160,10 @@ export default function ListaSolicitudes(props) {
   };
 
   return (
-    <Paper className="paper-solicitud-c" elevation={4}>
-      <h2>Historial</h2>
+    <Paper className="paper-solicitud-c" elevation={10}>
+      <div className="detalles-titles">
+        <h2>Historial</h2>
+      </div>
       <Divider />
       <div className='historial-container'>
         {renderizarCambios()}

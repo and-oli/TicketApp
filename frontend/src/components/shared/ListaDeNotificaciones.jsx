@@ -38,11 +38,12 @@ function ListaDeNotificaciones() {
           key={i}
           className="paper-notificaciones"
         >
-          <img
-            alt="icono"
-            src="/iconComsistelco512.png"
-            className="notificacion-icon"
-          />
+          <div className="notificacion-icon">
+            <img
+              alt="icono"
+              src="/iconComsistelco512.png"
+            />
+          </div>
           <div className="contenido">
             <h5>{noti.title}</h5>
             <p>{noti.text}</p>

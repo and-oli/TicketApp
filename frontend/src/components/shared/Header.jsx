@@ -121,6 +121,8 @@ const Header = (props) => {
         method: "GET",
         headers: {
           "x-access-token": localStorage.getItem("TAToken"),
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
       });
       const countJson = await count.json();

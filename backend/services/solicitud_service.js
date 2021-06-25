@@ -143,6 +143,7 @@ module.exports = {
       const solicitudesPorId = await Solicitud.find({ idSolicitud: req.params.idSolicitud })
         .populate('dueno', ['name', 'role'])
         .populate('refCliente')
+        .populate('listaIncumbentes', ['name'])
         .populate(
           'refUsuarioSolicitante',
           ['name', 'email']
@@ -192,9 +193,7 @@ module.exports = {
       newSolicitud.abierta = true;
       newSolicitud.categoria = req.body.categoria;
       newSolicitud.refCliente = req.body.refCliente;
-      newSolicitud.dueno = '60bfa4ac77ba960a2404c56d';
       newSolicitud.refUsuarioSolicitante = req.decoded.id;
-      newSolicitud.listaIncumbentes = req.decoded.id !== '60bfa4ac77ba960a2404c56d' ? [req.decoded.id, '60bfa4ac77ba960a2404c56d'] : ['60bfa4ac77ba960a2404c56d'];
       const createSolicitud = await Solicitud.create(newSolicitud);
       const resCreateSolicitud = await createSolicitud
         .populate('dueno', 'subscription')
