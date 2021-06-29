@@ -19,8 +19,14 @@ export default function Login() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    const permission = await Notification.requestPermission();
+    let subscription
+    
+  if (permission === 'granted') {
     const ready = await navigator.serviceWorker.ready;
-    const subscription = await ready.pushManager.getSubscription();
+    subscription = await ready.pushManager.getSubscription();
+  }
+    
     if (!loading) {
       setloading(true);
       let user = {};
