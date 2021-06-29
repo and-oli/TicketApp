@@ -203,7 +203,7 @@ export default function EnviarSolicitud() {
               label="Correo"
               onChange={handleChange}
               name="correo"
-              className="form-control"
+              className="form-control-text"
               variant="outlined"
             />
             <TextField
@@ -211,7 +211,7 @@ export default function EnviarSolicitud() {
               label="Ciudad"
               onChange={handleChange}
               name="ciudad"
-              className="form-control"
+              className="form-control-text"
               variant="outlined"
             />
             <TextField
@@ -219,7 +219,7 @@ export default function EnviarSolicitud() {
               label="Resumen"
               onChange={handleChange}
               name="resumen"
-              className="form-control"
+              className="form-control-text"
               variant="outlined"
               inputProps={{
                 maxLength: 35,
@@ -230,7 +230,7 @@ export default function EnviarSolicitud() {
               label="Descripcion"
               onChange={handleChange}
               name="descripcion"
-              className="form-control"
+              className="form-control-descripcion"
               variant="outlined"
               multiline
               rows={4}

@@ -20,7 +20,7 @@ export async function notificationWorker() {
     const renderSubscription = async () => {
       const ready = await navigator.serviceWorker.ready;
       const subscription = await ready.pushManager.getSubscription();
-      const response = await fetch('http://localhost:3001/notification/vapidPublicKey');
+      const response = await fetch('http://192.168.1.39:3001/notification/vapidPublicKey');
       const vapidPublicKey = await response.json();
       const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey.vapidKey);
       if (subscription) {
@@ -34,7 +34,7 @@ export async function notificationWorker() {
     };
 
     const subscriptionVerify = await renderSubscription();
-    await fetch('http://localhost:3001/notification/register', {
+    await fetch('http://192.168.1.39:3001/notification/register', {
       method: 'post',
       headers: {
         'Content-type': 'application/json'

@@ -117,6 +117,7 @@ export default function ListaSolicitudes() {
   const classes = useStyles();
 
   const enviarBusqueda = useCallback(async () => {
+    setloading(true);
     if (
       pagePrevia === page &&
       ordenarPorPrevia === ordenarPor &&
@@ -136,13 +137,16 @@ export default function ListaSolicitudes() {
       }
     );
     const filtroJson = await resFiltro.json();
+
     setListaSolicitudes(filtroJson.solicitudes);
     setloading(false);
+
     if (filtroJson.cuenta) {
       setCuenta(filtroJson.cuenta);
     } else {
       setCuenta(0);
     }
+
   }, [
     filtro,
     page,
@@ -156,7 +160,7 @@ export default function ListaSolicitudes() {
   ]);
 
   React.useEffect(() => {
-    enviarBusqueda()
+    enviarBusqueda();
   }, [enviarBusqueda]);
 
   const handleChangePage = (event, newPage) => {

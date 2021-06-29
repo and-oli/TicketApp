@@ -79,7 +79,7 @@ export default function DetalleSolicitud(props) {
           <p><b>Prioridad:</b> {detalleSolicitud.prioridad}</p>
           <p><b>Fecha de envío:</b> {detalleSolicitud.fechaHora}</p>
           <p><b>Estado:</b> {detalleSolicitud.estado}</p>
-          <p><b>Asignada a:</b> {asignada} ({roleAsignado})</p>
+          <p><b>Asignada a:</b> {asignada} {roleAsignado? `(${roleAsignado})` : null}</p>
         </Paper>
         <CambiosSolicitud
           user={userRole}

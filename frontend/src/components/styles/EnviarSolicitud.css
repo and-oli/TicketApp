@@ -21,11 +21,51 @@
   width: 800px;
   min-width: 150px;
 }
-.form-control {
-  margin: 10px !important;
+.form-control-text {
   width: 90%;
   align-self: center;
 }
+
+.form-control {
+  width: 90% !important;
+  align-self: center;
+}
+
+.form-control-text fieldset {
+  height: 60px;
+}
+
+.form-control-text fieldset legend span {
+  width: auto;
+  padding: 8px;
+}
+
+.form-control-text .MuiOutlinedInput-input {
+  padding: 15px !important;
+  padding-top: 30px !important;
+  font-size: 20px;
+}
+
+.form-control-text textarea {
+  margin-top: 55px;
+}
+
+.form-control-descripcion {
+  width: 90%;
+  align-self: center;
+}
+
+.form-control-text .MuiInputBase-input {
+  margin-top: 15px !important;
+  height: 10px !important;
+}
+
+.form-control-text .MuiInputBase-root {
+  padding: 0px !important;
+  height: 40px !important;
+  font-size: 17px !important;
+}
+
 .container-b {
   display: flex;
   flex-direction: column;
@@ -68,3 +108,4 @@
 .button-enviar-solicitud {
   background-color: black;
 }
+

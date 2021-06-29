@@ -29,8 +29,7 @@ function ListaDeNotificaciones() {
   }, []);
 
   const renderizarNotificaciones = () => {
-    return notificaciones.map((noti, i) => {
-      return (
+    const mapNotificaciones = notificaciones.map((noti, i) => (
         <Paper
           component={Link}
           to={noti.url}
@@ -49,8 +48,13 @@ function ListaDeNotificaciones() {
             <p>{noti.text}</p>
           </div>
         </Paper>
-      );
-    });
+      )
+    );
+    if(mapNotificaciones.length) {
+      return mapNotificaciones
+    } else {
+      return <h4>No hay notificaciones</h4>
+    }
   };
   return (
     <div className="container-notificaciones-padre">

@@ -52,7 +52,7 @@ self.addEventListener("pushsubscriptionchange", async event => {
       endpoint: subscription.endpoint,
     })
   };
-  const resFetch = await fetch('http://192.168.1.39:3001/notification/register', header);
+  const resFetch = await fetch('http://localhost:3001/notification/register', header);
   event.waitUntil(resFetch);
 }, false)
 

@@ -23,12 +23,21 @@
 .container-notificaciones{
   display: flex;
   flex-direction: column;
-  height: 700px;
-  min-width: 395px;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 450px;
+  max-height: 750px;
+  min-width: 370px;
   overflow-y: auto;
   margin-top: 20px;
   width: 65%;
 }
+
+.container-notificaciones h4 {
+  color: rgba(0, 0, 0, 0.809);
+}
+
 .paper-notificaciones{
   display: flex;
   margin-top: 20px;

@@ -65,7 +65,7 @@ module.exports = {
         .populate('listaIncumbentes', 'name');
       res.json({ nuevaListaIncumbentes, mensaje: 'Se agrego incumbente exitosamente', ok: true });
     } catch (err) {
-      res.json({ mensaje: 'Ocurrio un error', ok: false });
+      res.json({ mensaje: 'El usuario no fue encontrado', ok: false });
     }
   },
 };
