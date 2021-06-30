@@ -70,7 +70,7 @@ module.exports = {
             subscription:user.subscription,
           }, secretKey, { expiresIn: '24h' });
           res.json({
-            mensaje: 'Usuario valido',
+            mensaje: `Bienvenido ${userInfo.name}`,
             idUsuario: userInfo._id,
             user: userInfo.role,
             username: userInfo.username,

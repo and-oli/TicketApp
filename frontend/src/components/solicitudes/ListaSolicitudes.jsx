@@ -81,6 +81,7 @@ export default function ListaSolicitudes() {
   const refOrdenarPorPrevia = useRef();
   const refOrdenPrevia = useRef();
   const refRowsPerPagePrevia = useRef();
+  const refFiltroPrevia = useRef();
 
   const renderizarConstante = async () => {
     const header = {
@@ -106,26 +107,38 @@ export default function ListaSolicitudes() {
   React.useEffect(() => {
     refPagePrevia.current = page;
     refOrdenarPorPrevia.current = ordenarPor;
-    refOrdenPrevia.current = ordenPrevia;
+    refOrdenPrevia.current = orden;
     refRowsPerPagePrevia.current = rowsPerPage;
+    refFiltroPrevia.current = filtro;
   });
   const pagePrevia = refPagePrevia.current;
   const ordenarPorPrevia = refOrdenarPorPrevia.current;
   const ordenPrevia = refOrdenPrevia.current;
   const rowsPerPagePrevia = refRowsPerPagePrevia.current;
+  const filtroPrevia = refFiltroPrevia.current || {};
 
   const classes = useStyles();
 
-  const enviarBusqueda = useCallback(async () => {
+  const enviarBusqueda = useCallback(async (forzar) => {
     setloading(true);
     if (
       pagePrevia === page &&
       ordenarPorPrevia === ordenarPor &&
       ordenPrevia === orden &&
-      rowsPerPagePrevia === rowsPerPage
+      rowsPerPagePrevia === rowsPerPage &&
+      !forzar
     ) {
-      return;
+        setloading(false);
+        return;
     }
+    console.log(
+      pagePrevia === page,
+      ordenarPorPrevia === ordenarPor,
+      ordenPrevia === orden,
+      rowsPerPagePrevia === rowsPerPage,
+      filtroPrevia.searchEstado === filtro.searchEstado,
+      !forzar
+    );
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
     const resFiltro = await fetch(
       `http://localhost:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
@@ -149,6 +162,7 @@ export default function ListaSolicitudes() {
 
   }, [
     filtro,
+    filtroPrevia,
     page,
     pagePrevia,
     rowsPerPage,
@@ -181,7 +195,7 @@ export default function ListaSolicitudes() {
     if (e) {
       e.preventDefault();
     }
-    enviarBusqueda();
+    enviarBusqueda(true);
   };
 
   const cambioOrden = (idEncabezado) => {
