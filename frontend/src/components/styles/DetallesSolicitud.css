@@ -3,15 +3,12 @@
   display: flex;
   justify-content: center;
   text-align: center;
-  color: white;
+  font-size: 120%;;
 }
 
 .title-paper p {
-  background-color: black;
-  padding: 3px;
-  padding-bottom: 6px;
   min-width: 370px;
-  border-radius: 3px;
+  margin: 10px
 }
 
 .container-paper {
@@ -29,7 +26,7 @@
   width: 30%;
   margin-top: 5px;
   min-width: 370px;
-  height: 750px;
+  height: 700px;
 }
 
 .paper-solicitud-a b{
@@ -37,7 +34,8 @@
 }
 
 .paper-solicitud-a p {
-  margin: 18px;
+  margin-left: 18px;
+  margin: 15px;
 }
 
 .detalles-titles {
@@ -81,7 +79,7 @@
   width: 30%;
   margin-top: 5px;
   min-width: 370px;
-  height: 750px;
+  height: 700px;
 }
 
 .paper-solicitud-b form {
@@ -146,7 +144,7 @@
   margin-top: 5px;
   min-width: 370px;
   margin-bottom: 20px;
-  height: 750px;
+  height: 700px;
 }
 
 .title-file{
@@ -191,7 +189,6 @@ hr {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 35px;
   flex-wrap: wrap;
   margin-bottom: 10px;
   width: 100%;
@@ -205,14 +202,14 @@ hr {
 
 .form-control-nota {
   align-self: center;
-  height: 100px;
+  height: 90px;
   width: 95%;
 }
 
 .form-control-titulo {
   display: flex !important;
   align-self: center;
-  margin: 20px !important;
+  margin: 10px !important;
   height: 40px;
   width: 95%;
 }
@@ -265,5 +262,11 @@ hr {
 .form-control-titulo label{
   font-size: 14px;
   transform: translate(10px, 15px) scale(1);
+}
+
+.button {
+  margin: 20px;
+  width: 200px;
+  align-self: center;
 }
 

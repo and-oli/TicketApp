@@ -50,8 +50,17 @@
   position: absolute;
 }
 
-.button {
-  margin: 20px;
-  width: 200px;
+.button-login {
+  background-color: black !important;
+  color: white !important;
   align-self: center;
 }
+
+.button-login:hover {
+  background-color: #d5d5d5 !important;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+   0px 2px 2px 0px rgb(0 0 0 / 14%),
+   0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+
+/* .MuiButton-contained */

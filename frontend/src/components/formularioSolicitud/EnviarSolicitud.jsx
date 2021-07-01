@@ -33,22 +33,22 @@ export default function EnviarSolicitud() {
     };
 
     const getClientes = await fetch(
-      "http://localhost:3001/users/clientes",
+      "http://192.168.1.39:3001/users/clientes",
       header
     );
 
     const categoriasSolicitud = await fetch(
-      "http://localhost:3001/constantes/categoriasSolicitud",
+      "http://192.168.1.39:3001/constantes/categoriasSolicitud",
       header
     );
 
     const prioridad = await fetch(
-      "http://localhost:3001/constantes/prioridad",
+      "http://192.168.1.39:3001/constantes/prioridad",
       header
     );
 
     const requerimiento = await fetch(
-      "http://localhost:3001/constantes/tipoRequerimiento",
+      "http://192.168.1.39:3001/constantes/tipoRequerimiento",
       header
     );
 
@@ -122,7 +122,7 @@ export default function EnviarSolicitud() {
       };
       header.body = JSON.stringify(data);
       const resFetch = await fetch(
-        "http://localhost:3001/solicitudes/nuevaSolicitud",
+        "http://192.168.1.39:3001/solicitudes/nuevaSolicitud",
         header
       );
       const resJson = await resFetch.json();
@@ -130,7 +130,7 @@ export default function EnviarSolicitud() {
       if (resJson.ok) {
         header.body = JSON.stringify(resJson);
         await fetch(
-          "http://localhost:3001/notification/solicitudNotifications",
+          "http://192.168.1.39:3001/notification/solicitudNotifications",
           header
         );
         setloading(false);
@@ -170,6 +170,8 @@ export default function EnviarSolicitud() {
               <NativeSelect
                 value={state.prioridad}
                 name="prioridad"
+                id='prioridad'
+                placeholder='seleccionar prioridad'
                 onChange={handleChange}
                 className="select-empty"
               >
@@ -196,8 +198,6 @@ export default function EnviarSolicitud() {
                 {renderLista(categorias)}
               </NativeSelect>
             </FormControl>
-          </div>
-          <div className="container-b">
             <TextField
               value={state.correo}
               label="Correo"

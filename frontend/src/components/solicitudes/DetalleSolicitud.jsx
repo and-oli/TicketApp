@@ -27,12 +27,12 @@ export default function DetalleSolicitud(props) {
     };
 
     const resDetalles = await fetch(
-      `http://localhost:3001/solicitudes/porNumero/${id}`,
+      `http://192.168.1.39:3001/solicitudes/porNumero/${id}`,
       header
     );
 
     const categoriasArchivos = await fetch(
-      "http://localhost:3001/constantes/categoriasArchivos",
+      "http://192.168.1.39:3001/constantes/categoriasArchivos",
       header
     );
 
@@ -59,7 +59,7 @@ export default function DetalleSolicitud(props) {
     <div>
       <div className="title-paper">
         <p>
-          Solicitud #{idSolicitud}: {detalleSolicitud.resumen}
+          <b>Solicitud #{idSolicitud}: {detalleSolicitud.resumen}</b>
         </p>
       </div>
       <div className="container-paper">

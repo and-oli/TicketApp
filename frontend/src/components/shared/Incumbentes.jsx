@@ -75,7 +75,7 @@ export default function ListaDeIncumbentes(props) {
           data.refIncumbente = nuevoUsuario._id;
           data.solicitud = _id;
           const resNuevoIncumbente = await fetch(
-            `http://localhost:3001/incumbentes/nuevoIncumbente`,
+            `http://192.168.1.39:3001/incumbentes/nuevoIncumbente`,
             {
               method: "POST",
               body: JSON.stringify(data),

@@ -81,7 +81,7 @@ export default function ListaSolicitudes() {
   const refOrdenarPorPrevia = useRef();
   const refOrdenPrevia = useRef();
   const refRowsPerPagePrevia = useRef();
-  const refFiltroPrevia = useRef();
+  // const refFiltroPrevia = useRef();
 
   const renderizarConstante = async () => {
     const header = {
@@ -92,7 +92,7 @@ export default function ListaSolicitudes() {
     };
 
     const fetchEstados = await fetch(
-      `http://localhost:3001/constantes/estados`,
+      `http://192.168.1.39:3001/constantes/estados`,
       header
     );
     const estados = await fetchEstados.json();
@@ -109,13 +109,13 @@ export default function ListaSolicitudes() {
     refOrdenarPorPrevia.current = ordenarPor;
     refOrdenPrevia.current = orden;
     refRowsPerPagePrevia.current = rowsPerPage;
-    refFiltroPrevia.current = filtro;
+    // refFiltroPrevia.current = filtro;
   });
   const pagePrevia = refPagePrevia.current;
   const ordenarPorPrevia = refOrdenarPorPrevia.current;
   const ordenPrevia = refOrdenPrevia.current;
   const rowsPerPagePrevia = refRowsPerPagePrevia.current;
-  const filtroPrevia = refFiltroPrevia.current || {};
+  // const filtroPrevia = refFiltroPrevia.current || {};
 
   const classes = useStyles();
 
@@ -131,17 +131,9 @@ export default function ListaSolicitudes() {
         setloading(false);
         return;
     }
-    console.log(
-      pagePrevia === page,
-      ordenarPorPrevia === ordenarPor,
-      ordenPrevia === orden,
-      rowsPerPagePrevia === rowsPerPage,
-      filtroPrevia.searchEstado === filtro.searchEstado,
-      !forzar
-    );
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
     const resFiltro = await fetch(
-      `http://localhost:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
+      `http://192.168.1.39:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
       {
         method: "GET",
         headers: {
@@ -162,7 +154,7 @@ export default function ListaSolicitudes() {
 
   }, [
     filtro,
-    filtroPrevia,
+    // filtroPrevia,
     page,
     pagePrevia,
     rowsPerPage,

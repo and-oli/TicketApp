@@ -5,12 +5,13 @@
   width: 100%;
 }
 
-.title-paper-notificaciones{
+.title-paper-notificaciones p{
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: black;
-  color: white;
+  color: black;
+  font-weight: bold;
+  font-size: 25px;
   margin-top: 20px;
   border-radius: 2px;
   padding-left: 10px;
@@ -21,6 +22,18 @@
 }
 
 .container-notificaciones{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  min-height: 450px;
+  max-height: 750px;
+  min-width: 370px;
+  overflow-y: auto;
+  width: 65%;
+}
+
+.container-sin-notificaciones {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -40,7 +53,7 @@
 
 .paper-notificaciones{
   display: flex;
-  margin-top: 20px;
+  margin-bottom: 20px;
   width: 98%;
   min-width: 360px;
   text-decoration: none;
@@ -48,21 +61,26 @@
   align-items: center;
   height: auto;
 }
+
 .paper-notificaciones:hover {
   background-color: rgba(255, 225, 1, 0.207);
+}
+
+.checkbox-notificacion {
+  width: 60px;
 }
 
 .contenido{
   flex-wrap: wrap;
   flex-direction: column;
   margin-left: 10px;
-  line-height:17px;
+  line-height:0px;
+  width: 100%;
 }
 
 .contenido h5{
   margin: 0px;
-  margin-top: 8px;
-  line-height: 5px;
+  line-height: 17px;
 }
 
 .contenido p{
@@ -82,6 +100,39 @@
 .notificacion-icon img {
   width: 60px;
   height: 60px;
-  border-radius: 4px;
+  border-radius: 6.5px;
   box-shadow: 2px 2px 5px rgba(72, 72, 72, 0.604);
 }
+
+.title-paper-notificaciones {
+  display: flex;
+  align-self: center;
+  width: 60%;
+  height: 60px;
+  margin-bottom: 0px;
+  align-items: center;
+  justify-content: center;
+}
+
+.container-notificaciones-padre {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 450px;
+    max-height: 750px;
+    min-width: 370px;
+    width: 100%;
+}
+
+.eliminar-notificacion {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  min-width: 370px;
+  width: 65%;
+}
+
+.eliminar-notificacion svg {
+  margin-left: 20px;
+  margin-bottom: 20px;
+} 

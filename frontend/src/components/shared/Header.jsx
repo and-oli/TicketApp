@@ -13,9 +13,11 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MenuItem from "@material-ui/core/MenuItem";
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import Badge from "@material-ui/core/Badge";
 import { Link } from "react-router-dom";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import ConfirmationNumberSharpIcon from '@material-ui/icons/ConfirmationNumberSharp';
 import Menu from "./Menu";
 import clsx from "clsx";
 
@@ -116,8 +118,8 @@ const Header = (props) => {
   };
 
   const notificationsTotalCount = async () => {
-    if (window.location.href !== 'http://localhost:3000/lista-notificaciones') {
-      const count = await fetch('http://localhost:3001/notification/countNotifications', {
+    if (window.location.href !== 'http://192.168.1.39:3000/lista-notificaciones') {
+      const count = await fetch('http://192.168.1.39:3001/notification/countNotifications', {
         method: "GET",
         headers: {
           "x-access-token": localStorage.getItem("TAToken"),
@@ -197,12 +199,27 @@ const Header = (props) => {
           <Divider />
         </Drawer>
         <div className="container-header-img">
-          <img
-            className="header__img"
-            src="/logoComsistelco.png"
-            alt="Tickets"
-          />
+          <Link to='/'>
+            <img
+              className="header__img"
+              src="/logoComsistelco2.png"
+              alt="Tickets"
+            />
+          </Link>
           <div className="circle-icon">
+            <IconButton
+              component={Link}
+              to='/nueva-solicitud'
+              className="icon-nueva-solicitud"
+              aria-label="show 17 new notifications"
+              color="inherit"
+              onClick={handleCountNotifications}
+            >
+              <ConfirmationNumberSharpIcon
+                className="icon"
+              />
+              <p>Reportar solicitud</p>
+            </IconButton>
             <IconButton
               component={Link}
               to='/lista-notificaciones'
@@ -251,7 +268,10 @@ const Header = (props) => {
                 <Paper>
                   <ClickAwayListener onClickAway={closeLogMenu}>
                     <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                      <MenuItem id='logout' onClick={handleClose}>Logout</MenuItem>
+                      <MenuItem id='logout' onClick={handleClose}>
+                        <PowerSettingsNewIcon className='logout-icon'/>
+                        cerrar sesión 
+                      </MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>

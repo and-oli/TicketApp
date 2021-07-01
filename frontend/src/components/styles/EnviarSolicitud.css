@@ -21,13 +21,17 @@
   width: 800px;
   min-width: 150px;
 }
+.container-a p{
+  margin: 0px;
+  padding: 0px !important;
+} 
 .form-control-text {
-  width: 90%;
+  width: 70%;
   align-self: center;
 }
 
 .form-control {
-  width: 90% !important;
+  width: 30% !important;
   align-self: center;
 }
 
@@ -51,7 +55,7 @@
 }
 
 .form-control-descripcion {
-  width: 90%;
+  width: 70%;
   align-self: center;
 }
 
@@ -66,20 +70,12 @@
   font-size: 17px !important;
 }
 
-.container-b {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  height: 650px;
-  width: 800px;
-  min-width: 150px;
-}
-
 .title-envio p {
   display: flex;
   border-radius: 5px;
-  background-color: black;
-  color: white;
+  font-weight: bold;
+  font-size: 23px;
+  color: black;
   padding: 5px;
 }
 .button {
@@ -108,4 +104,3 @@
 .button-enviar-solicitud {
   background-color: black;
 }
-

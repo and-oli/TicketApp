@@ -8,18 +8,35 @@ header {
   top: 0;
 }
 
+header .icon-nueva-solicitud {
+  color:#eecf4d;
+  align-self: center;
+}
+
+header .icon-nueva-solicitud p {
+  color: white;
+  width: 40px;
+  line-height: 115%;
+  font-size: 30%;
+}
+
 .container-header-img {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
   width: 100%;
+  padding: 10px;
 }
 
-.header__img {
-  width: 200px;
-  height: 80px;
+.container-header-img a {
+  height: 35px;
 }
+
+.container-header-img a img {
+  height: 100%;
+}
+
 .header__menu ul {
   margin: 0px 0px 0px -14px;
   padding: 0px;
@@ -63,13 +80,31 @@ ul:hover {
 .circle-icon {
   display: flex;
   justify-content:center;
-  width: 100px;
+  margin-right: 10px;
   height: 40px;
 }
+
+.MuiIconButton-root {
+  padding: 0px !important;
+}
+
 .icon {
   align-self: center;
 }
 
 .icon-notifications {
   align-self: center;
+  margin: 10px !important;
+}
+
+.makeStyles-menuButton-3 {
+  width: 3.5% !important;
+}
+
+#logout {
+  color: black;
+}
+
+.logout-icon {
+  height: 20px !important;
 }

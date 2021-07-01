@@ -46,6 +46,20 @@ module.exports = {
     }
   },
 
+  deleteNotifications: async function (req, res) {
+    const notificacionesAEliminar = req.body
+    try {
+      await Notificacion.updateMany({
+      _id: {
+        $in: notificacionesAEliminar.notificacionesId
+      }
+    },)
+    res.json({mensaje: 'Notificaciones eliminadas con exito'})
+    } catch (err) {
+      console.log('error', err)
+    }
+  },
+
   cambioNotificaciones: async function (req, res) {
     const { solicitud, notificacion } = req.body;
     try {
