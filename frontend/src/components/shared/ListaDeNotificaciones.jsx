@@ -10,10 +10,11 @@ function ListaDeNotificaciones() {
   const [notificaciones, setNotificaciones] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [eliminar, setEliminar] = React.useState(true);
+  const [listaNotificacionesAEliminar, setListaNotificacionesAEliminar] = React.useState([])
 
   const renderNotificaciones = async () => {
     const getNotificaciones = await fetch(
-      "http://192.168.1.39:3001/notification/getNotifications",
+      "http://192.168.0.11:3001/notification/getNotifications",
       {
         method: "GET",
         headers: {
@@ -32,20 +33,31 @@ function ListaDeNotificaciones() {
   }
 
   const handelClickDelete = async () => {
+  const data = {
+  lista: listaNotificacionesAEliminar
+  } 
     const header = {
       method: "post",
       headers: {
+        "x-access-token": localStorage.getItem("TAToken"),
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify(paraEliminar),
+      body: JSON.stringify(data),
     }
-    const notificacionesEliminadasFetch = await fetch('http://192.168.1.39/notification/eliminarNotificaciones', header);
+    const notificacionesEliminadasFetch = await fetch('http://192.168.0.11:3001/notification/eliminarNotificaciones', header);
     const notificacionesEliminadasJson = await notificacionesEliminadasFetch;
     if (notificacionesEliminadasJson.ok) {
-      console.log(notificacionesEliminadasJson)
+      window.location.reload();
     }
   }
+
+  const checkboxChange = (event) => {
+    const notificacionesParaEliminar = event.target.value;
+    setListaNotificacionesAEliminar((prevState) => 
+    [...prevState, notificacionesParaEliminar]);
+  }
+
   useEffect(() => {
     renderNotificaciones();
   }, []);
@@ -70,8 +82,9 @@ function ListaDeNotificaciones() {
           <p>{noti.text}</p>
         </div>
         <Checkbox
-          defaultChecked
-          color="default"
+          onChange = {checkboxChange}
+          color ="default"
+          value = {noti._id}
           style={eliminar ? { display: 'none' } : null}
           className='checkbox-notificacion'
           inputProps={{ 'aria-label': 'checkbox with default color' }}
@@ -86,12 +99,16 @@ function ListaDeNotificaciones() {
             <DeleteIcon
               onClick={deleteClick}
             />
+            <p 
+            style={eliminar ? { display: 'none' } : null}
+            onClick={handelClickDelete}
+            >
+              Eliminar({listaNotificacionesAEliminar.length})
+            </p>
           </div>
           <div className='container-notificaciones'>
             {mapNotificaciones}
           </div>
-
-
         </div>
       )
     } else {

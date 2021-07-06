@@ -118,8 +118,8 @@ const Header = (props) => {
   };
 
   const notificationsTotalCount = async () => {
-    if (window.location.href !== 'http://192.168.1.39:3000/lista-notificaciones') {
-      const count = await fetch('http://192.168.1.39:3001/notification/countNotifications', {
+    if (window.location.href !== 'http://192.168.0.11:3000/lista-notificaciones') {
+      const count = await fetch('http://192.168.0.11:3001/notification/countNotifications', {
         method: "GET",
         headers: {
           "x-access-token": localStorage.getItem("TAToken"),

@@ -10,7 +10,7 @@ export default function Navigation(props) {
 
   const reload = async () => {
     const response = await fetch(
-      "http://192.168.1.39:3001/users/validarToken",
+      "http://192.168.0.11:3001/users/validarToken",
       {
         method: "GET",
         headers: {

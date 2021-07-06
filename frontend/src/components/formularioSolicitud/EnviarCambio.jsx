@@ -41,10 +41,10 @@ export default function CambiosSolicitud(props) {
       },
     };
     const estados = await fetch(
-      "http://192.168.1.39:3001/constantes/estados",
+      "http://192.168.0.11:3001/constantes/estados",
       header
     );
-    const tecnicos = await fetch("http://192.168.1.39:3001/users", header);
+    const tecnicos = await fetch("http://192.168.0.11:3001/users", header);
 
     const resEstados = await estados.json();
     const resTecnicos = await tecnicos.json();
@@ -116,7 +116,7 @@ export default function CambiosSolicitud(props) {
       }
     }
     const responseArchivos = await fetch(
-      `http://192.168.1.39:3001/archivo/postFile`,
+      `http://192.168.0.11:3001/archivo/postFile`,
       {
         method: "POST",
         body: formData,
@@ -151,7 +151,7 @@ export default function CambiosSolicitud(props) {
     }
 
     const resCambio = await fetch(
-      `http://192.168.1.39:3001/cambiosSolicitud/${idSolicitud}`,
+      `http://192.168.0.11:3001/cambiosSolicitud/${idSolicitud}`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -168,7 +168,7 @@ export default function CambiosSolicitud(props) {
       notificacion: resCambioJson.notificacion,
     };
     if (resCambioJson.ok) {
-      await fetch("http://192.168.1.39:3001/notification/cambioNotifications", {
+      await fetch("http://192.168.0.11:3001/notification/cambioNotifications", {
         method: "post",
         headers: {
           "x-access-token": localStorage.getItem("TAToken"),

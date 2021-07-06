@@ -27,12 +27,12 @@ export default function DetalleSolicitud(props) {
     };
 
     const resDetalles = await fetch(
-      `http://192.168.1.39:3001/solicitudes/porNumero/${id}`,
+      `http://192.168.0.11:3001/solicitudes/porNumero/${id}`,
       header
     );
 
     const categoriasArchivos = await fetch(
-      "http://192.168.1.39:3001/constantes/categoriasArchivos",
+      "http://192.168.0.11:3001/constantes/categoriasArchivos",
       header
     );
 

@@ -49,7 +49,7 @@ router.get('/countNotifications', token.checkToken, async function (req, res) {
   await notificationService.countNotifications(req, res)
 });
 
-router.post('/eliminarNotificaciones', async function (req, res) {
+router.post('/eliminarNotificaciones', token.checkToken,  async function (req, res) {
   await notificationService.deleteNotifications(req, res)
 });
 

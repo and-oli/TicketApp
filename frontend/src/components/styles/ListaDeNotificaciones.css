@@ -30,7 +30,7 @@
   max-height: 750px;
   min-width: 370px;
   overflow-y: auto;
-  width: 65%;
+  width: 100%;
 }
 
 .container-sin-notificaciones {
@@ -54,7 +54,7 @@
 .paper-notificaciones{
   display: flex;
   margin-bottom: 20px;
-  width: 98%;
+  width: 65%;
   min-width: 360px;
   text-decoration: none;
   flex-direction: row;
@@ -74,7 +74,6 @@
   flex-wrap: wrap;
   flex-direction: column;
   margin-left: 10px;
-  line-height:0px;
   width: 100%;
 }
 
@@ -84,8 +83,9 @@
 }
 
 .contenido p{
-  margin-top: 12px;
+  margin-top: 0px;
   margin-bottom: 10px;
+  line-height: 15px;
 }
 
 .notificacion-icon{
@@ -126,13 +126,24 @@
 
 .eliminar-notificacion {
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   height: 50px;
   min-width: 370px;
-  width: 65%;
+  width: 100%;
 }
 
 .eliminar-notificacion svg {
+  margin: 0px !important;
   margin-left: 20px;
   margin-bottom: 20px;
+  margin-left: 0px !important;
+  margin-right: 50% !important;
 } 
+
+.eliminar-notificacion p {
+  align-self: center;
+  cursor: pointer;
+  margin: 0px;
+}

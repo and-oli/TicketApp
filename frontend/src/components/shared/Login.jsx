@@ -34,7 +34,7 @@ export default function Login() {
       user.password = password;
       user.subscription = subscription;
       const response = await fetch(
-        "http://192.168.1.39:3001/users/authenticate",
+        "http://192.168.0.11:3001/users/authenticate",
         {
           method: "post",
           headers: {
@@ -49,7 +49,7 @@ export default function Login() {
       if (resJson.ok) {
         localStorage.setItem("TAToken", resJson.token);
         localStorage.setItem("TAUser", resJson.user);
-        await fetch("http://192.168.1.39:3001/notification/sendNotifications", {
+        await fetch("http://192.168.0.11:3001/notification/sendNotifications", {
           method: "GET",
           headers: {
             "x-access-token": localStorage.getItem("TAToken"),

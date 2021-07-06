@@ -12,7 +12,7 @@ export default function ListaSolicitudes(props) {
   const getCambios = useCallback(async (ref) => {
     if (ref !== undefined) {
       const resCambios = await fetch(
-        `http://192.168.1.39:3001/cambiosSolicitud/cambios/${ref}`,
+        `http://192.168.0.11:3001/cambiosSolicitud/cambios/${ref}`,
         {
           method: "GET",
           headers: {

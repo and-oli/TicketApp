@@ -49,12 +49,10 @@ module.exports = {
   deleteNotifications: async function (req, res) {
     const notificacionesAEliminar = req.body
     try {
-      await Notificacion.updateMany({
-      _id: {
-        $in: notificacionesAEliminar.notificacionesId
-      }
+      await Notificacion.deleteMany({
+      _id:  notificacionesAEliminar.lista
     },)
-    res.json({mensaje: 'Notificaciones eliminadas con exito'})
+    res.json({mensaje: 'Notificaciones eliminadas con exito', ok:true})
     } catch (err) {
       console.log('error', err)
     }

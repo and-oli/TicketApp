@@ -25,8 +25,8 @@ export default function ListaDeIncumbentes(props) {
     };
     setCargandoIncumbentes(true)
 
-    const incumbentesActuales = await fetch(`http://192.168.1.39:3001/incumbentes/listaDeIncumbentes/${id}`, header);
-    const listaPosiblesIncumbentes = await fetch(`http://192.168.1.39:3001/incumbentes/posiblesIncumbentes`, header);
+    const incumbentesActuales = await fetch(`http://192.168.0.11:3001/incumbentes/listaDeIncumbentes/${id}`, header);
+    const listaPosiblesIncumbentes = await fetch(`http://192.168.0.11:3001/incumbentes/posiblesIncumbentes`, header);
 
     const incumbentesJson = await incumbentesActuales.json();
     const posiblesIncumbentesJson = await listaPosiblesIncumbentes.json();
@@ -52,7 +52,7 @@ export default function ListaDeIncumbentes(props) {
     data.idSolicitud = _id;
     data.nuevaLista = lista;
 
-    await fetch('http://192.168.1.39:3001/incumbentes/deleteIncumbente', {
+    await fetch('http://192.168.0.11:3001/incumbentes/deleteIncumbente', {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -75,7 +75,7 @@ export default function ListaDeIncumbentes(props) {
           data.refIncumbente = nuevoUsuario._id;
           data.solicitud = _id;
           const resNuevoIncumbente = await fetch(
-            `http://192.168.1.39:3001/incumbentes/nuevoIncumbente`,
+            `http://192.168.0.11:3001/incumbentes/nuevoIncumbente`,
             {
               method: "POST",
               body: JSON.stringify(data),
@@ -153,8 +153,10 @@ export default function ListaDeIncumbentes(props) {
     };
   };
   return (
+    <div>
+    <p><b>Incumbentes:</b></p>
     <div className='ajuste-listado-incumbentes'>
-      <p><b>Incumbentes:</b></p>
+      
       <Autocomplete
         rows={1}
         className='form-control-agregar-lista'
@@ -203,6 +205,7 @@ export default function ListaDeIncumbentes(props) {
       }
       <h4 className='incumbente-vacio'>{incumbenteVacio}</h4>
       {renderizarIncumbentes()}
+    </div>
     </div>
   )
 };
