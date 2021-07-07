@@ -18,10 +18,16 @@ module.exports = {
     try {
       const userInfo = req.decoded;
       const infoFiltro = req.query;
-      const filtro = {};
+      let filtroEstado;
+      let filtroResumen;
+      let filtroUsuario = [];
 
       if (userInfo.role !== 'ADMINISTRADOR') {
-        filtro.refUsuarioSolicitante = mongoose.Types.ObjectId(userInfo.id);
+        filtroUsuario = [
+          {refUsuarioSolicitante: mongoose.Types.ObjectId(userInfo.id)},
+          {dueno: mongoose.Types.ObjectId(userInfo.id)},
+          {listaIncumbentes: mongoose.Types.ObjectId(userInfo.id)},
+        ]
       }
 
       const regexNumeros = /\d+/g;
@@ -34,49 +40,45 @@ module.exports = {
       }
 
       if (infoFiltro.estado) {
-        filtro.estado = { $regex: infoFiltro.estado, $options: 'i' };
+        filtroEstado = { estado: infoFiltro.estado};
       };
 
       if (infoFiltro.texto) {
-        filtro.resumen = { $regex: infoFiltro.texto, $options: 'i' };
+        filtroResumen = { resumen: {$regex: infoFiltro.texto }};
       };
 
       if (infoFiltro.ordenarPor) {
         ordenResultado = {};
         ordenResultado[infoFiltro.ordenarPor] = infoFiltro.orden === 'asc' ? 1 : -1;
       };
+      console.log(filtroResumen)
       const cantidad = Number(infoFiltro.cantidad);
       const pagina = Number(infoFiltro.pagina);
-      const resultadoCuenta = await Solicitud.aggregate([
-        {
-          $match: {
-            $or: [
-              filtro,
-              {
-                idSolicitud: {
-                  $in: posiblesIds
-                },
-              }
-            ]
-          },
+      const filtroAgregacion = {
+        $match: {
+          $or: [
+            filtroResumen,
+            {
+              idSolicitud: {
+                $in: posiblesIds
+              },
+            }
+          ],
+          $or: filtroUsuario,
+          ...filtroEstado
         },
+      };
+      const resultadoCuenta = await Solicitud.aggregate([
+        filtroAgregacion,
         { $count: "cuenta" },
       ]);
+      let cuenta = 0;
+      if (resultadoCuenta[0]) {
+        cuenta = resultadoCuenta[0].cuenta;
+      }
 
-      const cuenta = resultadoCuenta[0].cuenta;
       const solicitudes = await Solicitud.aggregate([
-        {
-          $match: {
-            $or: [
-              filtro,
-              {
-                idSolicitud: {
-                  $in: posiblesIds
-                },
-              }
-            ]
-          },
-        },
+        filtroAgregacion,
         {
           $lookup: {
             from: 'clientes',
@@ -88,24 +90,9 @@ module.exports = {
         {
           $lookup: {
             from: 'usuarios',
-            let: { ref: '$refUsuarioSolicitante' },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      { $eq: ['$$ref', '$_id'] }
-                    ]
-                  }
-                }
-              },
-              {
-                $project: {
-                  name: 1,
-                }
-              }
-            ],
-            as: 'usuarioSolicitante'
+            localField: 'refUsuarioSolicitante',
+            foreignField: '_id',
+            as: 'usuarioSolicitante',
           }
         },
         { $sort: ordenResultado },
