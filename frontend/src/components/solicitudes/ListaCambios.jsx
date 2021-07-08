@@ -12,7 +12,7 @@ export default function ListaSolicitudes(props) {
   const getCambios = useCallback(async (ref) => {
     if (ref !== undefined) {
       const resCambios = await fetch(
-        `http://192.168.0.11:3001/cambiosSolicitud/cambios/${ref}`,
+        `http://localhost:3001/cambiosSolicitud/cambios/${ref}`,
         {
           method: "GET",
           headers: {
@@ -51,7 +51,6 @@ export default function ListaSolicitudes(props) {
 
   const renderizarArchivos = (archivos) => {
     if (archivos[0]) {
-
       const renderizarArchivosPorCategoria = () => {
         const categorias = {};
         categoriasArchivos.forEach((categoria) => {
@@ -67,12 +66,12 @@ export default function ListaSolicitudes(props) {
           const punto = archivo.nombreArchivo.split(".");
           const extencion = punto[punto.length - 1];
           const nombreSolo = archivo.nombreArchivo.split(`.${extencion}`)[0];
-          let nombre
+          let nombre;
           if (nombreSolo.length > 15) {
             nombre = `${nombreSolo.substring(0, 15)}...${extencion}`;
           } else {
             nombre = archivo.nombreArchivo;
-          }
+          };
           const link = archivo.urlArchivo;
           if (archivo.categoriaArchivo === categoria) {
             return (
@@ -81,7 +80,7 @@ export default function ListaSolicitudes(props) {
               </p>
             );
           } else return null;
-        }))
+        }));
 
         const mapArchivos = categoriasArchivos.map(categoria => {
           if (categorias[categoria].length) {
@@ -101,7 +100,7 @@ export default function ListaSolicitudes(props) {
         <div>
           <Divider />
           <p className="title-card-cambio"><b>Archivo(s):</b></p>
-          <div className='archivos-por-categoria'>
+          <div className="archivos-por-categoria">
             {renderizarArchivosPorCategoria()}
           </div>
         </div>
@@ -155,8 +154,8 @@ export default function ListaSolicitudes(props) {
         );
       } else {
         return renderizarItemsCambios();
-      }
-    }
+      };
+    };
   };
 
   return (
@@ -165,9 +164,9 @@ export default function ListaSolicitudes(props) {
         <h2>Historial</h2>
       </div>
       <Divider />
-      <div className='historial-container'>
+      <div className="historial-container">
         {renderizarCambios()}
       </div>
     </Paper>
   );
-}
+};

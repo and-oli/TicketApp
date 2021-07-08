@@ -211,17 +211,4 @@ module.exports = {
       enviarError(res, error);
     };
   },
-
-  postIncumbentes: async function (req, res) {
-    try {
-      await Solicitud.updateOne({ _id: req.params.idSolicitud }, {
-        $addToSet: {
-          listaIncumbentes: req.body.nuevosIncumbentes,
-        }
-      });
-
-    } catch (error) {
-      console.error(error);
-    };
-  },
 };

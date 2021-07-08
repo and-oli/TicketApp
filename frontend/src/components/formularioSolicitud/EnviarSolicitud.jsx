@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import FormControl from "@material-ui/core/FormControl";
-import NativeSelect from "@material-ui/core/NativeSelect";
+import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
 import "../styles/EnviarSolicitud.css";
 
 export default function EnviarSolicitud() {
@@ -33,22 +34,22 @@ export default function EnviarSolicitud() {
     };
 
     const getClientes = await fetch(
-      "http://192.168.0.11:3001/users/clientes",
+      "http://localhost:3001/users/clientes",
       header
     );
 
     const categoriasSolicitud = await fetch(
-      "http://192.168.0.11:3001/constantes/categoriasSolicitud",
+      "http://localhost:3001/constantes/categoriasSolicitud",
       header
     );
 
     const prioridad = await fetch(
-      "http://192.168.0.11:3001/constantes/prioridad",
+      "http://localhost:3001/constantes/prioridad",
       header
     );
 
     const requerimiento = await fetch(
-      "http://192.168.0.11:3001/constantes/tipoRequerimiento",
+      "http://localhost:3001/constantes/tipoRequerimiento",
       header
     );
 
@@ -66,7 +67,7 @@ export default function EnviarSolicitud() {
   useEffect(() => {
     renderizarConstantes();
   }, []);
-
+  
   const renderLista = (lista) => {
     return lista.map((item, i) => (
       <option
@@ -75,7 +76,7 @@ export default function EnviarSolicitud() {
           item === "Categorias" ||
             item === "Prioridad" ||
             item === "Tipo de requerimiento"
-            ? "" 
+            ? ""
             : item
         }
       >
@@ -122,7 +123,7 @@ export default function EnviarSolicitud() {
       };
       header.body = JSON.stringify(data);
       const resFetch = await fetch(
-        "http://192.168.0.11:3001/solicitudes/nuevaSolicitud",
+        "http://localhost:3001/solicitudes/nuevaSolicitud",
         header
       );
       const resJson = await resFetch.json();
@@ -130,11 +131,12 @@ export default function EnviarSolicitud() {
       if (resJson.ok) {
         header.body = JSON.stringify(resJson);
         await fetch(
-          "http://192.168.0.11:3001/notification/solicitudNotifications",
+          "http://localhost:3001/notification/solicitudNotifications",
           header
         );
-        setloading(false);
         window.location.reload();
+      } else {
+        setloading(false)
       }
     }
   };
@@ -152,119 +154,150 @@ export default function EnviarSolicitud() {
       <div className="title-envio">
         <p>Introduzca los detalles de la solicitud</p>
       </div>
-      <form onSubmit={enviarSolicitud}>
-        <div className="container-p">
-          <div className="container-a">
-            <FormControl className="form-control">
-              <NativeSelect
-                value={state.refCliente}
-                name="refCliente"
+      <form className="form-nueva-solicitud" onSubmit={enviarSolicitud}>
+        <Paper className="paper-nueva-solicitud" elevation={20}>
+          <div className="container-p">
+            <div className="container-a">
+              <FormControl variant="outlined" className="form-control-select">
+                <p>Cliente: </p>
+                <Select
+                  disabled={loading}
+                  native
+                  value={state.refCliente}
+                  name="refCliente"
+                  onChange={handleChange}
+                  className="select-empty"
+                >
+                  <option aria-label="None"></option>
+                  {renderizarClientes(listaClientes)}
+                </Select>
+              </FormControl>
+              <FormControl variant="outlined" className="form-control-select">
+                <p>Prioridad: </p>
+                <Select
+                  disabled={loading}
+                  native
+                  value={state.prioridad}
+                  name="prioridad"
+                  id="prioridad"
+                  placeholder="seleccionar prioridad"
+                  onChange={handleChange}
+                  className="select-empty"
+                >
+                  <option aria-label="None"></option>
+                  {renderLista(prioridad)}
+                </Select>
+              </FormControl>
+              <FormControl variant="outlined" className="form-control-select">
+                <p>Requerimiento: </p>
+                <Select
+                  placeholder="Seleccionar requerimiento"
+                  disabled={loading}
+                  native
+                  value={state.requerimiento}
+                  name="requerimiento"
+                  onChange={handleChange}
+                  className="select-empty"
+                >
+                  <option aria-label="None"></option>
+                  {renderLista(requerimiento)}
+                </Select>
+              </FormControl>
+              <FormControl variant="outlined" className="form-control-select">
+                <p>Categoria: </p>
+                <Select
+                  disabled={loading}
+                  native
+                  value={state.categoria}
+                  name="categoria"
+                  onChange={handleChange}
+                  className="select-empty"
+                >
+                  <option aria-label="None"></option>
+                  {renderLista(categorias)}
+                </Select>
+              </FormControl>
+            </div>
+            <div className="form-control-text">
+              <p className="text-field">Correo del solicitante: </p>
+              <TextField
+                placeholder="Correo"
+                disabled={loading}
+                value={state.correo}
                 onChange={handleChange}
-                className="select-empty"
-              >
-                <option value="">Cliente</option>
-                {renderizarClientes(listaClientes)}
-              </NativeSelect>
-            </FormControl>
-            <FormControl className="form-control">
-              <NativeSelect
-                value={state.prioridad}
-                name="prioridad"
-                id='prioridad'
-                placeholder='seleccionar prioridad'
+                name="correo"
+                variant="outlined"
+              />
+            </div>
+            <div className="form-control-text">
+              <p className="text-field">Ciudad: </p>
+              <TextField
+                placeholder="Ciudad"
+                disabled={loading}
+                value={state.ciudad}
                 onChange={handleChange}
-                className="select-empty"
-              >
-                {renderLista(prioridad)}
-              </NativeSelect>
-            </FormControl>
-            <FormControl className="form-control">
-              <NativeSelect
-                value={state.requerimiento}
-                name="requerimiento"
+                name="ciudad"
+                variant="outlined"
+              />
+            </div>
+            <div className="form-control-text">
+              <p className="text-field">Resumen: </p>
+              <TextField
+                placeholder="Resumen"
+                disabled={loading}
+                value={state.resumen}
                 onChange={handleChange}
-                className="select-empty"
-              >
-                {renderLista(requerimiento)}
-              </NativeSelect>
-            </FormControl>
-            <FormControl className="form-control">
-              <NativeSelect
-                value={state.categoria}
-                name="categoria"
+                name="resumen"
+                variant="outlined"
+                inputProps={{
+                  maxLength: 35,
+                }}
+              />
+            </div>
+            <div className="form-control-text">
+              <p className="text-field">Descripcion: </p>
+              <TextField
+                placeholder="Descripcion"
+                disabled={loading}
+                value={state.descripcion}
                 onChange={handleChange}
-                className="select-empty"
-              >
-                {renderLista(categorias)}
-              </NativeSelect>
-            </FormControl>
-            <TextField
-              value={state.correo}
-              label="Correo"
-              onChange={handleChange}
-              name="correo"
-              className="form-control-text"
-              variant="outlined"
-            />
-            <TextField
-              value={state.ciudad}
-              label="Ciudad"
-              onChange={handleChange}
-              name="ciudad"
-              className="form-control-text"
-              variant="outlined"
-            />
-            <TextField
-              value={state.resumen}
-              label="Resumen"
-              onChange={handleChange}
-              name="resumen"
-              className="form-control-text"
-              variant="outlined"
-              inputProps={{
-                maxLength: 35,
-              }}
-            />
-            <TextField
-              value={state.descripcion}
-              label="Descripcion"
-              onChange={handleChange}
-              name="descripcion"
-              className="form-control-descripcion"
-              variant="outlined"
-              multiline
-              rows={4}
-            />
+                name="descripcion"
+                className="form-control-descripcion"
+                variant="outlined"
+                multiline
+                rows={4}
+              />
+            </div>
           </div>
-        </div>
-        <h6
-          style={{
-            color: mensaje.color,
-            marginTop: 0,
-            height: 10,
-            textAlign: "center",
-          }}
-        >
-          {mensaje.text}
-        </h6>
-        <div className="button">
-          {loading ? (
-            <CircularProgress
-              color="inherit"
-              className="icon-enviar"
-              disableShrink
-            />
-          ) : (
-            <Button
-              variant="contained"
-              type="submit"
-              component="button"
-              className="button-enviar"
-            >
-              <p className="button-p">Enviar solicitud</p>
-            </Button>
-          )}
-        </div>
+          <h6
+            style={{
+              color: mensaje.color,
+              marginTop: 0,
+              height: 10,
+              textAlign: "center",
+            }}
+          >
+            {mensaje.text}
+          </h6>
+          <div className="button">
+            {loading ? (
+              <CircularProgress
+                color="inherit"
+                className="icon-enviar"
+                disableShrink
+              />
+            ) : (
+              <Button
+                variant="contained"
+                type="submit"
+                component="button"
+                className="button-enviar"
+              >
+                <p className="button-p">Enviar solicitud</p>
+              </Button>
+            )}
+          </div>
+        </Paper>
       </form>
     </div>
   );

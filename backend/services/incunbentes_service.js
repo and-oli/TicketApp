@@ -53,19 +53,25 @@ module.exports = {
     const infoIncumbente = req.body;
     const nuevoIncumbente = {};
     try {
-      nuevoIncumbente.$push = {
+      nuevoIncumbente.$addToSet = {
         listaIncumbentes:
           infoIncumbente.refIncumbente
       }
-      const nuevaListaIncumbentes = await Solicitud.findOneAndUpdate({
-        idSolicitud:
-          infoIncumbente.solicitud
-      },
-        nuevoIncumbente)
+
+      const nuevaListaIncumbentes = await Solicitud.updateOne({
+        idSolicitud: infoIncumbente.solicitud
+      }, nuevoIncumbente)
         .populate('listaIncumbentes', 'name');
-      res.json({ nuevaListaIncumbentes, mensaje: 'Se agrego incumbente exitosamente', ok: true });
+
+      if (nuevaListaIncumbentes.nModified) {
+        res.json({ nuevaListaIncumbentes, mensaje: 'Se agrego incumbente exitosamente', ok: true });
+      } else {
+        res.json({ nuevaListaIncumbentes, mensaje: 'El usuario ya esta en la lista', ok: false });
+      }
+
     } catch (err) {
-      res.json({ mensaje: 'El usuario no fue encontrado', ok: false });
+      console.log(err)
+      res.json({ mensaje: 'El usuario no agregado intentelo de nuevo', ok: false });
     }
   },
 };

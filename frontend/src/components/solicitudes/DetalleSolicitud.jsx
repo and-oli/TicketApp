@@ -27,12 +27,12 @@ export default function DetalleSolicitud(props) {
     };
 
     const resDetalles = await fetch(
-      `http://192.168.0.11:3001/solicitudes/porNumero/${id}`,
+      `http://localhost:3001/solicitudes/porNumero/${id}`,
       header
     );
 
     const categoriasArchivos = await fetch(
-      "http://192.168.0.11:3001/constantes/categoriasArchivos",
+      "http://localhost:3001/constantes/categoriasArchivos",
       header
     );
 
@@ -48,7 +48,7 @@ export default function DetalleSolicitud(props) {
       setAsignada(detallesJson.solicitud.dueno.name);
     } else {
       setAsignada("Sin dueño");
-    }
+    };
   };
 
   React.useEffect(() => {
@@ -70,7 +70,7 @@ export default function DetalleSolicitud(props) {
           <Divider />
           <p><b>Descripcion:</b></p>
           <div className="descripcion">
-          <p>{detalleSolicitud.descripcion}</p>
+            <p>{detalleSolicitud.descripcion}</p>
           </div>
           <p><b>Cliente:</b> {cliente}</p>
           <p><b>Nombre del solicitante:</b> {solicitante.name}</p>
@@ -79,7 +79,7 @@ export default function DetalleSolicitud(props) {
           <p><b>Prioridad:</b> {detalleSolicitud.prioridad}</p>
           <p><b>Fecha de envío:</b> {detalleSolicitud.fechaHora}</p>
           <p><b>Estado:</b> {detalleSolicitud.estado}</p>
-          <p><b>Asignada a:</b> {asignada} {roleAsignado? `(${roleAsignado})` : null}</p>
+          <p><b>Asignada a:</b> {asignada} {roleAsignado ? `(${roleAsignado})` : null}</p>
         </Paper>
         <CambiosSolicitud
           user={userRole}
@@ -100,4 +100,4 @@ export default function DetalleSolicitud(props) {
       </div>
     </div>
   );
-}
+};

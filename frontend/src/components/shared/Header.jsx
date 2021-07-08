@@ -13,11 +13,11 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MenuItem from "@material-ui/core/MenuItem";
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import Badge from "@material-ui/core/Badge";
 import { Link } from "react-router-dom";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import ConfirmationNumberSharpIcon from '@material-ui/icons/ConfirmationNumberSharp';
+import ConfirmationNumberSharpIcon from "@material-ui/icons/ConfirmationNumberSharp";
 import Menu from "./Menu";
 import clsx from "clsx";
 
@@ -106,7 +106,7 @@ const Header = (props) => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [openLog, setOpenLog] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const [countNotifications, setCountNotifications] = React.useState()
+  const [countNotifications, setCountNotifications] = React.useState();
 
   const handleClose = async () => {
     const ready = await navigator.serviceWorker.ready;
@@ -118,8 +118,8 @@ const Header = (props) => {
   };
 
   const notificationsTotalCount = async () => {
-    if (window.location.href !== 'http://192.168.0.11:3000/lista-notificaciones') {
-      const count = await fetch('http://192.168.0.11:3001/notification/countNotifications', {
+    if (window.location.pathname !== "/lista-notificaciones") {
+      const count = await fetch("http://localhost:3001/notification/countNotifications", {
         method: "GET",
         headers: {
           "x-access-token": localStorage.getItem("TAToken"),
@@ -132,37 +132,37 @@ const Header = (props) => {
     } else {
       setCountNotifications(0);
     }
-  }
+  };
 
   const handleCountNotifications = () => {
-    setCountNotifications(null)
-  }
+    setCountNotifications(null);
+  };
 
   useEffect(() => {
-    notificationsTotalCount()
-  }, [])
+    notificationsTotalCount();
+  }, []);
 
   function handleListKeyDown(event) {
     if (event.key === "Tab") {
       event.preventDefault();
     }
-  }
+  };
 
   function openLogMenu() {
     setOpenLog(true);
-  }
+  };
 
   function closeLogMenu() {
     setOpenLog(false);
-  }
+  };
 
   function handleDrawerOpen() {
     setDrawerOpen(true);
-  }
+  };
 
   function handleDrawerClose() {
     setDrawerOpen(false);
-  }
+  };
 
   return (
     <div>
@@ -199,7 +199,7 @@ const Header = (props) => {
           <Divider />
         </Drawer>
         <div className="container-header-img">
-          <Link to='/'>
+          <Link to="/">
             <img
               className="header__img"
               src="/logoComsistelco2.png"
@@ -209,7 +209,7 @@ const Header = (props) => {
           <div className="circle-icon">
             <IconButton
               component={Link}
-              to='/nueva-solicitud'
+              to="/nueva-solicitud"
               className="icon-nueva-solicitud"
               aria-label="show 17 new notifications"
               color="inherit"
@@ -222,7 +222,7 @@ const Header = (props) => {
             </IconButton>
             <IconButton
               component={Link}
-              to='/lista-notificaciones'
+              to="/lista-notificaciones"
               className="icon-notifications"
               aria-label="show 17 new notifications"
               color="inherit"
@@ -235,7 +235,7 @@ const Header = (props) => {
               </Badge>
             </IconButton>
             <AccountCircle
-              id='icon'
+              id="icon"
               className="icon"
               ref={anchorRef}
               aria-controls={openLog ? "menu-list-grow" : undefined}
@@ -268,9 +268,9 @@ const Header = (props) => {
                 <Paper>
                   <ClickAwayListener onClickAway={closeLogMenu}>
                     <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                      <MenuItem id='logout' onClick={handleClose}>
-                        <PowerSettingsNewIcon className='logout-icon'/>
-                        cerrar sesión 
+                      <MenuItem id="logout" onClick={handleClose}>
+                        <PowerSettingsNewIcon className="logout-icon" />
+                        cerrar sesión
                       </MenuItem>
                     </MenuList>
                   </ClickAwayListener>

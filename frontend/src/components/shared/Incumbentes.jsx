@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import '../styles/incumbentes.css'
-
+import Chip from "@material-ui/core/Chip";
+import Avatar from "@material-ui/core/Avatar";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import "../styles/incumbentes.css"
 
 export default function ListaDeIncumbentes(props) {
-  const { _id } = props;
+  const { _id, deshabilitarEntradas } = props;
   const [listaIncumbentes, setListaIncumbentes] = useState([]);
-  const [incumbente, setIncumbente] = useState('');
+  const [incumbente, setIncumbente] = useState("");
   const [listadoPosiblesIncumbentes, setPosiblesIncumbentes] = useState([]);
   const [agregando, setAgregando] = useState(false);
-  const [incumbenteVacio, setIncumbenteVacio] = useState('');
+  const [incumbenteVacio, setIncumbenteVacio] = useState("");
   const [cargandoIncumbentes, setCargandoIncumbentes] = useState(false);
 
   const getIncumbentes = async (id) => {
@@ -23,17 +22,17 @@ export default function ListaDeIncumbentes(props) {
         "x-access-token": localStorage.getItem("TAToken"),
       }
     };
-    setCargandoIncumbentes(true)
+    setCargandoIncumbentes(true);
 
-    const incumbentesActuales = await fetch(`http://192.168.0.11:3001/incumbentes/listaDeIncumbentes/${id}`, header);
-    const listaPosiblesIncumbentes = await fetch(`http://192.168.0.11:3001/incumbentes/posiblesIncumbentes`, header);
+    const incumbentesActuales = await fetch(`http://localhost:3001/incumbentes/listaDeIncumbentes/${id}`, header);
+    const listaPosiblesIncumbentes = await fetch(`http://localhost:3001/incumbentes/posiblesIncumbentes`, header);
 
     const incumbentesJson = await incumbentesActuales.json();
     const posiblesIncumbentesJson = await listaPosiblesIncumbentes.json();
 
     setListaIncumbentes(incumbentesJson.lista);
     setPosiblesIncumbentes(posiblesIncumbentesJson.listaPosiblesUsuarios);
-    setCargandoIncumbentes(false)
+    setCargandoIncumbentes(false);
   };
 
   useEffect(() => {
@@ -42,7 +41,7 @@ export default function ListaDeIncumbentes(props) {
 
   const handleChange = (event, values) => {
     const value = event ? event.target.value : values;
-    setIncumbente(value ? value : '');
+    setIncumbente(value ? value : "");
   };
 
   const handleDelete = async (incumbente) => {
@@ -52,7 +51,7 @@ export default function ListaDeIncumbentes(props) {
     data.idSolicitud = _id;
     data.nuevaLista = lista;
 
-    await fetch('http://192.168.0.11:3001/incumbentes/deleteIncumbente', {
+    await fetch("http://localhost:3001/incumbentes/deleteIncumbente", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -64,51 +63,44 @@ export default function ListaDeIncumbentes(props) {
     setListaIncumbentes(lista);
   };
 
-  const agregarIncumbentes = async () => {
+  const agregarIncumbentes = async (event) => {
+    event.preventDefault();
     setAgregando(true);
     if (incumbente) {
-      const usuarioRepetido = listaIncumbentes.filter(user => user.username === incumbente)[0];
-      if (!usuarioRepetido) {
-        const nuevoUsuario = listadoPosiblesIncumbentes.filter(user => user.username === incumbente)[0];
-        if (nuevoUsuario) {
-          const data = {};
-          data.refIncumbente = nuevoUsuario._id;
-          data.solicitud = _id;
-          const resNuevoIncumbente = await fetch(
-            `http://192.168.0.11:3001/incumbentes/nuevoIncumbente`,
-            {
-              method: "POST",
-              body: JSON.stringify(data),
-              headers: {
-                "x-access-token": localStorage.getItem("TAToken"),
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          const jsonNuevoIncumbente = await resNuevoIncumbente.json();
-
-          if (jsonNuevoIncumbente.ok) {
-            const listaActual = listaIncumbentes;
-            listaActual.push(nuevoUsuario);
-            setListaIncumbentes(listaActual);
-            setIncumbente('');
-            setIncumbenteVacio('');
-            setAgregando(false);
+      const nuevoUsuario = listadoPosiblesIncumbentes.filter(user => user.username === incumbente)[0];
+      const data = {};
+      if (nuevoUsuario) {
+        data.refIncumbente = nuevoUsuario._id;
+        data.solicitud = _id;
+        const resNuevoIncumbente = await fetch(
+          `http://localhost:3001/incumbentes/nuevoIncumbente`,
+          {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "x-access-token": localStorage.getItem("TAToken"),
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
           }
+        );
+        const jsonNuevoIncumbente = await resNuevoIncumbente.json();
+        if (jsonNuevoIncumbente.ok) {
+          setListaIncumbentes((prevState) => ([...prevState, nuevoUsuario]));
+          setIncumbente("");
+          setIncumbenteVacio("");
+          setAgregando(false);
         } else {
-          setIncumbente('');
-          setIncumbenteVacio('El usuario no fue encontrado');
+          setIncumbente("");
+          setIncumbenteVacio(jsonNuevoIncumbente.mensaje);
           setAgregando(false);
         }
       } else {
-        setIncumbente('');
-        setIncumbenteVacio('El usuario ya esta en la lista');
+        setIncumbenteVacio("El usuario no existe");
         setAgregando(false);
       }
     } else {
-      setIncumbenteVacio('Ningun usuario seleccionado');
+      setIncumbenteVacio("Ningun usuario seleccionado");
       setAgregando(false);
     }
   };
@@ -118,7 +110,8 @@ export default function ListaDeIncumbentes(props) {
       const chips = listaIncumbentes.map(incumbente => {
         return (
           <Chip
-            className='chip-incumbente'
+            disabled={agregando || deshabilitarEntradas}
+            className="chip-incumbente"
             key={incumbente._id}
             avatar={
               <Avatar
@@ -133,7 +126,7 @@ export default function ListaDeIncumbentes(props) {
       });
       if (cargandoIncumbentes) {
         return (
-          <div className='cargar-lista-de-incumbentes'>
+          <div className="cargar-lista-de-incumbentes">
             <CircularProgress
               color="inherit"
               className="icon-agregar-incumbente"
@@ -143,7 +136,7 @@ export default function ListaDeIncumbentes(props) {
         )
       } else {
         return (
-          <div className='lista-de-incumbentes'>
+          <div className="lista-de-incumbentes">
             {chips.length
               ? chips
               : <h4>La lista esta vacia</h4>}
@@ -153,59 +146,60 @@ export default function ListaDeIncumbentes(props) {
     };
   };
   return (
-    <div>
-    <p><b>Incumbentes:</b></p>
-    <div className='ajuste-listado-incumbentes'>
-      
-      <Autocomplete
-        rows={1}
-        className='form-control-agregar-lista'
-        freeSolo
-        options={incumbente
-          ? incumbente.length >= 3
-            ? listadoPosiblesIncumbentes.map(user => user.username)
-            : []
-          : []
-        }
-        inputValue={incumbente}
-        onInputChange={handleChange}
-        onChange={handleChange}
-        renderInput={(params) => (
-          <TextField
-            label="Usuario incumbente"
-            variant="outlined"
-            id="usuario-incumbente"
-            className="input-agregar"
-            onClick={() => setIncumbenteVacio('')}
-            type="text"
+    <div className="form-incumbentes" >
+      <form onSubmit={agregarIncumbentes}>
+        <p><b>Incumbentes:</b></p>
+        <div className="ajuste-listado-incumbentes">
+          <Autocomplete
+            disabled={deshabilitarEntradas || agregando}
             rows={1}
-            {...params}
+            className="form-control-agregar-lista"
+            freeSolo
+            options={incumbente
+              ? incumbente.length >= 3
+                ? listadoPosiblesIncumbentes.map(user => user.username)
+                : []
+              : []
+            }
+            inputValue={incumbente}
+            onInputChange={handleChange}
+            onChange={handleChange}
+            renderInput={(params) => (
+              <TextField
+                label="Usuario incumbente"
+                variant="outlined"
+                id="usuario-incumbente"
+                className="input-agregar"
+                onClick={() => setIncumbenteVacio("")}
+                type="text"
+                rows={1}
+                {...params}
+              />
+            )}
           />
-        )}
-      />
-      {agregando ?
-        <div id='label-agregar-icon'>
-          <CircularProgress
-            color="inherit"
-            className="icon-agregar-incumbente"
-            disableShrink
-          />
-
+          {agregando ?
+            <div id="label-agregar-icon">
+              <CircularProgress
+                color="inherit"
+                className="icon-agregar-incumbente"
+                disableShrink
+              />
+            </div> :
+            <div className="container-agregar-button">
+              <button
+                disabled={deshabilitarEntradas}
+                style={deshabilitarEntradas ? { backgroundColor: "gray" } : null}
+                className="button-agregar"
+                type="submit"
+              >
+                Agregar
+              </button>
+            </div>
+          }
+          <h4 className="incumbente-vacio">{incumbenteVacio}</h4>
+          {renderizarIncumbentes()}
         </div>
-        :
-        <div className='container-agregar-button'>
-          <button
-            className="button-agregar"
-            type='button'
-            onClick={agregarIncumbentes}
-          >
-            Agregar
-          </button>
-        </div>
-      }
-      <h4 className='incumbente-vacio'>{incumbenteVacio}</h4>
-      {renderizarIncumbentes()}
-    </div>
+      </form>
     </div>
   )
 };

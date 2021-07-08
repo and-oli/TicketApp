@@ -53,7 +53,7 @@ function Menu(props) {
           </ListItemIcon>
           <ListItemText primary="Reportar solicitud" />
         </ListItem>
-        {user === 'Especialista' ? especialistaMenuItems : null}
+        {user === "Especialista" ? especialistaMenuItems : null}
       </List>
     </div>
   );

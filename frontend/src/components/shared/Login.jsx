@@ -12,21 +12,21 @@ export default function Login() {
 
   function userChange(event) {
     setUserName(event.target.value);
-  }
+  };
   function passwordChange(event) {
     setPassword(event.target.value);
-  }
+  };
 
   async function handleSubmit(event) {
     event.preventDefault();
     const permission = await Notification.requestPermission();
-    let subscription
-    
-  if (permission === 'granted') {
-    const ready = await navigator.serviceWorker.ready;
-    subscription = await ready.pushManager.getSubscription();
-  }
-    
+    let subscription;
+
+    if (permission === "granted") {
+      const ready = await navigator.serviceWorker.ready;
+      subscription = await ready.pushManager.getSubscription();
+    }
+
     if (!loading) {
       setloading(true);
       let user = {};
@@ -34,7 +34,7 @@ export default function Login() {
       user.password = password;
       user.subscription = subscription;
       const response = await fetch(
-        "http://192.168.0.11:3001/users/authenticate",
+        "http://localhost:3001/users/authenticate",
         {
           method: "post",
           headers: {
@@ -49,7 +49,7 @@ export default function Login() {
       if (resJson.ok) {
         localStorage.setItem("TAToken", resJson.token);
         localStorage.setItem("TAUser", resJson.user);
-        await fetch("http://192.168.0.11:3001/notification/sendNotifications", {
+        await fetch("http://localhost:3001/notification/sendNotifications", {
           method: "GET",
           headers: {
             "x-access-token": localStorage.getItem("TAToken"),
@@ -78,7 +78,7 @@ export default function Login() {
           <div>
             <form className="container-title" onSubmit={handleSubmit}>
               <TextField
-                id='usuario'
+                id="usuario"
                 type="text"
                 label="Usuario"
                 style={{ width: 200, alignSelf: "center" }}
@@ -88,7 +88,7 @@ export default function Login() {
                 required
               />
               <TextField
-                id='password'
+                id="password"
                 type="password"
                 label="Contraseña"
                 style={{ width: 200, alignSelf: "center" }}
@@ -116,7 +116,7 @@ export default function Login() {
                   variant="contained"
                   type="submit"
                   color="default"
-                  className='button-login'
+                  className="button-login"
                   style={{
                     width: 130,
                     fontSize: 10,
@@ -133,4 +133,4 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};

@@ -13,7 +13,7 @@ export default function CambiosSolicitud(props) {
   const [listaTecnicos, setTecnicos] = useState([]);
   const [estados, setEstados] = useState([]);
   const [archivos, setArchivos] = useState({});
-  const [excesoDeArchivos, setExcesoDeArchivos] = useState({})
+  const [excesoDeArchivos, setExcesoDeArchivos] = useState({});
   const [state, setState] = useState({
     dueno: "",
     titulo: "",
@@ -41,10 +41,10 @@ export default function CambiosSolicitud(props) {
       },
     };
     const estados = await fetch(
-      "http://192.168.0.11:3001/constantes/estados",
+      "http://localhost:3001/constantes/estados",
       header
     );
-    const tecnicos = await fetch("http://192.168.0.11:3001/users", header);
+    const tecnicos = await fetch("http://localhost:3001/users", header);
 
     const resEstados = await estados.json();
     const resTecnicos = await tecnicos.json();
@@ -72,17 +72,17 @@ export default function CambiosSolicitud(props) {
         ...prevState,
         [categoria]: {
           exceso: true,
-          color: 'red'
+          color: "red"
         }
-      }))
+      }));
     } else {
       setExcesoDeArchivos((prevState) => ({
         ...prevState,
         [categoria]: {
           exceso: false,
-          color: 'black'
+          color: "black"
         }
-      }))
+      }));
     }
     setArchivos((prevState) => ({
       ...prevState,
@@ -102,7 +102,6 @@ export default function CambiosSolicitud(props) {
 
   const enviarCambio = async (event) => {
     event.preventDefault();
-
     const formData = new FormData();
 
     for (const categoria of categoriasArchivos) {
@@ -116,15 +115,15 @@ export default function CambiosSolicitud(props) {
       }
     }
     const responseArchivos = await fetch(
-      `http://192.168.0.11:3001/archivo/postFile`,
+      `http://localhost:3001/archivo/postFile`,
       {
         method: "POST",
         body: formData,
         headers: {
           "x-access-token": localStorage.getItem("TAToken"),
         },
-      }
-    ); setloading(true);
+      });
+    setloading(true);
     const responseArchivosJson = await responseArchivos.json();
 
     const data = { refSolicitud: referenciaSolicitud };
@@ -151,7 +150,7 @@ export default function CambiosSolicitud(props) {
     }
 
     const resCambio = await fetch(
-      `http://192.168.0.11:3001/cambiosSolicitud/${idSolicitud}`,
+      `http://localhost:3001/cambiosSolicitud/${idSolicitud}`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -168,7 +167,7 @@ export default function CambiosSolicitud(props) {
       notificacion: resCambioJson.notificacion,
     };
     if (resCambioJson.ok) {
-      await fetch("http://192.168.0.11:3001/notification/cambioNotifications", {
+      await fetch("http://localhost:3001/notification/cambioNotifications", {
         method: "post",
         headers: {
           "x-access-token": localStorage.getItem("TAToken"),
@@ -177,8 +176,9 @@ export default function CambiosSolicitud(props) {
         },
         body: JSON.stringify(cambiosNoficacion),
       });
-      setloading(false);
       window.location.reload();
+    } else {
+      setloading(false);
     }
   };
 
@@ -210,8 +210,8 @@ export default function CambiosSolicitud(props) {
 
   const verificarCantidadArchivos = (categoria) => {
 
-    const archivosTotales = archivos[categoria]
-    const cantidadPermitida = excesoDeArchivos[categoria]
+    const archivosTotales = archivos[categoria];
+    const cantidadPermitida = excesoDeArchivos[categoria];
 
     if (archivosTotales) {
       if (archivosTotales.length) {
@@ -226,15 +226,16 @@ export default function CambiosSolicitud(props) {
         )
       }
     }
-  }
+  };
 
   const renderizarCamposArchivos = () => {
     return categoriasArchivos.map((categoria, i) => (
       <div className="container-item-archivo" key={i}>
-        <label htmlFor={categoria.toLowerCase()} id="label-file">
+        <label style={loading ? { backgroundColor: "gray" } : null} htmlFor={categoria.toLowerCase()} id="label-file">
           <p>{"Adjuntar  " + categoria.toLowerCase()}s</p>
         </label>
         <input
+          disabled={loading}
           accept={categoria === "Foto" ? "image/png, image/gif, image/jpeg" : null}
           type="file"
           style={{ display: "none" }}
@@ -251,10 +252,11 @@ export default function CambiosSolicitud(props) {
   const renderizarCambiosEspecialista = () => {
     if (user !== "Usuario") {
       return (
-        <div className='cambios-especialista'>
+        <div className="cambios-especialista">
           <FormControl className="form-control-cambio">
             <label htmlFor="abierta"><p><b>Estado:</b></p></label>
             <NativeSelect
+              disabled={loading}
               value={state.abierta}
               name="estado"
               id="estado"
@@ -268,6 +270,7 @@ export default function CambiosSolicitud(props) {
           <FormControl className="form-control-cambio">
             <label htmlFor="asignar"><p><b>Dueño:</b></p></label>
             <NativeSelect
+              disabled={loading}
               value={state.dueno}
               name="dueno"
               id="dueno"
@@ -278,7 +281,6 @@ export default function CambiosSolicitud(props) {
               {renderizarTecnicos()}
             </NativeSelect>
           </FormControl>
-
         </div>
       );
     }
@@ -290,10 +292,11 @@ export default function CambiosSolicitud(props) {
         <h2>Modificar solicitud</h2>
       </div>
       <Divider />
-      <form onSubmit={enviarCambio}>
+      <form id="form-cambios" className="form-cambios" onSubmit={enviarCambio}>
         {renderizarCambiosEspecialista()}
-        <div className='form-text-cambio'>
+        <div className="form-text-cambio">
           <TextField
+            disabled={loading}
             value={state.titulo}
             label="Titulo"
             id="titulo-de-cambio"
@@ -309,6 +312,7 @@ export default function CambiosSolicitud(props) {
             rows={1}
           />
           <TextField
+            disabled={loading}
             value={state.nota}
             label="Nota"
             id="nota-de-cambio"
@@ -324,10 +328,12 @@ export default function CambiosSolicitud(props) {
             rows={2}
           />
         </div>
-        <div className='ajuste-categorias-archivos'>
+        <div className="ajuste-categorias-archivos">
           {renderizarCamposArchivos()}
         </div>
+        </form>
         <ListaDeIncumbentes
+          deshabilitarEntradas={loading}
           _id={idSolicitud}
         />
         <div className="button">
@@ -341,6 +347,7 @@ export default function CambiosSolicitud(props) {
             <Button
               variant="contained"
               type="submit"
+              form="form-cambios"
               component="button"
               className="button-guardar"
             >
@@ -348,7 +355,7 @@ export default function CambiosSolicitud(props) {
             </Button>
           )}
         </div>
-      </form>
+      
     </Paper>
   );
 }

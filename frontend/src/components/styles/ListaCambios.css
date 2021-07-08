@@ -130,6 +130,7 @@
   flex-direction: column;
   text-align: center;
   justify-content: center;
+  user-select: none;
   padding-bottom: 20%;
   color: rgba(0, 0, 0, 0.652);
   width: 100%;

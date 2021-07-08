@@ -92,7 +92,7 @@ export default function ListaSolicitudes() {
     };
 
     const fetchEstados = await fetch(
-      `http://192.168.0.11:3001/constantes/estados`,
+      `http://localhost:3001/constantes/estados`,
       header
     );
     const estados = await fetchEstados.json();
@@ -128,12 +128,12 @@ export default function ListaSolicitudes() {
       rowsPerPagePrevia === rowsPerPage &&
       !forzar
     ) {
-        setloading(false);
-        return;
+      setloading(false);
+      return;
     }
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
     const resFiltro = await fetch(
-      `http://192.168.0.11:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
+      `http://localhost:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
       {
         method: "GET",
         headers: {
@@ -335,4 +335,4 @@ export default function ListaSolicitudes() {
       </TableContainer>
     </div>
   );
-}
+};
