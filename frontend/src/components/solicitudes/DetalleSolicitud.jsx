@@ -84,6 +84,7 @@ export default function DetalleSolicitud(props) {
         <CambiosSolicitud
           user={userRole}
           categoriasArchivos={categoriasArchivos}
+          idSolicitante={solicitante._id}
           abierta={detalleSolicitud.abierta}
           asignado={asignada}
           requerimiento={detalleSolicitud.requerimente}

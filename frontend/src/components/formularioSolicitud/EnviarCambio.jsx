@@ -28,6 +28,7 @@ export default function CambiosSolicitud(props) {
     idSolicitud,
     user,
     asignado,
+    idSolicitante,
   } = props;
 
   const renderizarConstantes = async (categorias) => {
@@ -335,6 +336,7 @@ export default function CambiosSolicitud(props) {
         <ListaDeIncumbentes
           deshabilitarEntradas={loading}
           _id={idSolicitud}
+          solicitante={idSolicitante}
         />
         <div className="button">
           {loading ? (

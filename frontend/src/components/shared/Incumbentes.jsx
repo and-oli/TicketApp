@@ -7,14 +7,13 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import "../styles/incumbentes.css"
 
 export default function ListaDeIncumbentes(props) {
-  const { _id, deshabilitarEntradas } = props;
+  const { _id, deshabilitarEntradas, solicitante } = props;
   const [listaIncumbentes, setListaIncumbentes] = useState([]);
   const [incumbente, setIncumbente] = useState("");
   const [listadoPosiblesIncumbentes, setPosiblesIncumbentes] = useState([]);
   const [agregando, setAgregando] = useState(false);
   const [incumbenteVacio, setIncumbenteVacio] = useState("");
   const [cargandoIncumbentes, setCargandoIncumbentes] = useState(false);
-
   const getIncumbentes = async (id) => {
     const header = {
       method: "GET",
@@ -110,7 +109,7 @@ export default function ListaDeIncumbentes(props) {
       const chips = listaIncumbentes.map(incumbente => {
         return (
           <Chip
-            disabled={agregando || deshabilitarEntradas}
+            disabled={agregando || deshabilitarEntradas || solicitante === incumbente._id}
             className="chip-incumbente"
             key={incumbente._id}
             avatar={
@@ -120,7 +119,7 @@ export default function ListaDeIncumbentes(props) {
               />}
             id={incumbente._id}
             label={<p>{incumbente.username}</p>}
-            onDelete={() => handleDelete(incumbente)}
+            onDelete={solicitante !== incumbente._id ? () => handleDelete(incumbente) : null}
           />
         )
       });
@@ -145,6 +144,15 @@ export default function ListaDeIncumbentes(props) {
       }
     };
   };
+
+  const renderizarPosiblesIncumbentes = () => listadoPosiblesIncumbentes.map(user => {
+    if (solicitante !== user._id) {
+      return user.username
+    } else {
+      return ""
+    }
+  });
+
   return (
     <div className="form-incumbentes" >
       <form onSubmit={agregarIncumbentes}>
@@ -157,7 +165,7 @@ export default function ListaDeIncumbentes(props) {
             freeSolo
             options={incumbente
               ? incumbente.length >= 3
-                ? listadoPosiblesIncumbentes.map(user => user.username)
+                ? renderizarPosiblesIncumbentes()
                 : []
               : []
             }

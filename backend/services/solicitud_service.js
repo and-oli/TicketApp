@@ -194,6 +194,7 @@ module.exports = {
       newSolicitud.categoria = req.body.categoria;
       newSolicitud.refCliente = req.body.refCliente;
       newSolicitud.refUsuarioSolicitante = req.decoded.id;
+      newSolicitud.listaIncumbentes = req.decoded.id
       const createSolicitud = await Solicitud.create(newSolicitud);
       const resCreateSolicitud = await createSolicitud
         .populate('dueno', 'subscription')
