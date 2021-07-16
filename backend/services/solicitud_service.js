@@ -29,7 +29,6 @@ module.exports = {
           {listaIncumbentes: mongoose.Types.ObjectId(userInfo.id)},
         ]
       }
-
       const regexNumeros = /\d+/g;
       let posiblesIds = [];
       const coincidencias = infoFiltro.texto.match(regexNumeros);
@@ -51,7 +50,6 @@ module.exports = {
         ordenResultado = {};
         ordenResultado[infoFiltro.ordenarPor] = infoFiltro.orden === 'asc' ? 1 : -1;
       };
-      console.log(filtroResumen)
       const cantidad = Number(infoFiltro.cantidad);
       const pagina = Number(infoFiltro.pagina);
       const filtroAgregacion = {
@@ -99,7 +97,6 @@ module.exports = {
         { $skip: pagina * cantidad },
         { $limit: cantidad },
       ]);
-
       res.json({
         mensaje: 'Solicitud exitosa...',
         ok: true,

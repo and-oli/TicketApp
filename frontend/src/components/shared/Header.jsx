@@ -111,7 +111,9 @@ const Header = (props) => {
   const handleClose = async () => {
     const ready = await navigator.serviceWorker.ready;
     const subscription = await ready.pushManager.getSubscription();
-    await subscription.unsubscribe();
+    if (subscription) {
+      await subscription.unsubscribe();
+    }
     localStorage.removeItem("TAToken");
     localStorage.removeItem("TAUser");
     window.location.reload();
@@ -202,6 +204,7 @@ const Header = (props) => {
           <Link to="/">
             <img
               className="header__img"
+              id='logo-icon-principal'
               src="/logoComsistelco2.png"
               alt="Tickets"
             />
@@ -213,6 +216,7 @@ const Header = (props) => {
               className="icon-nueva-solicitud"
               aria-label="show 17 new notifications"
               color="inherit"
+              title="Reportar solicitud"
               onClick={handleCountNotifications}
             >
               <ConfirmationNumberSharpIcon
@@ -224,7 +228,9 @@ const Header = (props) => {
               component={Link}
               to="/lista-notificaciones"
               className="icon-notifications"
-              aria-label="show 17 new notifications"
+              title={`${countNotifications} notificaciones`}
+              id="notificaciones"
+              aria-label='ver notificaciones'
               color="inherit"
               onClick={handleCountNotifications}
             >

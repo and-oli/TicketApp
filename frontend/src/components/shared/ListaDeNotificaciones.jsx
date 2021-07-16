@@ -54,8 +54,8 @@ function ListaDeNotificaciones() {
   };
 
   const handelClickDelete = async () => {
-    setLoading(true)
     if (listaNotificacionesAEliminar.length) {
+      setLoading(true)
       const data = {
         lista: listaNotificacionesAEliminar,
       };
@@ -77,7 +77,7 @@ function ListaDeNotificaciones() {
       if (notificacionesEliminadasJson.ok) {
         window.location.reload();
       }
-    }
+    } 
   };
 
   const checkboxChange = (event) => {
@@ -121,6 +121,7 @@ function ListaDeNotificaciones() {
         to={noti.url}
         elevation={5}
         key={i}
+        id={i}
         className="paper-notificaciones"
       >
         <div className="notificacion-icon">
@@ -139,6 +140,7 @@ function ListaDeNotificaciones() {
           style={noMostrar}
           onChange={checkboxChange}
           value={noti._id}
+          id={i}
           ref={noti.referencia}
         />
       </Paper>
@@ -172,8 +174,10 @@ function ListaDeNotificaciones() {
           {eliminar || !notificaciones.length ?
             <DeleteIcon
               onClick={iconDeleteClick}
+              id="eliminar"
             /> :
             <DeleteForeverIcon
+              id="cancelar"
               onClick={iconDeleteClick}
             />}
           <p

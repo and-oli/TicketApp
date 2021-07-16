@@ -67,7 +67,7 @@ export default function EnviarSolicitud() {
   useEffect(() => {
     renderizarConstantes();
   }, []);
-  
+
   const renderLista = (lista) => {
     return lista.map((item, i) => (
       <option
@@ -158,65 +158,72 @@ export default function EnviarSolicitud() {
         <Paper className="paper-nueva-solicitud" elevation={20}>
           <div className="container-p">
             <div className="container-a">
-              <FormControl variant="outlined" className="form-control-select">
-                <p>Cliente: </p>
-                <Select
-                  disabled={loading}
-                  native
-                  value={state.refCliente}
-                  name="refCliente"
-                  onChange={handleChange}
-                  className="select-empty"
-                >
-                  <option aria-label="None"></option>
-                  {renderizarClientes(listaClientes)}
-                </Select>
-              </FormControl>
-              <FormControl variant="outlined" className="form-control-select">
-                <p>Prioridad: </p>
-                <Select
-                  disabled={loading}
-                  native
-                  value={state.prioridad}
-                  name="prioridad"
-                  id="prioridad"
-                  placeholder="seleccionar prioridad"
-                  onChange={handleChange}
-                  className="select-empty"
-                >
-                  <option aria-label="None"></option>
-                  {renderLista(prioridad)}
-                </Select>
-              </FormControl>
-              <FormControl variant="outlined" className="form-control-select">
-                <p>Requerimiento: </p>
-                <Select
-                  placeholder="Seleccionar requerimiento"
-                  disabled={loading}
-                  native
-                  value={state.requerimiento}
-                  name="requerimiento"
-                  onChange={handleChange}
-                  className="select-empty"
-                >
-                  <option aria-label="None"></option>
-                  {renderLista(requerimiento)}
-                </Select>
-              </FormControl>
-              <FormControl variant="outlined" className="form-control-select">
-                <p>Categoria: </p>
-                <Select
-                  disabled={loading}
-                  native
-                  value={state.categoria}
-                  name="categoria"
-                  onChange={handleChange}
-                  className="select-empty"
-                >
-                  <option aria-label="None"></option>
-                  {renderLista(categorias)}
-                </Select>
-              </FormControl>
+              <div className='container-select-empty'>
+                <FormControl variant="outlined" className="form-control-select">
+                  <p>Cliente: </p>
+                  <Select
+                    native
+                    disabled={loading}
+                    value={state.refCliente}
+                    name="refCliente"
+                    onChange={handleChange}
+                    id='cliente'
+                    className="select-empty"
+                  >
+                    <option aria-label="None"></option>
+                    {renderizarClientes(listaClientes)}
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined" className="form-control-select">
+                  <p>Prioridad: </p>
+                  <Select
+                    disabled={loading}
+                    native
+                    value={state.prioridad}
+                    name="prioridad"
+                    id="prioridad"
+                    placeholder="seleccionar prioridad"
+                    onChange={handleChange}
+                    className="select-empty"
+                  >
+                    <option aria-label="None"></option>
+                    {renderLista(prioridad)}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className='container-select-empty'>
+                <FormControl variant="outlined" className="form-control-select">
+                  <p>Requerimiento: </p>
+                  <Select
+                    placeholder="Seleccionar requerimiento"
+                    disabled={loading}
+                    native
+                    value={state.requerimiento}
+                    name="requerimiento"
+                    id='requerimiento'
+                    onChange={handleChange}
+                    className="select-empty"
+                  >
+                    <option aria-label="None"></option>
+                    {renderLista(requerimiento)}
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined" className="form-control-select">
+                  <p>Categoria: </p>
+                  <Select
+                    disabled={loading}
+                    native
+                    value={state.categoria}
+                    name="categoria"
+                    id='categoria'
+                    onChange={handleChange}
+                    className="select-empty"
+                  >
+                    <option aria-label="None"></option>
+                    {renderLista(categorias)}
+                  </Select>
+                </FormControl>
+              </div>
             </div>
             <div className="form-control-text">
               <p className="text-field">Correo del solicitante: </p>
@@ -226,6 +233,7 @@ export default function EnviarSolicitud() {
                 value={state.correo}
                 onChange={handleChange}
                 name="correo"
+                id='correo'
                 variant="outlined"
               />
             </div>
@@ -237,6 +245,7 @@ export default function EnviarSolicitud() {
                 value={state.ciudad}
                 onChange={handleChange}
                 name="ciudad"
+                id='ciudad'
                 variant="outlined"
               />
             </div>
@@ -248,6 +257,7 @@ export default function EnviarSolicitud() {
                 value={state.resumen}
                 onChange={handleChange}
                 name="resumen"
+                id='resumen'
                 variant="outlined"
                 inputProps={{
                   maxLength: 35,
@@ -262,6 +272,7 @@ export default function EnviarSolicitud() {
                 value={state.descripcion}
                 onChange={handleChange}
                 name="descripcion"
+                id='descripcion'
                 className="form-control-descripcion"
                 variant="outlined"
                 multiline
@@ -269,17 +280,10 @@ export default function EnviarSolicitud() {
               />
             </div>
           </div>
-          <h6
-            style={{
-              color: mensaje.color,
-              marginTop: 0,
-              height: 10,
-              textAlign: "center",
-            }}
-          >
+          <h6 style={{ color: mensaje.color }} className='informacion-incompleta'>
             {mensaje.text}
           </h6>
-          <div className="button">
+          <div className="button-enviar-nueva-solicitud">
             {loading ? (
               <CircularProgress
                 color="inherit"

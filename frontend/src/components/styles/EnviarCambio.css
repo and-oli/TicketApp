@@ -1,0 +1,210 @@
+.title-file{
+  display: flex;
+  justify-content: center;
+  margin: 5px;
+  margin-bottom: 5px;
+  height: 10px;
+}
+
+.solicitud-b {
+  display: flex;
+  font-size: 20px;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  min-width: 370px;
+  height: auto;
+}
+
+.solicitud-a .MuiBox-root {
+  padding: 0px !important;
+}
+
+/* Estilos de los formularios para el componente de EnviarCambios */
+.solicitud-b form p {
+  margin: 5px;
+  margin-left: 0px;
+}
+
+.cambios-especialista{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: row;
+  align-self: center;
+  width: 60%;
+}
+
+.ajuste-camios-select {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  width: 50%;
+  min-width: 290px;
+  align-self: center;
+  height: auto;
+}
+
+.form-control-cambio {
+  margin: 10px !important;
+  line-height: 0px;
+  width: 70%;
+  min-width: 250px !important;
+}
+
+.form-control-cambio .select-empty-cambio {
+  margin: 0px;
+}
+
+.form-control-cambio select{
+  font-size: 17px;
+}
+
+.select-empty-cambio .select-empty option {
+  font-size: 15px;
+}
+
+.select-empty-cambio .select-empty select{
+  font-size: 17px;
+}
+
+.form-cambios {
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  padding-top: 10px;
+  line-height: 0px;
+  width: 100%;
+}
+
+.form-text-cambio {
+  display: flex;
+  width: 60%;
+  margin-top: 10px;
+  align-self: center;
+  flex-direction: column;
+}
+
+.form-control-nota {
+  align-self: center;
+  height: 90px;
+  width: 100%;
+  min-width: 340px !important;
+}
+
+.form-control-titulo {
+  display: flex !important;
+  align-self: center;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+  height: 40px;
+  width: 100%;
+  min-width: 340px !important;
+}
+
+.form-control-titulo .MuiInputBase-root {
+  padding: 0px !important;
+  padding-left: 10px !important; 
+  height: 40px !important;
+  font-size: 17px !important;
+}
+
+.form-control-nota textarea { 
+  font-size: 15px;
+} 
+
+.form-control-titulo textarea {
+  font-size: 15px;
+}
+
+.form-control-titulo fieldset {
+  height: 45px;
+}
+
+.input-agregar fieldset input {
+  background-color: black;
+}
+
+.form-control-titulo fieldset legend{
+  width: 40px;
+}
+
+.form-control-nota label{ 
+  font-size: 14px;
+} 
+
+.form-control-titulo label{
+  font-size: 14px;
+  transform: translate(10px, 15px) scale(1);
+}
+
+/* Estilo para boton de guardar los cambios */
+.button-cambios .button-guardar {
+  height: 30px;
+  width: 180px;
+  font-size: 10px;
+  color: white;
+  background-color: rgb(0, 0, 0);
+  border: darkgrey;
+  border-radius: 2px;
+}
+
+.button-cambios {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+  width: 200px;
+}
+
+/* Esttilos para los botones de archivo */
+.container-item-archivo{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  line-height: 10px;
+  text-align: center;
+  width: 100%;
+  height: 40px;
+  min-width: 250px;
+  margin: 10px;
+}
+
+.ajuste-categorias-archivos {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 50%;
+  min-width: 290px;
+  align-self: center;
+  height: auto;
+}
+
+#label-file{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.939);
+  border-radius: 3px;
+  color: white;
+  padding: 3px;
+  user-select: none;
+  font-size: 10px;
+  width: 70%;
+  height: auto;
+  line-height: 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#label-file p{
+  margin: 3px;
+}
+
+#label-file:hover {
+  background-color: #d5d5d5;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+   0px 2px 2px 0px rgb(0 0 0 / 14%),
+   0px 1px 5px 0px rgb(0 0 0 / 12%);
+}

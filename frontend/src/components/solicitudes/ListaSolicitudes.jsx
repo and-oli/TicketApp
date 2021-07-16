@@ -142,10 +142,10 @@ export default function ListaSolicitudes() {
       }
     );
     const filtroJson = await resFiltro.json();
-
-    setListaSolicitudes(filtroJson.solicitudes);
-    setloading(false);
-
+    if (filtroJson.ok) {
+      setListaSolicitudes(filtroJson.solicitudes);
+      setloading(false);
+    }
     if (filtroJson.cuenta) {
       setCuenta(filtroJson.cuenta);
     } else {
@@ -208,7 +208,7 @@ export default function ListaSolicitudes() {
   };
 
   const renderizarInfoSolicitudes = () => {
-    if (listaSolicitudes) {
+    if (listaSolicitudes.length) {
       return listaSolicitudes.map((sol) => (
         <TableRowAlt key={sol.idSolicitud}>
           <TableCell align="center" id={sol.idSolicitud}>

@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^11.2.7",
-    "cypress": "^7.5.0"
+    "cypress": "^7.5.0",
+    "cypress-localstorage-commands": "^1.4.5"
   }
 }

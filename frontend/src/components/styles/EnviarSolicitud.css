@@ -6,6 +6,30 @@
   height: auto;
 }
 
+.title-envio p {
+  display: flex;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 23px;
+  color: black;
+  padding: 5px;
+}
+
+.form-nueva-solicitud {
+  display: flex;
+  justify-content: center;
+}
+
+.paper-nueva-solicitud {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  margin-bottom: 15px;
+  min-width: 350px;
+  padding: 20px;
+}
+
 .container-p {
   display: flex;
   flex-direction: column;
@@ -14,6 +38,8 @@
   width: 100%;
   height: auto;
 }
+
+/* Estilos para select en EnviarSolicitud */
 .container-a {
   display: flex;
   flex-wrap: wrap;
@@ -21,6 +47,7 @@
   justify-content: center;
   width: 100%;
 }
+
 .container-a p{
   margin: 0px;
   width: 70%;
@@ -28,17 +55,9 @@
   padding: 0px !important;
 } 
 
-.form-control-text {
-  width: 95%;
-  margin: 10px;
-  min-width: 350px !important;
-  align-self: center;
-}
-
 .form-control-select {
-  width: 30% !important;
+  width: 90% !important;
   min-width: 350px !important;
-  margin: 10px !important;
   align-self: center;
   align-items: baseline;
   flex-direction: column !important;
@@ -46,6 +65,27 @@
 
 .form-control-select p {
   margin: 10px;
+}
+
+.container-select-empty {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  margin: 10px;
+  flex-wrap: wrap;
+  min-width: 350px;
+}
+
+.container-select-empty .select-empty {
+  width: 100%;
+}
+
+/* Estilos para entradas de texto */
+.form-control-text {
+  width: 95%;
+  margin: 10px;
+  min-width: 350px !important;
+  align-self: center;
 }
 
 .form-control-text .MuiTextField-root {
@@ -64,16 +104,7 @@
   align-self: center;
 }
 
-.title-envio p {
-  display: flex;
-  border-radius: 5px;
-  font-weight: bold;
-  text-align: center;
-  font-size: 23px;
-  color: black;
-  padding: 5px;
-}
-.button {
+.button-enviar-nueva-solicitud {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -82,7 +113,7 @@
   background-color: white;
 }
 
-.button .button-enviar {
+.button-enviar-nueva-solicitud .button-enviar {
   height: 35px;
   width: 190px;
   font-size: 15px;
@@ -92,36 +123,10 @@
   border-radius: 2px;
 }
 
-.form-control-select .select-empty {
-  width: 100%;
-}
-
-.button-enviar-solicitud {
-  background-color: black;
-}
-
-.paper-nueva-solicitud {
-  display: flex;
-  flex-direction: column;
-  width: 40%;
-  margin-bottom: 15px;
-  min-width: 350px;
-  padding: 20px;
-}
-
-.form-nueva-solicitud {
-  display: flex;
-  justify-content: center;
-}
-
-.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: rgba(0, 0, 0, 0.748) !important;
-}
-
-.MuiFormLabel-root.Mui-focused {
-  color: rgba(0, 0, 0, 0.597) !important;
-}
-
-.MuiInput-underline:after {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.597) !important;
+.informacion-incompleta {
+  margin-top: 0px !important;
+  margin: 20px;
+  height: 10px;
+  align-self: center;
+  text-align: "center";
 }

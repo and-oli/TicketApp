@@ -81,7 +81,7 @@ module.exports = {
       cambios.estado = estados.resuelta;
       notificacion.text = `El estado de la solicitud  cambio a: ${cambios.estado}`;
     };
-    
+
     cambios.refUsuario = req.decoded.id;
     await Solicitud.updateOne({ idSolicitud: req.params.idSolicitud }, resultadoSolicitud);
     const cambiosSolicitud = new CambiosSolicitud();
@@ -121,7 +121,7 @@ module.exports = {
       }
     }
     if (!notificacion.text) {
-      notificacion.text = cambios.nota
+      notificacion.text = cambios.titulo;
     }
     // await this.enviarCorreo(req, resultadoSolicitud, cambios.nota, solicitud.listaIncumbentes, solicitud.idSolicitud);
     try {

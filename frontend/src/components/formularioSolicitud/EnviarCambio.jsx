@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -7,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
 import ListaDeIncumbentes from "../shared/Incumbentes";
-
+import '../styles/EnviarCambio.css'
 export default function CambiosSolicitud(props) {
   const [loading, setloading] = useState(false);
   const [listaTecnicos, setTecnicos] = useState([]);
@@ -254,44 +253,48 @@ export default function CambiosSolicitud(props) {
     if (user !== "Usuario") {
       return (
         <div className="cambios-especialista">
-          <FormControl className="form-control-cambio">
-            <label htmlFor="abierta"><p><b>Estado:</b></p></label>
-            <NativeSelect
-              disabled={loading}
-              value={state.abierta}
-              name="estado"
-              id="estado"
-              onChange={handleChange}
-              className="select-empty-cambio"
-            >
-              <option value="">{estado}</option>
-              {renderizarEstados()}
-            </NativeSelect>
-          </FormControl>
-          <FormControl className="form-control-cambio">
-            <label htmlFor="asignar"><p><b>Dueño:</b></p></label>
-            <NativeSelect
-              disabled={loading}
-              value={state.dueno}
-              name="dueno"
-              id="dueno"
-              onChange={handleChange}
-              className="select-empty-cambio"
-            >
-              <option value="">{asignado}</option>
-              {renderizarTecnicos()}
-            </NativeSelect>
-          </FormControl>
+          <div className="ajuste-camios-select">
+            <FormControl className="form-control-cambio">
+              <label htmlFor="abierta"><p><b>Estado:</b></p></label>
+              <NativeSelect
+                disabled={loading}
+                value={state.abierta}
+                name="estado"
+                id="estado"
+                onChange={handleChange}
+                className="select-empty-cambio"
+              >
+                <option value="">{estado}</option>
+                {renderizarEstados()}
+              </NativeSelect>
+            </FormControl>
+            <FormControl className="form-control-cambio">
+              <label htmlFor="asignar"><p><b>Dueño:</b></p></label>
+              <NativeSelect
+                disabled={loading}
+                value={state.dueno}
+                name="dueno"
+                id="dueno"
+                onChange={handleChange}
+                className="select-empty-cambio"
+              >
+                <option value="">{asignado}</option>
+                {renderizarTecnicos()}
+              </NativeSelect>
+            </FormControl>
+          </div>
+          <div className="ajuste-categorias-archivos">
+            {renderizarCamposArchivos()}
+          </div>
         </div>
       );
     }
   };
 
   return (
-    <Paper className="paper-solicitud-b" elevation={10}>
-      <div className="detalles-titles">
-        <h2>Modificar solicitud</h2>
-      </div>
+    <div className="solicitud-b">
+      <Divider />
+      <p className='detalles-cambios-titulos'>Modifar</p>
       <Divider />
       <form id="form-cambios" className="form-cambios" onSubmit={enviarCambio}>
         {renderizarCambiosEspecialista()}
@@ -329,35 +332,31 @@ export default function CambiosSolicitud(props) {
             rows={2}
           />
         </div>
-        <div className="ajuste-categorias-archivos">
-          {renderizarCamposArchivos()}
-        </div>
-        </form>
-        <ListaDeIncumbentes
-          deshabilitarEntradas={loading}
-          _id={idSolicitud}
-          solicitante={idSolicitante}
-        />
-        <div className="button">
-          {loading ? (
-            <CircularProgress
-              color="inherit"
-              className="icon-enviar"
-              disableShrink
-            />
-          ) : (
-            <Button
-              variant="contained"
-              type="submit"
-              form="form-cambios"
-              component="button"
-              className="button-guardar"
-            >
-              <p className="button-p">Guardar cambio</p>
-            </Button>
-          )}
-        </div>
-      
-    </Paper>
+      </form>
+      <div className="button-cambios">
+        {loading ? (
+          <CircularProgress
+            color="inherit"
+            className="icon-enviar"
+            disableShrink
+          />
+        ) : (
+          <Button
+            variant="contained"
+            type="submit"
+            form="form-cambios"
+            component="button"
+            className="button-guardar"
+          >
+            <p className="button-p">Guardar cambio</p>
+          </Button>
+        )}
+      </div>
+      <ListaDeIncumbentes
+        deshabilitarEntradas={loading}
+        _id={idSolicitud}
+        solicitante={idSolicitante}
+      />
+    </div>
   );
 }

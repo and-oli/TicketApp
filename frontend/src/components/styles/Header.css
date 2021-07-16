@@ -77,6 +77,7 @@ ul:hover {
 .menu-item {
   color: white;
 }
+
 .circle-icon {
   display: flex;
   justify-content:center;
@@ -107,4 +108,17 @@ ul:hover {
 
 .logout-icon {
   height: 20px !important;
+}
+
+/* Estilos para las entradas en formularios */
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.748) !important;
+}
+
+.MuiFormLabel-root.Mui-focused {
+  color: rgba(0, 0, 0, 0.597) !important;
+}
+
+.MuiInput-underline:after {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.597) !important;
 }

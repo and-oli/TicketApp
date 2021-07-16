@@ -159,14 +159,12 @@ export default function ListaSolicitudes(props) {
   };
 
   return (
-    <Paper className="paper-solicitud-c" elevation={10}>
-      <div className="detalles-titles">
-        <h2>Historial</h2>
-      </div>
+    <div>
+      <p className='detalles-cambios-titulos'>Historial</p>
       <Divider />
-      <div className="historial-container">
+      <div className="paper-solicitud-c">
         {renderizarCambios()}
       </div>
-    </Paper>
+    </div>
   );
 };

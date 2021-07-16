@@ -23,8 +23,12 @@ export default function ListaDeIncumbentes(props) {
     };
     setCargandoIncumbentes(true);
 
-    const incumbentesActuales = await fetch(`http://localhost:3001/incumbentes/listaDeIncumbentes/${id}`, header);
-    const listaPosiblesIncumbentes = await fetch(`http://localhost:3001/incumbentes/posiblesIncumbentes`, header);
+    const incumbentesActuales = await fetch(
+      `http://localhost:3001/incumbentes/listaDeIncumbentes/${id}`,
+      header);
+    const listaPosiblesIncumbentes = await fetch(`
+    http://localhost:3001/incumbentes/posiblesIncumbentes`,
+      header);
 
     const incumbentesJson = await incumbentesActuales.json();
     const posiblesIncumbentesJson = await listaPosiblesIncumbentes.json();
@@ -66,7 +70,9 @@ export default function ListaDeIncumbentes(props) {
     event.preventDefault();
     setAgregando(true);
     if (incumbente) {
-      const nuevoUsuario = listadoPosiblesIncumbentes.filter(user => user.username === incumbente)[0];
+      const nuevoUsuario = listadoPosiblesIncumbentes.filter(
+        user => user.username === incumbente
+      )[0];
       const data = {};
       if (nuevoUsuario) {
         data.refIncumbente = nuevoUsuario._id;
@@ -109,7 +115,10 @@ export default function ListaDeIncumbentes(props) {
       const chips = listaIncumbentes.map(incumbente => {
         return (
           <Chip
-            disabled={agregando || deshabilitarEntradas || solicitante === incumbente._id}
+            disabled={agregando ||
+              deshabilitarEntradas ||
+              solicitante ===
+              incumbente._id}
             className="chip-incumbente"
             key={incumbente._id}
             avatar={
@@ -119,7 +128,9 @@ export default function ListaDeIncumbentes(props) {
               />}
             id={incumbente._id}
             label={<p>{incumbente.username}</p>}
-            onDelete={solicitante !== incumbente._id ? () => handleDelete(incumbente) : null}
+            onDelete={solicitante !== incumbente._id ?
+              () => handleDelete(incumbente
+              ) : null}
           />
         )
       });
@@ -176,7 +187,6 @@ export default function ListaDeIncumbentes(props) {
               <TextField
                 label="Usuario incumbente"
                 variant="outlined"
-                id="usuario-incumbente"
                 className="input-agregar"
                 onClick={() => setIncumbenteVacio("")}
                 type="text"

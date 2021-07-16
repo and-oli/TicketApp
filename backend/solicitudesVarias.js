@@ -167,6 +167,7 @@ async function nuevasSolicitudes() {
       solicitud.prioridad = prioridad;
       solicitud.categoria = categoria;
       solicitud.refCliente = refUsuarioRandom.refCliente;
+      solicitud.listaIncumbentes = refUsuarioRandom._id;
       solicitud.refUsuarioSolicitante = refUsuarioRandom._id;
 
       documentoDeSolicitudes.push(solicitud);
