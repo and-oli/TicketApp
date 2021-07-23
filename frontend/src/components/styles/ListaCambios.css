@@ -3,7 +3,7 @@
   align-self: center;
   margin-top: 15px;
   margin-bottom: 15px;
-  width: 55%;
+  width: 60%;
   min-width: 320px;
   height: auto;
 }
@@ -146,7 +146,7 @@
 .archivos-por-categoria {
   display: flex;
   flex-wrap: wrap;
-  justify-content:space-evenly;
+  justify-content: center;
   flex-direction: row;
   padding-bottom: 10px;
 }

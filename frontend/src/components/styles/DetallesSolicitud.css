@@ -115,20 +115,20 @@ hr {
 
 /* Estilos de los iconos en el menu */
 .menu-icon-items {
-  width: 10% !important;
+  color: black;
   align-self: center;
 }
 
+.MuiTabs-indicator {
+  background-color: black !important;
+}
+
 .menu-icons {
-  border-radius: 100% !important;
+  border-radius: 50% !important;
 }
 
-.MuiBottomNavigationAction-label {
-  font-size: 70% !important;
-}
-
-.MuiBottomNavigationAction-root.Mui-selected {
-  color: black !important;
+.MuiTab-root {
+  min-width: 100px !important;
 }
 
 .paper-solicitud-c {
@@ -139,4 +139,4 @@ hr {
   width: 100%;
   min-width: 370px;
   height: 450px;
-}
+} 

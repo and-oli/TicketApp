@@ -21,14 +21,7 @@ module.exports = {
       let filtroEstado;
       let filtroResumen;
       let filtroUsuario = [];
-
-      if (userInfo.role !== 'ADMINISTRADOR') {
-        filtroUsuario = [
-          {refUsuarioSolicitante: mongoose.Types.ObjectId(userInfo.id)},
-          {dueno: mongoose.Types.ObjectId(userInfo.id)},
-          {listaIncumbentes: mongoose.Types.ObjectId(userInfo.id)},
-        ]
-      }
+      let filtro = {};
       const regexNumeros = /\d+/g;
       let posiblesIds = [];
       const coincidencias = infoFiltro.texto.match(regexNumeros);
@@ -39,11 +32,11 @@ module.exports = {
       }
 
       if (infoFiltro.estado) {
-        filtroEstado = { estado: infoFiltro.estado};
+        filtroEstado = { estado: infoFiltro.estado };
       };
 
       if (infoFiltro.texto) {
-        filtroResumen = { resumen: {$regex: infoFiltro.texto }};
+        filtroResumen = { resumen: { $regex: infoFiltro.texto } };
       };
 
       if (infoFiltro.ordenarPor) {
@@ -52,8 +45,15 @@ module.exports = {
       };
       const cantidad = Number(infoFiltro.cantidad);
       const pagina = Number(infoFiltro.pagina);
-      const filtroAgregacion = {
-        $match: {
+
+      if (userInfo.role !== 'ADMINISTRADOR') {
+        filtroUsuario = [
+          { refUsuarioSolicitante: mongoose.Types.ObjectId(userInfo.id) },
+          { dueno: mongoose.Types.ObjectId(userInfo.id) },
+          { listaIncumbentes: mongoose.Types.ObjectId(userInfo.id) },
+        ]
+
+        filtro = {
           $or: [
             filtroResumen,
             {
@@ -63,9 +63,16 @@ module.exports = {
             }
           ],
           $or: filtroUsuario,
+        }
+      }
+
+      const filtroAgregacion = {
+        $match: {
+          ...filtro,
           ...filtroEstado
         },
       };
+
       const resultadoCuenta = await Solicitud.aggregate([
         filtroAgregacion,
         { $count: "cuenta" },

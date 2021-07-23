@@ -110,7 +110,7 @@ export default function ListaSolicitudes(props) {
 
   const renderizarItemsCambios = () => {
     return cambios.map((cambio, i) => (
-      <Paper elevation={5} key={i} className="container-padre-cambios">
+      <Paper elevation={20} key={i} className="container-padre-cambios">
         <div className="info-usuario">
           <h4>{cambio.titulo}</h4>
           <Divider />

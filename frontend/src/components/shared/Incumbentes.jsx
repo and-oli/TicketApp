@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Chip from "@material-ui/core/Chip";
@@ -14,6 +14,16 @@ export default function ListaDeIncumbentes(props) {
   const [agregando, setAgregando] = useState(false);
   const [incumbenteVacio, setIncumbenteVacio] = useState("");
   const [cargandoIncumbentes, setCargandoIncumbentes] = useState(false);
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
+
+
   const getIncumbentes = async (id) => {
     const header = {
       method: "GET",
@@ -32,10 +42,11 @@ export default function ListaDeIncumbentes(props) {
 
     const incumbentesJson = await incumbentesActuales.json();
     const posiblesIncumbentesJson = await listaPosiblesIncumbentes.json();
-
+    if (mountedRef.current) {
     setListaIncumbentes(incumbentesJson.lista);
     setPosiblesIncumbentes(posiblesIncumbentesJson.listaPosiblesUsuarios);
     setCargandoIncumbentes(false);
+    }
   };
 
   useEffect(() => {

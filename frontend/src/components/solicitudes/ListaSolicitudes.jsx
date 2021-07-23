@@ -64,14 +64,14 @@ const TableRowAlt = withStyles((theme) => ({
 }))(TableRow);
 
 export default function ListaSolicitudes() {
-  const [listaSolicitudes, setListaSolicitudes] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [cuenta, setCuenta] = React.useState(0);
-  const [ordenarPor, setOrdenarPor] = React.useState("");
-  const [orden, setOrden] = React.useState("desc");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [listaSolicitudes, setListaSolicitudes] = useState([]);
+  const [page, setPage] = useState(0);
+  const [cuenta, setCuenta] = useState(0);
+  const [ordenarPor, setOrdenarPor] = useState("");
+  const [orden, setOrden] = useState("desc");
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setloading] = useState(true);
-  const [estados, setEstados] = React.useState([]);
+  const [estados, setEstados] = useState([]);
   const [filtro, setFiltro] = useState({
     searchTexto: "",
     searchEstado: "Todos",
@@ -237,7 +237,6 @@ export default function ListaSolicitudes() {
       );
     }
   };
-
   const encabezados = [
     { id: "idSolicitud", titulo: "Número de solicitud" },
     { id: "cliente", titulo: "Cliente" },

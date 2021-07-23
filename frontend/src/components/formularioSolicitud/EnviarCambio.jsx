@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -30,6 +30,15 @@ export default function CambiosSolicitud(props) {
     idSolicitante,
   } = props;
 
+  const mountedRef = useRef(false);
+  
+    useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
+
   const renderizarConstantes = async (categorias) => {
     const archObj = {};
     const header = {
@@ -49,11 +58,13 @@ export default function CambiosSolicitud(props) {
     const resEstados = await estados.json();
     const resTecnicos = await tecnicos.json();
 
+    if (mountedRef.current) {
     setEstados(Object.values(resEstados));
     setTecnicos(resTecnicos.tecnicos);
     const categoriasDeArchivos = Object.values(categorias);
     categoriasDeArchivos.forEach((cat) => (archObj[cat] = undefined));
     setArchivos(archObj);
+    }
   };
 
   useEffect(() => {
@@ -297,7 +308,6 @@ export default function CambiosSolicitud(props) {
       <p className='detalles-cambios-titulos'>Modifar</p>
       <Divider />
       <form id="form-cambios" className="form-cambios" onSubmit={enviarCambio}>
-        {renderizarCambiosEspecialista()}
         <div className="form-text-cambio">
           <TextField
             disabled={loading}
@@ -332,6 +342,7 @@ export default function CambiosSolicitud(props) {
             rows={2}
           />
         </div>
+        {renderizarCambiosEspecialista()}
       </form>
       <div className="button-cambios">
         {loading ? (

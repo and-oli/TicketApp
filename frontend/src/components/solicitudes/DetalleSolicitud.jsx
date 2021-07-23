@@ -5,14 +5,12 @@ import CambiosSolicitud from "../formularioSolicitud/EnviarCambio";
 import ListaCambios from "./ListaCambios";
 import InfoIcon from '@material-ui/icons/Info';
 import EditIcon from '@material-ui/icons/Edit';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import Tabs from '@material-ui/core/Tabs';
 import "../styles/DetallesSolicitud.css";
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-
+import Tab from '@material-ui/core/Tab';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -31,7 +29,7 @@ function TabPanel(props) {
       )}
     </div>
   );
-}
+};
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -39,12 +37,12 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function seleccionarVista(index) {
+function seleccionarPestana(index) {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
-}
+};
 
 export default function DetalleSolicitud(props) {
   const { userRole } = props;
@@ -56,7 +54,10 @@ export default function DetalleSolicitud(props) {
   const [categoriasArchivos, setCategoriasArchivos] = useState([]);
   const [roleAsignado, setRoleAsignado] = useState("");
   const [solicitante, setSolicitante] = useState({});
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
   const renderizarInfoSolicitud = async (id) => {
     const header = {
       method: "GET",
@@ -92,8 +93,28 @@ export default function DetalleSolicitud(props) {
     };
   };
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (e, newValue) => {
     setValue(newValue);
+  };
+
+  const handleTouchStart = (event) => {
+    const touch = event.targetTouches[0];
+    setTouchStart(touch.clientX);
+  };
+
+  const handleTouchMove = (event) => {
+    const touch = event.targetTouches[0];
+    setTouchEnd(touch.clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > 100) {
+      setValue(1);
+    }
+
+    if (touchStart - touchEnd < -100) {
+      setValue(0);
+    }
   };
 
   React.useEffect(() => {
@@ -107,25 +128,28 @@ export default function DetalleSolicitud(props) {
           <b>Solicitud #{idSolicitud}: {detalleSolicitud.resumen}</b>
         </p>
       </div>
-      <div className="container-paper">
+      <div className="container-paper"
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchStart={handleTouchStart}>
         <Paper className="solicitud-a" elevation={10}>
           <AppBar className='div-header' position='static'>
-            <BottomNavigation
+            <Tabs
               value={value}
               onChange={handleChange}
+              variant="scrollable"
+              scrollButtons="off"
               className='menu-icon-items'
             >
-              <BottomNavigationAction
+              <Tab
                 className='menu-icons'
-                label="Información"
-                {...seleccionarVista(0)}
+                {...seleccionarPestana(0)}
                 icon={<InfoIcon />} />
-              <BottomNavigationAction
+              <Tab
                 className='menu-icons'
-                label="Modificar"
-                {...seleccionarVista(1)}
+                {...seleccionarPestana(1)}
                 icon={<EditIcon />} />
-            </BottomNavigation>
+            </Tabs>
             <Divider />
           </AppBar>
           <TabPanel value={value} index={0}>
@@ -166,3 +190,4 @@ export default function DetalleSolicitud(props) {
     </div>
   );
 };
+
