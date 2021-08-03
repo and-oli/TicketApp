@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableFooter from "@material-ui/core/TableFooter";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
+import CategoriasTickets  from "../shared/categoriasTicket";
 import "../styles/ListaSolicitudes.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -38,7 +39,13 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     display: "flex",
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 130,
+    height: "auto",
+  },
+  formControlCategoria: {
+    display: "flex",
+    margin: theme.spacing(1),
+    minWidth: 220,
     height: "auto",
   },
 }));
@@ -72,9 +79,11 @@ export default function ListaSolicitudes() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setloading] = useState(true);
   const [estados, setEstados] = useState([]);
+  const [categoriaDeTicket, setCategoriaDeTicket] = useState([]);
   const [filtro, setFiltro] = useState({
     searchTexto: "",
     searchEstado: "Todos",
+    searchProyecto: "Todos los proyectos",
   });
 
   const refPagePrevia = useRef();
@@ -95,8 +104,18 @@ export default function ListaSolicitudes() {
       `http://localhost:3001/constantes/estados`,
       header
     );
-    const estados = await fetchEstados.json();
 
+    const fetchCategoriasTicket = await fetch(
+      `http://localhost:3001/categorias`,
+      header
+    );
+
+    const todasLasCategoriasTickets = await fetchCategoriasTicket.json();
+
+    const estados = await fetchEstados.json();
+    const categoriaTicket = todasLasCategoriasTickets.categorias;
+
+    setCategoriaDeTicket(categoriaTicket)
     setEstados(Object.values(estados));
   };
 
@@ -132,8 +151,9 @@ export default function ListaSolicitudes() {
       return;
     }
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
+    const proyecto = filtro.searchProyecto === "Todos los proyectos" ? "" : filtro.searchProyecto;
     const resFiltro = await fetch(
-      `http://localhost:3001/solicitudes/?estado=${estado}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
+      `http://localhost:3001/solicitudes/?estado=${estado}&proyecto=${proyecto}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
       {
         method: "GET",
         headers: {
@@ -207,26 +227,35 @@ export default function ListaSolicitudes() {
     ));
   };
 
+  const renderizarCategoriaDeTicket = () => {
+    return categoriaDeTicket.map((categoria, i) => (
+      <MenuItem value={categoria._id} key={i}>
+        {categoria.nombreCategoria}
+      </MenuItem>
+    ))
+  }
+
   const renderizarInfoSolicitudes = () => {
     if (listaSolicitudes.length) {
-      return listaSolicitudes.map((sol) => (
-        <TableRowAlt key={sol.idSolicitud}>
-          <TableCell align="center" id={sol.idSolicitud}>
-            <Link
-              className="link"
-              to={`/detalle-solicitud/?id_solicitud=${sol.idSolicitud}`}
-            >
-              {sol.idSolicitud}
-            </Link>
-          </TableCell>
-          <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
-          <TableCell align="center">{sol.usuarioSolicitante[0].name}</TableCell>
-          <TableCell align="center">{sol.estado}</TableCell>
-          <TableCell align="center">{sol.prioridad}</TableCell>
-          <TableCell align="center">{sol.resumen}</TableCell>
-          <TableCell align="center">{sol.fechaHora}</TableCell>
-        </TableRowAlt>
-      ));
+      return listaSolicitudes.map((sol) => {
+        return (
+          <TableRowAlt key={sol.idSolicitud}>
+            <TableCell align="center" id={sol.idSolicitud}>
+              <Link
+                className="link"
+                to={`/detalle-solicitud/?id_solicitud=${sol.idSolicitud}`}
+              >
+                {sol.idSolicitud}
+              </Link>
+            </TableCell>
+            <TableCell align="center">{sol.cliente[0].nombre}</TableCell>
+            <TableCell align="center">{sol.usuarioSolicitante[0].name}</TableCell>
+            <TableCell align="center">{sol.estado}</TableCell>
+            <TableCell align="center">{sol.prioridad}</TableCell>
+            <TableCell align="center">{sol.resumen}</TableCell>
+            <TableCell align="center">{sol.fechaHora}</TableCell>
+          </TableRowAlt>)
+      });
     } else {
       return (
         <TableRowAlt>
@@ -250,6 +279,23 @@ export default function ListaSolicitudes() {
   return (
     <div>
       <form id="filter-form" onSubmit={iniciarBusqueda}>
+        <div  className='text-file-icon-search'>
+        <FormControl className={classes.formControlCategoria}>
+          <InputLabel id="demo-controlled-open-select-label">Categoria ticket</InputLabel>
+          <Select
+            labelId="demo-controlled-open-select-label"
+            id="demo-controlled-open-select"
+            name="searchProyecto"
+            value={filtro.searchProyecto}
+            onChange={onChangeSearch}
+          >
+            <MenuItem value="Todos los proyectos">Todas las categorias</MenuItem>
+            {renderizarCategoriaDeTicket()}
+          </Select>
+        </FormControl>
+        <CategoriasTickets
+         categorias={categoriaDeTicket}/>
+        </div>
         <FormControl className={classes.formControl}>
           <InputLabel id="demo-controlled-open-select-label">Estado</InputLabel>
           <Select
@@ -263,6 +309,7 @@ export default function ListaSolicitudes() {
             {renderizarEstados()}
           </Select>
         </FormControl>
+        <div className='text-file-icon-search'>
         <TextField
           className="input-relacion"
           label="Buscar"
@@ -277,6 +324,7 @@ export default function ListaSolicitudes() {
           <IconButton type="submit">
             <SearchIcon />
           </IconButton>
+        </div>
         </div>
       </form>
       <Divider />
