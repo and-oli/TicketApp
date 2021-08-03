@@ -1,7 +1,7 @@
 const ModuloSolicitud = require('../models/Solicitud');
-const Solicitud = ModuloSolicitud.modelo;
+const Solicitud = ModuloSolicitud.modulo;
 const ModuloUsuarios = require('../models/Usuario');
-const Usuarios = ModuloUsuarios.modelo;
+const Usuarios = ModuloUsuarios.modulo;
 
 module.exports = {
   getIncumbentes: async function (req, res) {

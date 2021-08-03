@@ -10,6 +10,6 @@ const nombreModelo = 'cuentaSolicitudes'
 
 module.exports = {
     schema: SecuenciaSolicitudesSchema,
-    modelo: mongoose.model(nombreModelo, SecuenciaSolicitudesSchema),
+    modulo: mongoose.model(nombreModelo, SecuenciaSolicitudesSchema),
     nombreModelo,
 };

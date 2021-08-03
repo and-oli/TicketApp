@@ -17,6 +17,7 @@ const archivo = require('./routes/archivo');
 const constantes = require('./routes/constantes');
 const notification = require('./routes/notification');
 const incumbentes = require('./routes/incumbentes');
+const categorias = require('./routes/categorias_ticket');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/archivo', archivo);
 app.use('/constantes', constantes);
 app.use('/notification', notification);
 app.use('/incumbentes', incumbentes);
+app.use('/categorias', categorias);
 
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');

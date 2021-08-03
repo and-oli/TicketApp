@@ -1,7 +1,7 @@
 const ModuloCliente = require('../models/Cliente');
-const Cliente = ModuloCliente.modelo;
+const Cliente = ModuloCliente.modulo;
 const ModuloUsuario = require('../models/Usuario');
-const Usuario = ModuloUsuario.modelo;
+const Usuario = ModuloUsuario.modulo;
 const bcrypt = require('bcrypt');
 
 module.exports = {
@@ -111,7 +111,7 @@ module.exports = {
   },
   getClientes: async function (res) {
     try {
-      const clientes = await Cliente.find({})
+      const clientes = await Cliente.find({}).sort({_id: -1})
       res.json({
         mensaje: 'Solicitud exitosa...',
         ok: true,

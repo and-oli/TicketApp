@@ -104,7 +104,7 @@ export default function DetalleSolicitud(props) {
 
   const handleTouchMove = (event) => {
     const touch = event.targetTouches[0];
-    setTouchEnd(touch.clientX);
+      setTouchEnd(touch.clientX);
   };
 
   const handleTouchEnd = () => {
@@ -123,17 +123,19 @@ export default function DetalleSolicitud(props) {
 
   return (
     <div className='detalles-solicitud-padre'>
-      <div className="title-paper">
-        <p>
-          <b>Solicitud #{idSolicitud}: {detalleSolicitud.resumen}</b>
-        </p>
-      </div>
+
       <div className="container-paper"
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onTouchStart={handleTouchStart}>
         <Paper className="solicitud-a" elevation={10}>
+          <div className="title-paper">
+            <p>
+              <b>Solicitud #{idSolicitud}: {detalleSolicitud.resumen}</b>
+            </p>
+          </div>
           <AppBar className='div-header' position='static'>
+            <Divider />
             <Tabs
               value={value}
               onChange={handleChange}
@@ -157,14 +159,14 @@ export default function DetalleSolicitud(props) {
             <span className="descripcion">
               <p>{detalleSolicitud.descripcion}</p>
             </span>
-            <p className='solicitud-a-p'><b>Cliente:</b>{cliente}</p>
-            <p className='solicitud-a-p'><b>Nombre del solicitante:</b>{solicitante.name}</p>
-            <p className='solicitud-a-p'><b>Correo:</b>{solicitante.email}</p>
-            <p className='solicitud-a-p'><b>Categoria:</b>{detalleSolicitud.categoria}</p>
-            <p className='solicitud-a-p'><b>Prioridad:</b>{detalleSolicitud.prioridad}</p>
-            <p className='solicitud-a-p'><b>Fecha de envío:</b>{detalleSolicitud.fechaHora}</p>
-            <p className='solicitud-a-p'><b>Estado:</b>{detalleSolicitud.estado}</p>
-            <p className='solicitud-a-p'><b>Asignada a:</b>{asignada} {roleAsignado ? `(${roleAsignado})` : null}</p>
+            <p className='solicitud-a-p'><b>Cliente:</b>&nbsp;{cliente}</p>
+            <p className='solicitud-a-p'><b>Nombre del solicitante:</b>&nbsp;{solicitante.name}</p>
+            <p className='solicitud-a-p'><b>Correo:</b>&nbsp;{solicitante.email}</p>
+            <p className='solicitud-a-p'><b>Categoria:</b>&nbsp;{detalleSolicitud.categoria}</p>
+            <p className='solicitud-a-p'><b>Prioridad:</b>&nbsp;{detalleSolicitud.prioridad}</p>
+            <p className='solicitud-a-p'><b>Fecha de envío:</b>&nbsp;{detalleSolicitud.fechaHora}</p>
+            <p className='solicitud-a-p'><b>Estado:</b>&nbsp;{detalleSolicitud.estado}</p>
+            <p className='solicitud-a-p'><b>Asignada a:</b>&nbsp;{asignada} {roleAsignado ? `(${roleAsignado})` : null}</p>
           </TabPanel>
           <TabPanel value={value} index={1}>
             <ListaCambios
@@ -190,4 +192,3 @@ export default function DetalleSolicitud(props) {
     </div>
   );
 };
-

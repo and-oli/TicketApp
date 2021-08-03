@@ -43,9 +43,9 @@ export default function ListaDeIncumbentes(props) {
     const incumbentesJson = await incumbentesActuales.json();
     const posiblesIncumbentesJson = await listaPosiblesIncumbentes.json();
     if (mountedRef.current) {
-    setListaIncumbentes(incumbentesJson.lista);
-    setPosiblesIncumbentes(posiblesIncumbentesJson.listaPosiblesUsuarios);
-    setCargandoIncumbentes(false);
+      setListaIncumbentes(incumbentesJson.lista);
+      setPosiblesIncumbentes(posiblesIncumbentesJson.listaPosiblesUsuarios);
+      setCargandoIncumbentes(false);
     }
   };
 
@@ -126,7 +126,8 @@ export default function ListaDeIncumbentes(props) {
       const chips = listaIncumbentes.map(incumbente => {
         return (
           <Chip
-            disabled={agregando ||
+            disabled={
+              agregando ||
               deshabilitarEntradas ||
               solicitante ===
               incumbente._id}

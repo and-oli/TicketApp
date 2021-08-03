@@ -17,6 +17,6 @@ const nombreModelo = 'tareas'
 
 module.exports = {
     schema: TareaSchema,
-    modelo: mongoose.model(nombreModelo, TareaSchema),
+    modulo: mongoose.model(nombreModelo, TareaSchema),
     nombreModelo,
 };

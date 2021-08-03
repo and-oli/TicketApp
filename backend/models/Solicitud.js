@@ -10,7 +10,14 @@ const SolicitudSchema = new Schema({
     prioridad:String,
     abierta: Boolean,
     categoria: String,
-    listaIncumbentes:[{type:Schema.Types.ObjectId, ref:'usuarios', unique:false}],
+    refTipoTicket: {
+        type:Schema.Types.ObjectId, 
+        ref:'TipoTicketSchema'
+    },
+    listaIncumbentes:[{
+        type:Schema.Types.ObjectId, 
+        ref:'usuarios', unique:false
+    }],
     refUsuarioSolicitante:{
         type: Schema.Types.ObjectId,
         ref: 'usuarios'
@@ -37,6 +44,6 @@ const nombreModelo = 'solicitudes'
 
 module.exports = {
     schema: SolicitudSchema,
-    modelo: mongoose.model(nombreModelo, SolicitudSchema),
+    modulo: mongoose.model(nombreModelo, SolicitudSchema),
     nombreModelo,
 };

@@ -6,6 +6,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import "../styles/EnviarSolicitud.css";
+import { Divider } from "@material-ui/core";
 
 export default function EnviarSolicitud() {
   const [loading, setloading] = useState(false);
@@ -39,7 +40,7 @@ export default function EnviarSolicitud() {
     );
 
     const categoriasSolicitud = await fetch(
-      "http://localhost:3001/constantes/categoriasSolicitud",
+      "http://localhost:3001/categorias",
       header
     );
 
@@ -53,13 +54,18 @@ export default function EnviarSolicitud() {
       header
     );
 
-    const clientes = await getClientes.json();
+    const resClientes = await getClientes.json();
     const resCategorias = await categoriasSolicitud.json();
     const resPrioridad = await prioridad.json();
     const resRequerimiento = await requerimiento.json();
 
-    setListaClientes(clientes.clientes);
-    setCategorias(Object.values(resCategorias));
+    if (resCategorias.ok) {
+      const todasLasCategorias = resCategorias.categorias.map(
+        cat => (cat.nombreCategoria)
+      )
+      setCategorias(todasLasCategorias);
+    }
+    setListaClientes(resClientes.clientes);
     setPrioridad(Object.values(resPrioridad));
     setRequerimiento(Object.values(resRequerimiento));
   };
@@ -151,11 +157,12 @@ export default function EnviarSolicitud() {
 
   return (
     <div>
-      <div className="title-envio">
-        <p>Introduzca los detalles de la solicitud</p>
-      </div>
       <form className="form-nueva-solicitud" onSubmit={enviarSolicitud}>
         <Paper className="paper-nueva-solicitud" elevation={20}>
+          <div className="title-envio">
+            <p>Introduzca los detalles de la solicitud</p>
+          </div>
+          <Divider />
           <div className="container-p">
             <div className="container-a">
               <div className='container-select-empty'>

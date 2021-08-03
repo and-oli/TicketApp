@@ -13,6 +13,6 @@ const nombreModelo = 'proyectos'
 
 module.exports = {
     schema: ProyectoSchema,
-    modelo: mongoose.model(nombreModelo, ProyectoSchema),
+    modulo: mongoose.model(nombreModelo, ProyectoSchema),
     nombreModelo,
 };

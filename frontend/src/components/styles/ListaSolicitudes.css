@@ -35,11 +35,11 @@
 #filter-form {
   display: flex;
   background-color: white;
-  height:40px;
+  height:auto;
   align-items: center;
   min-width: 350px;
   justify-content: center;
-  margin: 25px;
+  flex-wrap: wrap;
 }
 .MuiTableSortLabel-root:hover, .MuiTableSortLabel-root.MuiTableSortLabel-active {
   color: white !important;
@@ -62,4 +62,96 @@ a {
 
 .MuiTablePagination-toolbar {
   user-select: none;
+}
+
+.text-file-icon-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 350px;
+}
+
+/* Estilos para cambios en categorias */
+.cambios-en-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  background-color: white;
+  margin: 10px;
+}
+
+.cambios-en-categorias .button-modificar-categorias {
+  height: 35px;
+  width: 90px;
+  font-size: 50%;
+  color: white;
+  background-color: rgb(0, 0, 0);
+  line-height: 12px;
+  border: darkgrey;
+  border-radius: 2px;
+}
+
+#categorias-paper .Agregar-categorias {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+#categorias-paper .Agregar-categorias .button-Agregar-categorias {
+  height: 30px;
+  width: 70px;
+  font-size: 50%;
+  color: white;
+  background-color: rgb(0, 0, 0);
+  border: darkgrey;
+  align-self: center;
+}
+
+.categorias-existentes {
+  display: flex;
+  flex-direction: column;
+  height: 60%;
+  width: 100%;
+  min-width: 350px;
+  overflow-y: auto;
+}
+
+#categorias-paper h3 {
+  text-align: center;
+  margin: 10px;
+}
+
+.categorias-existentes p{
+  margin: 5px;
+}
+
+.categoria-input {
+  width: 70%;
+  margin: 10px !important;
+}
+.categoria-container {
+  display: flex; 
+  flex-direction: row;
+  width: 96%;
+  padding-left: 5px; 
+  justify-content: space-between;
+}
+
+.editar-categoria {
+  display: flex; 
+  justify-content: space-between;
+  height: 30px;
+  padding: 5px;
+}
+
+.icono-eliminar-categoria {
+  margin-left: 30px;
+}
+
+.mensaje-respuesta {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }

@@ -14,6 +14,6 @@ const nombreModelo = 'notificaciones'
 
 module.exports = {
     schema: NotificationSchema,
-    modelo: mongoose.model(nombreModelo, NotificationSchema),
+    modulo: mongoose.model(nombreModelo, NotificationSchema),
     nombreModelo,
 };

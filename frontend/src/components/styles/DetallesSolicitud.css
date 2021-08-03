@@ -21,6 +21,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
+  margin-top: 40px;
   width: 60%;
   min-width: 370px;
 } 

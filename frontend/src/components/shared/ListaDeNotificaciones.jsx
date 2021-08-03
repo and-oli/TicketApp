@@ -77,7 +77,7 @@ function ListaDeNotificaciones() {
       if (notificacionesEliminadasJson.ok) {
         window.location.reload();
       }
-    } 
+    }
   };
 
   const checkboxChange = (event) => {
@@ -169,45 +169,45 @@ function ListaDeNotificaciones() {
         <p>Notificaciones</p>
       </div>
       {notificaciones.length?
-      <div className="eliminar-notificacion">
-        <div className="icon-delete-container">
-          {eliminar || !notificaciones.length ?
-            <DeleteIcon
+        <div className="eliminar-notificacion">
+          <div className="icon-delete-container">
+            {eliminar || !notificaciones.length ?
+              <DeleteIcon
+                onClick={iconDeleteClick}
+                id="eliminar"
+              /> :
+              <DeleteForeverIcon
+                id="cancelar"
+                onClick={iconDeleteClick}
+              />}
+            <p
+              style={noMostrar}
               onClick={iconDeleteClick}
-              id="eliminar"
-            /> :
-            <DeleteForeverIcon
-              id="cancelar"
-              onClick={iconDeleteClick}
-            />}
+            >
+              Cancelar
+            </p>
+            <FormControlLabel
+              style={noMostrar}
+              control={
+                <input
+                  disabled={loading}
+                  type="checkbox"
+                  ref={srefSeleccionarTodo}
+                />
+              }
+              onChange={seleccionarTodo}
+              label="Seleccionar todo:"
+              labelPlacement="start"
+            />
+          </div>
           <p
+            className="eliminar-notificacion-p"
             style={noMostrar}
-            onClick={iconDeleteClick}
+            onClick={handelClickDelete}
           >
-            Cancelar
+            Eliminar({cuentaEliminarNotificaciones})
           </p>
-          <FormControlLabel
-            style={noMostrar}
-            control={
-              <input
-                disabled={loading}
-                type="checkbox"
-                ref={srefSeleccionarTodo}
-              />
-            }
-            onChange={seleccionarTodo}
-            label="Seleccionar todo:"
-            labelPlacement="start"
-          />
-        </div>
-        <p
-          className="eliminar-notificacion-p"
-          style={noMostrar}
-          onClick={handelClickDelete}
-        >
-          Eliminar({cuentaEliminarNotificaciones})
-        </p>
-      </div>: null
+        </div>: null
       }
       {loading ? (
         <div className="container-sin-notificaciones">

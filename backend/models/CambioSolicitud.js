@@ -26,6 +26,6 @@ const nombreModelo = 'cambiosSolicitudes'
 
 module.exports = {
     schema: CambioSolicitudSchema,
-    modelo: mongoose.model(nombreModelo, CambioSolicitudSchema),
+    modulo: mongoose.model(nombreModelo, CambioSolicitudSchema),
     nombreModelo,
 };

@@ -31,8 +31,8 @@ export default function CambiosSolicitud(props) {
   } = props;
 
   const mountedRef = useRef(false);
-  
-    useEffect(() => {
+
+  useEffect(() => {
     mountedRef.current = true
     return () => {
       mountedRef.current = false
@@ -59,11 +59,11 @@ export default function CambiosSolicitud(props) {
     const resTecnicos = await tecnicos.json();
 
     if (mountedRef.current) {
-    setEstados(Object.values(resEstados));
-    setTecnicos(resTecnicos.tecnicos);
-    const categoriasDeArchivos = Object.values(categorias);
-    categoriasDeArchivos.forEach((cat) => (archObj[cat] = undefined));
-    setArchivos(archObj);
+      setEstados(Object.values(resEstados));
+      setTecnicos(resTecnicos.tecnicos);
+      const categoriasDeArchivos = Object.values(categorias);
+      categoriasDeArchivos.forEach((cat) => (archObj[cat] = undefined));
+      setArchivos(archObj);
     }
   };
 

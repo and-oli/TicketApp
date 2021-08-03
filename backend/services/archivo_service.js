@@ -1,6 +1,6 @@
 const UploadFile = require('../utils/UploadToGCS');
 const ModuloArchivo = require('../models/Archivo');
-const Archivo = ModuloArchivo.modelo;
+const Archivo = ModuloArchivo.modulo;
 
 module.exports = {
 

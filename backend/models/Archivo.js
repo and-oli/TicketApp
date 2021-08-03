@@ -11,6 +11,6 @@ const nombreModelo = 'archivos'
 
 module.exports = {
     schema: ArchivoSchema,
-    modelo: mongoose.model(nombreModelo, ArchivoSchema),
+    modulo: mongoose.model(nombreModelo, ArchivoSchema),
     nombreModelo,
 };

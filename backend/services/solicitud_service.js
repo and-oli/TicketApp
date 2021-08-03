@@ -1,8 +1,8 @@
 const ModuloSecuenciaSolicitudes = require('../models/SecuenciaSolicitudes');
 const ModuloSolicitud = require('../models/Solicitud');
 const estadoPredeterminado = require('../data/estado.json').sinAsignar
-const Solicitud = ModuloSolicitud.modelo;
-const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modelo;
+const Solicitud = ModuloSolicitud.modulo;
+const SecuenciaSolicitudes = ModuloSecuenciaSolicitudes.modulo;
 const mongoose = require('mongoose')
 function enviarError(res, error) {
   console.error(error.stack);
@@ -20,6 +20,7 @@ module.exports = {
       const infoFiltro = req.query;
       let filtroEstado;
       let filtroResumen;
+      let filtroProyecto;
       let filtroUsuario = [];
       let filtro = {};
       const regexNumeros = /\d+/g;
@@ -34,6 +35,10 @@ module.exports = {
       if (infoFiltro.estado) {
         filtroEstado = { estado: infoFiltro.estado };
       };
+
+      if(infoFiltro.proyecto) {
+        filtroProyecto = { refProyecto: mongoose.Types.ObjectId(infoFiltro.proyecto) }
+      }
 
       if (infoFiltro.texto) {
         filtroResumen = { resumen: { $regex: infoFiltro.texto } };
@@ -69,7 +74,8 @@ module.exports = {
       const filtroAgregacion = {
         $match: {
           ...filtro,
-          ...filtroEstado
+          ...filtroEstado,
+          ...filtroProyecto,
         },
       };
 
@@ -81,7 +87,7 @@ module.exports = {
       if (resultadoCuenta[0]) {
         cuenta = resultadoCuenta[0].cuenta;
       }
-
+      
       const solicitudes = await Solicitud.aggregate([
         filtroAgregacion,
         {
@@ -90,6 +96,14 @@ module.exports = {
             localField: 'refCliente',
             foreignField: '_id',
             as: 'cliente',
+          },
+        },
+        {
+          $lookup: {
+            from: 'proyectos',
+            localField: 'refCliente',
+            foreignField: 'refCliente',
+            as: 'proyecto',
           },
         },
         {

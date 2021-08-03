@@ -9,6 +9,6 @@ const nombreModelo = 'clientes'
 
 module.exports = {
     schema: ClienteSchema,
-    modelo: mongoose.model(nombreModelo, ClienteSchema),
+    modulo: mongoose.model(nombreModelo, ClienteSchema),
     nombreModelo,
 };

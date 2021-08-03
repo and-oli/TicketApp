@@ -1,4 +1,4 @@
-const Notificacion = require('../models/Notification').modelo;
+const Notificacion = require('../models/Notification').modulo;
 const webPush = require('web-push');
 
 module.exports = {

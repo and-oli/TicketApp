@@ -1,5 +1,5 @@
 const ModuloUsuario = require("../models/Usuario");
-const Usuario = ModuloUsuario.modelo;
+const Usuario = ModuloUsuario.modulo;
 const jwt = require("jsonwebtoken"); 
 const secretKey = require("../config/config").secret
 const roles = require("../data/roles.json")

@@ -26,8 +26,8 @@
   flex-direction: column;
   width: 40%;
   margin-bottom: 15px;
+  margin-top: 40px;
   min-width: 350px;
-  padding: 20px;
 }
 
 .container-p {
@@ -57,7 +57,7 @@
 
 .form-control-select {
   width: 90% !important;
-  min-width: 350px !important;
+  min-width: 330px !important;
   align-self: center;
   align-items: baseline;
   flex-direction: column !important;
@@ -84,7 +84,7 @@
 .form-control-text {
   width: 95%;
   margin: 10px;
-  min-width: 350px !important;
+  min-width: 330px !important;
   align-self: center;
 }
 
@@ -100,7 +100,7 @@
 .form-control-descripcion {
   width: 70%;
   margin: 20px !important;
-  min-width: 350px !important;
+  min-width: 330px !important;
   align-self: center;
 }
 
@@ -114,13 +114,18 @@
 }
 
 .button-enviar-nueva-solicitud .button-enviar {
-  height: 35px;
+  height: 40px;
   width: 190px;
   font-size: 15px;
+  margin-bottom: 20px;
   color: white;
   background-color: rgb(0, 0, 0);
   border: darkgrey;
   border-radius: 2px;
+}
+
+.button-enviar-nueva-solicitud .icon-enviar {
+  margin-bottom: 20px;
 }
 
 .informacion-incompleta {

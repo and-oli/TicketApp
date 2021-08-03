@@ -1,18 +1,57 @@
-const ModeloUsuario = require('./models/Usuario').modelo;
-const SecuenciaSolicitudes = require('./models/SecuenciaSolicitudes').modelo;
-const ModeloSolicitudes = require('./models/Solicitud').modelo;
-const ModeloProyecto = require('./models/Proyecto').modelo;
-const ModeloCliente = require('./models/Cliente').modelo;
-const ModeloNotificaciones = require('./models/Notification').modelo
-const ModeloCambioSolicitudes = require('./models/CambioSolicitud').modelo
-const ModeloArchivos = require('./models/Archivo').modelo
+const ModeloUsuario = require('./models/Usuario').modulo;
+const SecuenciaSolicitudes = require('./models/SecuenciaSolicitudes').modulo;
+const ModeloSolicitudes = require('./models/Solicitud').modulo;
+const ModeloProyecto = require('./models/Proyecto').modulo;
+const ModeloCliente = require('./models/Cliente').modulo;
+const ModeloNotificaciones = require('./models/Notification').modulo
+const ModeloCambioSolicitudes = require('./models/CambioSolicitud').modulo
+const ModeloArchivos = require('./models/Archivo').modulo
+const ModeloCategoria = require('./models/Categoria').modulo
 const estado = require('./data/estado.json').sinAsignar
-const categorias = require('./data/categorias_solicitud.json')
 const prioridades = require('./data/prioridad.json')
 const config = require('./config/config');
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
+const categorias = [
+  "Aires acondicionados",
+  "Alquiler",
+  "Backup's",
+  "Correo electronico",
+  "Cuenta de Acceso",
+  "Electricidad",
+  "General",
+  "Gestion documental",
+  "Hardware",
+  "Infraestructura - Obra civil",
+  "Internet",
+  "Monitoreo",
+  "Programacion de tecnico",
+  "Redes de datos",
+  "Seguridad Informatica",
+  "Software",
+  "Synergy",
+  "Telefonia",
+]
+
+const categoriasDeTicket = [
+  "Soporte tecnico"
+]
+async function categoriasNuevas() {
+  const mapeoCategorias = categorias.map((cat) => ({ nombreCategoria: cat }))
+  try {
+    const crearCategorias = await ModeloCategoria.create(mapeoCategorias);
+    if (crearCategorias.length) {
+      console.log(crearCategorias.length + 'categorias creadas')
+      return true
+    }
+  } catch (err) {
+    console.log(err)
+  }
+
+}
+
+
 
 async function newClient() {
   let clientesACrear = [];
@@ -30,7 +69,7 @@ async function newClient() {
 
   try {
     const cantidad = await ModeloCliente.create(clientesACrear);
-    console.log(cantidad.length+' Clientes creados')
+    console.log(cantidad.length + ' Clientes creados')
     return true
 
   } catch (error) {
@@ -42,25 +81,19 @@ async function newProjects() {
   let proyecto = {
     "nombre": "Proyecto"
   };
-  let newProyectos = [];
+  let newProyectos
   let refClientes = [];
-  const count = await ModeloProyecto.countDocuments();
   const clientes = await ModeloCliente.find({}).select('_id');
 
   clientes.forEach(ref => refClientes.push(ref._id));
+  newProyectos = refClientes.map((refCliente, i) => ({
+    nombre: proyecto.nombre + (i + 1),
+    refCliente: refCliente
+  }))
 
-  for (var i = 1; i <= 200; i++) {
-    let numeroCliente = count + i;
-    const proyectData = {};
-
-    proyectData.nombre = proyecto.nombre + numeroCliente;
-    proyectData.refCliente = refClientes[Math.floor(Math.random() * refClientes.length)];
-
-    newProyectos.push(proyectData);
-  }
   try {
     const cantidad = await ModeloProyecto.create(newProyectos);
-    console.log(cantidad.length+' Proyectos creados')
+    console.log(cantidad.length + ' Proyectos creados')
     return true
 
   } catch (error) {
@@ -111,7 +144,7 @@ async function newUsers() {
     };
 
     const cantidad = await ModeloUsuario.create(users);
-    console.log(cantidad.length+' Usuarios creadas')
+    console.log(cantidad.length + ' Usuarios creadas')
     return true
   } catch (error) {
     console.error(error);
@@ -136,16 +169,19 @@ async function nuevasSolicitudes() {
     const idCount = await SecuenciaSolicitudes.find({});
     const count = idCount[0].secuencia;
     const refId = [];
-    const idUser = await ModeloUsuario.find({}, { refCliente: 1, name: 1});
+    const idUser = await ModeloUsuario.find({}, { refCliente: 1, name: 1 });
     let refAdmin
     idUser.map(refUser => {
-      if(refUser.name === 'Admin') {
+      if (refUser.name === 'Admin') {
         refAdmin = refUser._id
       }
       if (refUser.refCliente) {
         refId.push(refUser);
       };
     });
+
+
+
     const data = {
       "resumen": "Resumen solicitud # ",
       "descripcion": "Descripcion solicitud # ",
@@ -157,6 +193,11 @@ async function nuevasSolicitudes() {
       const categoria = categoriaSolicitudes[Math.floor(Math.random() * categoriaSolicitudes.length)];
       const prioridad = prioridadSolicitudes[Math.floor(Math.random() * prioridadSolicitudes.length)]
 
+      const refProyecto = await ModeloProyecto.findOne({ refCliente: mongoose.Types.ObjectId(refUsuarioRandom.refCliente) })
+      let refProyectoRandom = refProyecto._id
+      if (refProyectoRandom === undefined) {
+        refProyectoRandom = refProyecto[Math.floor(Math.random() * refProyecto.length)]
+      }
       const id = count + i;
       solicitud.idSolicitud = id;
       solicitud.resumen = data.resumen + id;
@@ -169,7 +210,7 @@ async function nuevasSolicitudes() {
       solicitud.refCliente = refUsuarioRandom.refCliente;
       solicitud.listaIncumbentes = refUsuarioRandom._id;
       solicitud.refUsuarioSolicitante = refUsuarioRandom._id;
-
+      solicitud.refProyecto = refProyectoRandom
       documentoDeSolicitudes.push(solicitud);
     }
     await SecuenciaSolicitudes.updateOne(
@@ -179,7 +220,7 @@ async function nuevasSolicitudes() {
 
     const cantidad = await ModeloSolicitudes.create(documentoDeSolicitudes);
 
-    console.log(cantidad.length+' silicitudes creadas')
+    console.log(cantidad.length + ' silicitudes creadas')
     return true
 
   } catch (error) {
@@ -189,6 +230,7 @@ async function nuevasSolicitudes() {
 
 async function deleteColections() {
   const modelos = {
+    ModeloCategoria: ModeloCategoria,
     ModeloUsuario: ModeloUsuario,
     ModeloSolicitudes: ModeloSolicitudes,
     ModeloProyecto: ModeloProyecto,
@@ -207,7 +249,7 @@ async function deleteColections() {
     };
     return true
   } catch (error) {
-    console.log(error);
+    console.log(error.stack);
   };
 
 };
@@ -215,8 +257,10 @@ async function deleteColections() {
 async function createDB(deleteAll) {
   try {
     if (deleteAll === 'delete') {
+
       const deleteDB = await deleteColections()
       if (deleteDB) {
+        await categoriasNuevas();
         const clientes = await newClient();
         if (clientes) {
           const users = await newUsers();
