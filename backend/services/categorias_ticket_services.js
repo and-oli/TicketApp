@@ -1,8 +1,8 @@
-const CategoriaSchema = require('../models/Categoria');
-const ModuloCategoria = CategoriaSchema.modulo;
+const TipoTicketSchema = require('../models/TipoTicket');
+const ModuloTipoTicket = TipoTicketSchema.modulo;
 
 const confirmarRepetido = async (nombre) => {
-  const confirmacion = await ModuloCategoria.find({ nombreCategoria: nombre });
+  const confirmacion = await ModuloTipoTicket.find({ nombreCategoriaTicket: nombre });
   if (confirmacion.length) {
     return true;
   } else {
@@ -13,7 +13,7 @@ const confirmarRepetido = async (nombre) => {
 module.exports = {
   getCategorias: async (req, res) => {
     try {
-      const categorias = await ModuloCategoria.find({});
+      const categorias = await ModuloTipoTicket.find({});
       res.json({ ok: true, categorias });
     } catch (err) {
       console.log(err);
@@ -22,18 +22,18 @@ module.exports = {
   },
 
   postCategorias: async (req, res) => {
-    const nuevaCategoria = req.body.nombreNuevaCategoria;
+    const nuevaCategoria = req.body.nombreCategoriaTicket;
     try {
       const repetido = await confirmarRepetido(nuevaCategoria);
       if (repetido) {
         res.json({ ok: false, mensaje: 'La categoria ya existe' });
       } else {
-        await ModuloCategoria.create({ nombreCategoria: nuevaCategoria });
-        res.json({ ok: true, mensaje: 'Nueva categoria' });
+        await ModuloTipoTicket.create({ nombreCategoriaTicket: nuevaCategoria });
+        res.json({ ok: true, mensaje: 'Nueva categoria agregada' });
       }
     } catch (err) {
       console.log(err);
-      res.json({ ok: false, mensaje: 'hubo un error' });
+      res.json({ ok: false, mensaje: 'la categoria no pudo ser agregada' });
     }
   },
 
@@ -42,21 +42,17 @@ module.exports = {
     try {
       const repetido = await confirmarRepetido(informacionCategoria.nuevoNombreCategoria);
       if (!repetido) {
-        await ModuloCategoria.updateOne(
-          {
-            _id: informacionCategoria.id
-          },
-          {
-            nombreCategoria: informacionCategoria.nuevoNombreCategoria
-          }
+        await ModuloTipoTicket.updateOne(
+          { _id: informacionCategoria.id },
+          { nombreCategoriaTicket: informacionCategoria.nuevoNombreCategoria }
         );
-        res.json({ ok: true, mensaje: 'categoria actualizada con exito' });
+        res.json({ ok: true, mensaje: 'Categoria actualizada con exito' });
       } else {
         res.json({ ok: false, mensaje: 'La categoria ya existe' })
       }
     } catch (err) {
       console.log(err);
-      res.json({ ok: false, mensaje: 'hubo un error' })
+      res.json({ ok: false, mensaje: 'La categoria no pudo ser editada' })
     }
   },
 

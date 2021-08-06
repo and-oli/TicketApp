@@ -17,7 +17,7 @@ const archivo = require('./routes/archivo');
 const constantes = require('./routes/constantes');
 const notification = require('./routes/notification');
 const incumbentes = require('./routes/incumbentes');
-const categorias = require('./routes/categorias_ticket');
+const categorias = require('./routes/categoriasTicket');
 
 const app = express();
 

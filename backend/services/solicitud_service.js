@@ -19,15 +19,14 @@ module.exports = {
       const userInfo = req.decoded;
       const infoFiltro = req.query;
       let filtroEstado;
-      let filtroResumen;
-      let filtroProyecto;
-      let filtroUsuario = [];
+      let filtroCategoriaTicket;
+      let filtroUsuario = {};
+      let filtroResumen = {};
       let filtro = {};
       const regexNumeros = /\d+/g;
       let posiblesIds = [];
       const coincidencias = infoFiltro.texto.match(regexNumeros);
       let ordenResultado = { idSolicitud: -1 };
-
       if (coincidencias) {
         posiblesIds = coincidencias.map(c => Number.parseInt(c));
       }
@@ -36,13 +35,22 @@ module.exports = {
         filtroEstado = { estado: infoFiltro.estado };
       };
 
-      if(infoFiltro.proyecto) {
-        filtroProyecto = { refProyecto: mongoose.Types.ObjectId(infoFiltro.proyecto) }
+      if (infoFiltro.proyecto) {
+        filtroCategoriaTicket = { refTipoTicket: mongoose.Types.ObjectId(infoFiltro.proyecto) }
       }
 
       if (infoFiltro.texto) {
-        filtroResumen = { resumen: { $regex: infoFiltro.texto } };
-      };
+        filtroResumen = {
+          $or: [
+            { resumen: { $regex: infoFiltro.texto } },
+            {
+              idSolicitud: {
+                $in: posiblesIds
+              },
+            }
+          ]
+        };
+      }
 
       if (infoFiltro.ordenarPor) {
         ordenResultado = {};
@@ -52,30 +60,27 @@ module.exports = {
       const pagina = Number(infoFiltro.pagina);
 
       if (userInfo.role !== 'ADMINISTRADOR') {
-        filtroUsuario = [
-          { refUsuarioSolicitante: mongoose.Types.ObjectId(userInfo.id) },
-          { dueno: mongoose.Types.ObjectId(userInfo.id) },
-          { listaIncumbentes: mongoose.Types.ObjectId(userInfo.id) },
-        ]
-
-        filtro = {
+        filtroUsuario = {
           $or: [
-            filtroResumen,
-            {
-              idSolicitud: {
-                $in: posiblesIds
-              },
-            }
-          ],
-          $or: filtroUsuario,
+            { refUsuarioSolicitante: mongoose.Types.ObjectId(userInfo.id) },
+            { dueno: mongoose.Types.ObjectId(userInfo.id) },
+            { listaIncumbentes: mongoose.Types.ObjectId(userInfo.id) },
+          ]
         }
+      }
+
+      filtro = {
+        $and: [
+          filtroResumen,
+          filtroUsuario,
+        ],
       }
 
       const filtroAgregacion = {
         $match: {
           ...filtro,
           ...filtroEstado,
-          ...filtroProyecto,
+          ...filtroCategoriaTicket,
         },
       };
 
@@ -83,11 +88,12 @@ module.exports = {
         filtroAgregacion,
         { $count: "cuenta" },
       ]);
+
       let cuenta = 0;
       if (resultadoCuenta[0]) {
         cuenta = resultadoCuenta[0].cuenta;
       }
-      
+
       const solicitudes = await Solicitud.aggregate([
         filtroAgregacion,
         {

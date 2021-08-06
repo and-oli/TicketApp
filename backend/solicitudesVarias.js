@@ -7,6 +7,7 @@ const ModeloNotificaciones = require('./models/Notification').modulo
 const ModeloCambioSolicitudes = require('./models/CambioSolicitud').modulo
 const ModeloArchivos = require('./models/Archivo').modulo
 const ModeloCategoria = require('./models/Categoria').modulo
+const ModeloCategoriaTicket = require('./models/TipoTicket').modulo;
 const estado = require('./data/estado.json').sinAsignar
 const prioridades = require('./data/prioridad.json')
 const config = require('./config/config');
@@ -32,11 +33,27 @@ const categorias = [
   "Software",
   "Synergy",
   "Telefonia",
-]
+];
 
 const categoriasDeTicket = [
-  "Soporte tecnico"
-]
+  "Soporte tecnico",
+  "Ejemplo"
+];
+
+async function categoriasTicketNuevas() {
+  const mapeoCategoriasTicket = categoriasDeTicket.map((cat) => ({ nombreCategoriaTicket: cat }))
+  try {
+    const crearCategoriasTicket = await ModeloCategoriaTicket.create(mapeoCategoriasTicket);
+    if (crearCategoriasTicket.length) {
+      console.log(crearCategoriasTicket.length + 'categorias creadas')
+      return true
+    }
+  } catch (err) {
+    console.log(err)
+  }
+
+}
+
 async function categoriasNuevas() {
   const mapeoCategorias = categorias.map((cat) => ({ nombreCategoria: cat }))
   try {
@@ -50,8 +67,6 @@ async function categoriasNuevas() {
   }
 
 }
-
-
 
 async function newClient() {
   let clientesACrear = [];
@@ -158,7 +173,7 @@ async function nuevasSolicitudes() {
   const prioridadSolicitudes = Object.values(prioridades);
   try {
     const secuenciaExiste = await SecuenciaSolicitudes.countDocuments({});
-
+    const categoriasDeTicket = await ModeloCategoriaTicket.find({});
     if (!secuenciaExiste) {
       const nuevaSecuencia = new SecuenciaSolicitudes();
       nuevaSecuencia.secuencia = 1;
@@ -192,7 +207,7 @@ async function nuevasSolicitudes() {
       const refUsuarioRandom = refId[Math.floor(Math.random() * refId.length)];
       const categoria = categoriaSolicitudes[Math.floor(Math.random() * categoriaSolicitudes.length)];
       const prioridad = prioridadSolicitudes[Math.floor(Math.random() * prioridadSolicitudes.length)]
-
+      const categoriaTicket = categoriasDeTicket[Math.floor(Math.random() * categoriasDeTicket.length)]
       const refProyecto = await ModeloProyecto.findOne({ refCliente: mongoose.Types.ObjectId(refUsuarioRandom.refCliente) })
       let refProyectoRandom = refProyecto._id
       if (refProyectoRandom === undefined) {
@@ -209,6 +224,7 @@ async function nuevasSolicitudes() {
       solicitud.categoria = categoria;
       solicitud.refCliente = refUsuarioRandom.refCliente;
       solicitud.listaIncumbentes = refUsuarioRandom._id;
+      solicitud.refTipoTicket = categoriaTicket._id;
       solicitud.refUsuarioSolicitante = refUsuarioRandom._id;
       solicitud.refProyecto = refProyectoRandom
       documentoDeSolicitudes.push(solicitud);
@@ -238,6 +254,7 @@ async function deleteColections() {
     ModeloNotificaciones: ModeloNotificaciones,
     ModeloCambioSolicitudes: ModeloCambioSolicitudes,
     ModeloArchivos: ModeloArchivos,
+    ModeloCategoriaTicket: ModeloCategoriaTicket 
   };
   try {
     for (let llave in modelos) {
@@ -261,6 +278,7 @@ async function createDB(deleteAll) {
       const deleteDB = await deleteColections()
       if (deleteDB) {
         await categoriasNuevas();
+        await categoriasTicketNuevas();
         const clientes = await newClient();
         if (clientes) {
           const users = await newUsers();

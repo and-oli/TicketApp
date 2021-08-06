@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var TipoTicketSchema = new Schema({
-  nombreCategoria: String,
+  nombreCategoriaTicket: String,
 });
 
 const nombreModelo = 'TipoTicket'   
