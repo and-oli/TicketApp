@@ -1,3 +1,9 @@
+.login-container-padre { 
+  display: flex; 
+  justify-content: center; 
+  min-width: 360px;
+}
+
 .login-container {
   display: flex;
   align-items: center;
@@ -27,6 +33,7 @@
   position: absolute;
   align-items: center;
   height: 100px;
+  min-width: 360px;
   width: 100%;
   background-color: black;
 }
@@ -38,6 +45,12 @@
   width: auto;
   height: 250px;
 }
+
+.container-title h6 {
+    margin-top: 0px;
+    height: 10px;
+    text-align: center;
+  }
 
 .title {
   font-size: 40px;
@@ -54,6 +67,16 @@
   background-color: black !important;
   color: white !important;
   align-self: center;
+  width: 130px !important;
+  font-size: 10px !important;
+  align-self: center !important;
+  margin-top: 17px !important;
+}
+
+.spinner-load { 
+  width: 40px; 
+  align-self: center; 
+  margin-top: 10px;
 }
 
 .button-login:hover {
@@ -63,4 +86,7 @@
    0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
 }
 
-/* .MuiButton-contained */
+.login-input { 
+  width: 200px; 
+  align-self: center; 
+}

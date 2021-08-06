@@ -11,7 +11,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Select from "@material-ui/core/Select";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
 import SearchIcon from "@material-ui/icons/Search";
 import TableRow from "@material-ui/core/TableRow";
 import Divider from "@material-ui/core/Divider";
@@ -20,12 +19,12 @@ import { Link } from "react-router-dom";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableFooter from "@material-ui/core/TableFooter";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import CategoriasTickets  from "../shared/categoriasTicket";
+import CategoriasTickets from "../shared/CategoriasTicket";
 import "../styles/ListaSolicitudes.css";
 
 const useStyles = makeStyles((theme) => ({
   searchIcon: {
-    padding: theme.spacing(0, 2),
+    padding: 8,
     height: "100%",
     display: "flex",
     alignItems: "center",
@@ -41,12 +40,23 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 130,
     height: "auto",
+    '@media screen and (min-width: 0px) and (max-width: 500px)': {
+      width: '335px !important',
+    },
   },
+
+  root: {
+    minWidth: 360,
+  },
+
   formControlCategoria: {
     display: "flex",
     margin: theme.spacing(1),
     minWidth: 220,
     height: "auto",
+    '@media screen and (min-width: 0px) and (max-width: 500px)': {
+      width: '290px !important',
+    },
   },
 }));
 
@@ -70,7 +80,8 @@ const TableRowAlt = withStyles((theme) => ({
   },
 }))(TableRow);
 
-export default function ListaSolicitudes() {
+export default function ListaSolicitudes(props) {
+  const { userRole } = props;
   const [listaSolicitudes, setListaSolicitudes] = useState([]);
   const [page, setPage] = useState(0);
   const [cuenta, setCuenta] = useState(0);
@@ -114,7 +125,6 @@ export default function ListaSolicitudes() {
 
     const estados = await fetchEstados.json();
     const categoriaTicket = todasLasCategoriasTickets.categorias;
-
     setCategoriaDeTicket(categoriaTicket)
     setEstados(Object.values(estados));
   };
@@ -153,7 +163,7 @@ export default function ListaSolicitudes() {
     const estado = filtro.searchEstado === "Todos" ? "" : filtro.searchEstado;
     const proyecto = filtro.searchProyecto === "Todos los proyectos" ? "" : filtro.searchProyecto;
     const resFiltro = await fetch(
-      `http://localhost:3001/solicitudes/?estado=${estado}&proyecto=${proyecto}&texto=${filtro.searchTexto}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
+      `http://localhost:3001/solicitudes/?estado=${estado}&proyecto=${proyecto}&texto=${filtro.searchTexto.trim()}&pagina=${page}&cantidad=${rowsPerPage}&ordenarPor=${ordenarPor}&orden=${orden}`,
       {
         method: "GET",
         headers: {
@@ -221,17 +231,17 @@ export default function ListaSolicitudes() {
 
   const renderizarEstados = () => {
     return estados.map((estado, i) => (
-      <MenuItem value={estado} key={i}>
+      <option value={estado} key={i}>
         {estado}
-      </MenuItem>
+      </option>
     ));
   };
 
   const renderizarCategoriaDeTicket = () => {
     return categoriaDeTicket.map((categoria, i) => (
-      <MenuItem value={categoria._id} key={i}>
-        {categoria.nombreCategoria}
-      </MenuItem>
+      <option value={categoria._id} key={i}>
+        {categoria.nombreCategoriaTicket}
+      </option>
     ))
   }
 
@@ -276,59 +286,83 @@ export default function ListaSolicitudes() {
     { id: "fechaHora", titulo: "Fecha" },
   ];
 
+  const confirmarRoles = {
+    especialista: userRole === "Especialista",
+    administrador: userRole === "ADMINISTRADOR",
+  }
+
   return (
     <div>
       <form id="filter-form" onSubmit={iniciarBusqueda}>
-        <div  className='text-file-icon-search'>
-        <FormControl className={classes.formControlCategoria}>
-          <InputLabel id="demo-controlled-open-select-label">Categoria ticket</InputLabel>
-          <Select
-            labelId="demo-controlled-open-select-label"
-            id="demo-controlled-open-select"
-            name="searchProyecto"
-            value={filtro.searchProyecto}
-            onChange={onChangeSearch}
-          >
-            <MenuItem value="Todos los proyectos">Todas las categorias</MenuItem>
-            {renderizarCategoriaDeTicket()}
-          </Select>
-        </FormControl>
-        <CategoriasTickets
-         categorias={categoriaDeTicket}/>
-        </div>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="demo-controlled-open-select-label">Estado</InputLabel>
-          <Select
-            labelId="demo-controlled-open-select-label"
-            id="demo-controlled-open-select"
-            name="searchEstado"
-            value={filtro.searchEstado}
-            onChange={onChangeSearch}
-          >
-            <MenuItem value="Todos">Todos</MenuItem>
-            {renderizarEstados()}
-          </Select>
-        </FormControl>
+        {confirmarRoles.especialista
+          || confirmarRoles.administrador
+          ? <div className='text-file-icon-search'>
+            <FormControl className={classes.formControlCategoria}>
+              <InputLabel id="demo-controlled-open-select-label">
+                Categoria ticket
+              </InputLabel>
+              <Select
+                native
+                value={filtro.searchProyecto}
+                onChange={onChangeSearch}
+                labelId="demo-controlled-open-select-label"
+                inputProps={{
+                  name: "searchProyecto",
+                  id: "demo-controlled-open-select",
+                }}
+              >
+                <option value="Todos los proyectos">
+                  Todas las categorias
+                </option>
+                {renderizarCategoriaDeTicket()}
+              </Select>
+            </FormControl>
+            {confirmarRoles.administrador
+              ? <CategoriasTickets categorias={categoriaDeTicket} />
+              : null}
+          </div>
+          : null
+        }
         <div className='text-file-icon-search'>
-        <TextField
-          className="input-relacion"
-          label="Buscar"
-          value={filtro.searchTexto}
-          name="searchTexto"
-          onChange={onChangeSearch}
-          inputProps={{ "aria-label": "search" }}
-          variant="outlined"
-          margin="dense"
-        />
-        <div className={classes.searchIcon}>
-          <IconButton type="submit">
-            <SearchIcon />
-          </IconButton>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-controlled-open-select-estado-label">
+              Estado
+            </InputLabel>
+            <Select
+              native
+              labelId="demo-controlled-open-select-estado-label"
+              inputProps={{
+                id: "demo-controlled-open-estado-select",
+                name: "searchEstado"
+              }}
+              value={filtro.searchEstado}
+              onChange={onChangeSearch}
+            >
+              <option value="Todos">Todos</option>
+              {renderizarEstados()}
+            </Select>
+          </FormControl>
         </div>
+        <div className='text-file-icon-search'>
+          <TextField
+            className="input-relacion"
+            label="Buscar"
+            value={filtro.searchTexto}
+            name="searchTexto"
+            onChange={onChangeSearch}
+            inputProps={{ "aria-label": "search" }}
+            variant="outlined"
+            margin="dense"
+          />
+          <div className={classes.searchIcon}>
+            <IconButton type="submit">
+              <SearchIcon />
+            </IconButton>
+          </div>
         </div>
       </form>
       <Divider />
-      <TableContainer component={Paper}>
+      <TableContainer className={classes.root} component={Paper}>
         <Table id="table" size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
@@ -341,6 +375,7 @@ export default function ListaSolicitudes() {
                     sortDirection={ordenarPor === encabezado.id ? orden : false}
                   >
                     <TableSortLabel
+                      hideSortIcon={true}
                       active={ordenarPor === encabezado.id}
                       direction={ordenarPor === encabezado.id ? orden : "asc"}
                       onClick={() => cambioOrden(encabezado.id)}
@@ -367,7 +402,7 @@ export default function ListaSolicitudes() {
               renderizarInfoSolicitudes()
             )}
           </TableBody>
-          <TableFooter style={{ width: "auto" }}>
+          <TableFooter>
             <TableRow>
               <TablePagination
                 count={cuenta}

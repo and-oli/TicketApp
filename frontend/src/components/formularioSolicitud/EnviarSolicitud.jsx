@@ -40,7 +40,7 @@ export default function EnviarSolicitud() {
     );
 
     const categoriasSolicitud = await fetch(
-      "http://localhost:3001/categorias",
+      "http://localhost:3001/constantes/categoriasEspecificas",
       header
     );
 
@@ -60,7 +60,7 @@ export default function EnviarSolicitud() {
     const resRequerimiento = await requerimiento.json();
 
     if (resCategorias.ok) {
-      const todasLasCategorias = resCategorias.categorias.map(
+      const todasLasCategorias = resCategorias.categoriasEspecificas.map(
         cat => (cat.nombreCategoria)
       )
       setCategorias(todasLasCategorias);

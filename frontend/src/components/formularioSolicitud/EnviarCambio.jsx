@@ -242,7 +242,13 @@ export default function CambiosSolicitud(props) {
   const renderizarCamposArchivos = () => {
     return categoriasArchivos.map((categoria, i) => (
       <div className="container-item-archivo" key={i}>
-        <label style={loading ? { backgroundColor: "gray" } : null} htmlFor={categoria.toLowerCase()} id="label-file">
+        <label
+          style={
+            loading
+              ? { backgroundColor: "gray" }
+              : null}
+          htmlFor={categoria.toLowerCase()}
+          id="label-file">
           <p>{"Adjuntar  " + categoria.toLowerCase()}s</p>
         </label>
         <input
@@ -266,7 +272,15 @@ export default function CambiosSolicitud(props) {
         <div className="cambios-especialista">
           <div className="ajuste-camios-select">
             <FormControl className="form-control-cambio">
-              <label htmlFor="abierta"><p><b>Estado:</b></p></label>
+              <label htmlFor="abierta"
+                style={
+                  loading
+                    ? { color: "gray" }
+                    : null}>
+                <p>
+                  <b>Estado:</b>
+                </p>
+              </label>
               <NativeSelect
                 disabled={loading}
                 value={state.abierta}
@@ -280,7 +294,15 @@ export default function CambiosSolicitud(props) {
               </NativeSelect>
             </FormControl>
             <FormControl className="form-control-cambio">
-              <label htmlFor="asignar"><p><b>Dueño:</b></p></label>
+              <label htmlFor="asignar"
+                style={
+                  loading
+                    ? { color: "gray" }
+                    : null}>
+                <p>
+                  <b>Dueño:</b>
+                </p>
+              </label>
               <NativeSelect
                 disabled={loading}
                 value={state.dueno}

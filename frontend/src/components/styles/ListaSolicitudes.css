@@ -29,7 +29,7 @@
 
 .input-relacion {
   width: 300px;
-  margin-left: 5px;
+  margin-left: 5px !important;
 }
 
 #filter-form {
@@ -37,10 +37,11 @@
   background-color: white;
   height:auto;
   align-items: center;
-  min-width: 350px;
+  min-width: 360px;
   justify-content: center;
   flex-wrap: wrap;
 }
+
 .MuiTableSortLabel-root:hover, .MuiTableSortLabel-root.MuiTableSortLabel-active {
   color: white !important;
   font-weight: bold !important;
@@ -68,7 +69,6 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 350px;
 }
 
 /* Estilos para cambios en categorias */
@@ -109,6 +109,12 @@ a {
   align-self: center;
 }
 
+#categorias-paper .Agregar-categorias .spinner-Agregar-categorias {
+  height: 20px;
+  color: black;
+  align-self: center;
+}
+
 .categorias-existentes {
   display: flex;
   flex-direction: column;
@@ -131,6 +137,7 @@ a {
   width: 70%;
   margin: 10px !important;
 }
+
 .categoria-container {
   display: flex; 
   flex-direction: row;
@@ -154,4 +161,10 @@ a {
   display: flex;
   width: 100%;
   justify-content: center;
+}
+
+@media screen and (min-width: 0px) and (max-width: 500px){
+  .input-relacion {
+    width: 295px !important;
+  }
 }

@@ -36,6 +36,11 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
   },
+  popper: {
+    display: "flex",
+    position: "absolute",
+    zIndex: 2,
+  },
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
@@ -100,8 +105,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = (props) => {
-  const { userRole } = props;
+const Header = () => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [openLog, setOpenLog] = React.useState(false);
@@ -120,15 +124,19 @@ const Header = (props) => {
   };
 
   const notificationsTotalCount = async () => {
+    const header = {
+      method: "GET",
+      headers: {
+        "x-access-token": localStorage.getItem("TAToken"),
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    };
+
     if (window.location.pathname !== "/lista-notificaciones") {
-      const count = await fetch("http://localhost:3001/notification/countNotifications", {
-        method: "GET",
-        headers: {
-          "x-access-token": localStorage.getItem("TAToken"),
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
+      const count = await fetch(
+        "http://localhost:3001/notification/countNotifications",
+        header);
       const countJson = await count.json();
       setCountNotifications(countJson.count);
     } else {
@@ -197,7 +205,7 @@ const Header = (props) => {
             </IconButton>
           </div>
           <Divider />
-          <Menu close={handleDrawerClose} user={userRole} />
+          <Menu close={handleDrawerClose} />
           <Divider />
         </Drawer>
         <div className="container-header-img">
@@ -249,14 +257,8 @@ const Header = (props) => {
               onClick={openLogMenu}
             />
           </div>
-
           <Popper
-            style={{
-              display: "flex",
-              position: "absolute",
-              marginRight: 30,
-              zIndex: 2,
-            }}
+            className={classes.popper}
             open={openLog}
             anchorEl={anchorRef.current}
             role={undefined}

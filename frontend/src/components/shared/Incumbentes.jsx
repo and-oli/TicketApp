@@ -218,7 +218,9 @@ export default function ListaDeIncumbentes(props) {
             <div className="container-agregar-button">
               <button
                 disabled={deshabilitarEntradas}
-                style={deshabilitarEntradas ? { backgroundColor: "gray" } : null}
+                style={deshabilitarEntradas
+                  ? { backgroundColor: "gray" }
+                  : null}
                 className="button-agregar"
                 type="submit"
               >

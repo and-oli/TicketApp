@@ -2,6 +2,7 @@
   display: flex; 
   flex-direction: column; 
   align-items: center;
+  min-width: 360px;
 }
 
 .title-paper {
@@ -13,7 +14,7 @@
 }
 
 .title-paper p {
-  min-width: 370px;
+  min-width: 360px;
   margin: 10px
 }
 
@@ -23,7 +24,7 @@
   justify-content: space-evenly;
   margin-top: 40px;
   width: 60%;
-  min-width: 370px;
+  min-width: 360px;
 } 
 
 .detalles-cambios-titulos {
@@ -43,7 +44,7 @@ hr {
   align-items: center;
   background-color: white;
   width: 100%;
-  min-width: 370px;
+  min-width: 360px;
 }
 
 .MuiPaper-elevation4 {
@@ -60,7 +61,7 @@ hr {
   margin-bottom: 25px;
   width: 100%;
   margin-top: 5px;
-  min-width: 370px;
+  min-width: 360px;
 }
 
 .solicitud-a .MuiBox-root {
@@ -138,6 +139,6 @@ hr {
   overflow-y: auto;
   font-family: 'Roboto', sans-serif;
   width: 100%;
-  min-width: 370px;
+  min-width: 360px;
   height: 450px;
 } 

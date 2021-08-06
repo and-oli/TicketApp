@@ -72,7 +72,7 @@ export default function Login() {
           alt="Logo comsistelco"
         />
       </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div className='login-container-padre'>
         <div className="login-container">
           <h2 className="title">Iniciar Sesión</h2>
           <div>
@@ -81,7 +81,7 @@ export default function Login() {
                 id="usuario"
                 type="text"
                 label="Usuario"
-                style={{ width: 200, alignSelf: "center" }}
+                className='login-input'
                 size="small"
                 value={userName}
                 onChange={userChange}
@@ -91,23 +91,17 @@ export default function Login() {
                 id="password"
                 type="password"
                 label="Contraseña"
-                style={{ width: 200, alignSelf: "center" }}
+                className='login-input'
                 value={password}
                 onChange={passwordChange}
                 required
               />
-              <h6
-                style={{
-                  color: message.color,
-                  marginTop: 0,
-                  textAlign: "center",
-                }}
-              >
+              <h6 style={{ color: message.color }}>
                 {message.text}
               </h6>
               {loading ? (
                 <CircularProgress
-                  style={{ width: 40, alignSelf: "center", marginTop: 30 }}
+                  className='spinner-load'
                   color="inherit"
                   disableShrink
                 />
@@ -117,12 +111,6 @@ export default function Login() {
                   type="submit"
                   color="default"
                   className="button-login"
-                  style={{
-                    width: 130,
-                    fontSize: 10,
-                    alignSelf: "center",
-                    marginTop: 30,
-                  }}
                 >
                   Ingresar
                 </Button>

@@ -15,9 +15,9 @@ function ListaDeNotificaciones() {
   const [cuentaEliminarNotificaciones, setCuentaEliminarNotificaciones] = React.useState(0);
   const [ref, setRef] = useState([]);
   const srefSeleccionarTodo = React.createRef();
-  const noMostrar = eliminar || !notificaciones.length
+  const noMostrar = (eliminar || !notificaciones.length
     ? { display: "none" }
-    : null;
+    : null);
 
 
   const renderNotificaciones = async () => {
@@ -168,7 +168,7 @@ function ListaDeNotificaciones() {
       <div className="title-paper-notificaciones">
         <p>Notificaciones</p>
       </div>
-      {notificaciones.length?
+      {notificaciones.length ?
         <div className="eliminar-notificacion">
           <div className="icon-delete-container">
             {eliminar || !notificaciones.length ?
@@ -207,12 +207,15 @@ function ListaDeNotificaciones() {
           >
             Eliminar({cuentaEliminarNotificaciones})
           </p>
-        </div>: null
+        </div> : null
       }
       {loading ? (
         <div className="container-sin-notificaciones">
           <CircularProgress
             color="inherit"
+            style={{
+              color: 'black'
+            }}
             className="icon-enviar"
             disableShrink
           />

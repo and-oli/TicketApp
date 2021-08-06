@@ -104,16 +104,18 @@ export default function DetalleSolicitud(props) {
 
   const handleTouchMove = (event) => {
     const touch = event.targetTouches[0];
-      setTouchEnd(touch.clientX);
+    setTouchEnd(touch.clientX);
   };
 
   const handleTouchEnd = () => {
-    if (touchStart - touchEnd > 100) {
-      setValue(1);
-    }
+    if (touchEnd !== 0) {
+      if (touchStart - touchEnd > 150) {
+        setValue(1);
+      }
 
-    if (touchStart - touchEnd < -100) {
-      setValue(0);
+      if (touchStart - touchEnd < -150) {
+        setValue(0);
+      }
     }
   };
 

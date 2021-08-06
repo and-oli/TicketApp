@@ -19,6 +19,7 @@
 .form-nueva-solicitud {
   display: flex;
   justify-content: center;
+  min-width: 360px;
 }
 
 .paper-nueva-solicitud {

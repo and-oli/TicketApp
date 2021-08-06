@@ -7,6 +7,7 @@ import { Button, Paper } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 function getModalStyle() {
   return {
@@ -17,6 +18,13 @@ function getModalStyle() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  editIcon: {
+    padding: 0,
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+  },
+
   paper: {
     position: 'absolute',
     width: '40%',
@@ -34,11 +42,15 @@ export default function CategoriasTickets(props) {
   const [open, setOpen] = React.useState(false);
   const [enviarNuevaCategoria, setEnviarNuevaCategoria] = React.useState('');
   const [listaDeCategorias, setListaDeCategorias] = React.useState([]);
-  const [nuevoNombre, setNuevoNombre] = React.useState({});
   const [noDisponible, setNoDisponible] = React.useState(false);
+  const [cargando, setCargando] = React.useState(false)
   const [mensajeRespuesta, setMensajeRespuesta] = React.useState({
     texto: '',
     color: '',
+  });
+  const [nuevoNombre, setNuevoNombre] = React.useState({
+    nombreCategoriaTicket: '',
+    id: '',
   });
 
   useEffect(() => {
@@ -60,7 +72,7 @@ export default function CategoriasTickets(props) {
       color: '',
     });
     setNuevoNombre({
-      nombreCategoria: '',
+      nombreCategoriaTicket: '',
       id: '',
     });
     const listaEditarCategorias = categorias.map(categoria => ({
@@ -72,8 +84,9 @@ export default function CategoriasTickets(props) {
   };
 
   const nuevaCategoria = async () => {
+    setCargando(true)
     const data = {
-      nombreNuevaCategoria: enviarNuevaCategoria.trim(),
+      nombreCategoriaTicket: enviarNuevaCategoria.trim(),
     };
 
     const header = {
@@ -98,6 +111,7 @@ export default function CategoriasTickets(props) {
       });
       window.location.reload();
     } else {
+      setCargando(false)
       setMensajeRespuesta({
         texto: responseNuevaCategoria.mensaje,
         color: 'red',
@@ -106,7 +120,7 @@ export default function CategoriasTickets(props) {
   };
 
   const enviarEdicionCategoria = async (id) => {
-    const nombreCateoria = nuevoNombre.nombreCategoria.trim();
+    const nombreCateoria = nuevoNombre.nombreCategoriaTicket.trim();
     const data = {
       nuevoNombreCategoria: nombreCateoria,
       id: nuevoNombre.id,
@@ -131,7 +145,7 @@ export default function CategoriasTickets(props) {
       const nuevaLista = listaDeCategorias.map(categoria => {
         if (categoria._id === id) {
           categoria.editar = false;
-          categoria.nombreCategoria = nombreCateoria;
+          categoria.nombreCategoriaTicket = nombreCateoria;
         }
         return categoria;
       });
@@ -148,7 +162,6 @@ export default function CategoriasTickets(props) {
       });
     };
   };
-
   const handleChange = (e) => {
     const value = e.target.value;
     setEnviarNuevaCategoria(value);
@@ -157,7 +170,7 @@ export default function CategoriasTickets(props) {
   const onChangeCategoria = (e, idCategoria) => {
     const editarNombreCategoria = e.target.value;
     setNuevoNombre({
-      nombreCategoria: editarNombreCategoria,
+      nombreCategoriaTicket: editarNombreCategoria,
       id: idCategoria,
     });
   };
@@ -179,7 +192,7 @@ export default function CategoriasTickets(props) {
       color: '',
     });
     setNuevoNombre({
-      nombreCategoria: '',
+      nombreCategoriaTicket: '',
       id: '',
     });
     editarSolicitud(id, editar)
@@ -197,17 +210,18 @@ export default function CategoriasTickets(props) {
           <div className='editar-categoria' key={categoria._id}>
             {categoria.editar ?
               <input type="text"
-                defaultValue={categoria.nombreCategoria}
+                defaultValue={categoria.nombreCategoriaTicket}
                 onChange={(e) => onChangeCategoria(e, categoria._id)}
               /> :
-              <p>{categoria.nombreCategoria}</p>
+              <p>{categoria.nombreCategoriaTicket}</p>
             }
             {!categoria.editar ?
               (!noDisponible ?
                 <EditIcon
+                  className={classes.editIcon}
                   onClick={() => {
                     setNuevoNombre({
-                      nombreCategoria: categoria.nombreCategoria,
+                      nombreCategoriaTicket: categoria.nombreCategoriaTicket,
                       id: categoria._id
                     });
                     editarSolicitud(categoria._id, true)
@@ -215,9 +229,11 @@ export default function CategoriasTickets(props) {
                 /> : null) :
               <div>
                 <CheckIcon
+                  disabled={cargando}
                   onClick={() => enviarEdicionCategoria(categoria._id)}
                 />
                 <ClearIcon
+                  disabled={cargando}
                   onClick={() => onClickClear(categoria._id, false)}
                 />
               </div>
@@ -239,17 +255,22 @@ export default function CategoriasTickets(props) {
           value={enviarNuevaCategoria}
           onChange={handleChange}
           margin="dense"
+          disabled={cargando}
         />
-        <Button
-          variant="contained"
-          component="button"
-          type='submit'
-          form='Agregar-categorias'
-          className="button-Agregar-categorias"
-          onClick={handleOpen}
-        >
-          <p className="button-p">Agregar</p>
-        </Button>
+        {!cargando ?
+          <Button
+            disabled={cargando}
+            variant="contained"
+            component="button"
+            type='submit'
+            form='Agregar-categorias'
+            className="button-Agregar-categorias"
+            onClick={handleOpen}
+          >
+            <p className="button-p">Agregar</p>
+          </Button> :
+          <CircularProgress className="spinner-Agregar-categorias" />}
+
       </form>
       <h6
         className='mensaje-respuesta'
@@ -263,16 +284,11 @@ export default function CategoriasTickets(props) {
   return (
     <div>
       <div className='cambios-en-categorias'>
-        <Button
+        <EditIcon
+          className={classes.editIcon}
           variant="contained"
-          component="button"
-          className="button-modificar-categorias"
           onClick={handleOpen}
-        >
-          <p className="button-p">
-            Modificar categoria
-          </p>
-        </Button>
+        />
       </div>
       <Modal
         open={open}

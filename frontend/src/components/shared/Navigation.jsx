@@ -30,10 +30,10 @@ export default function Navigation(props) {
 
   return (
     <Router>
-      <Header userRole={user} />
+      <Header />
       <Switch>
         <Route exact path="/">
-          <ListaSolicitudes />
+          <ListaSolicitudes userRole={user} />
         </Route>
         <Route path="/detalle-solicitud">
           <DetalleSolicitud userRole={user} />
